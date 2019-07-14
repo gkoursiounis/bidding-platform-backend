@@ -1,0 +1,64 @@
+image: maven:3.6.0-jdk-8
+
+variables:
+  OPTION_MAVEN_CACHE:     "-Dmaven.repo.local=$PATH_MAVEN_CACHE"
+  OPTION_SONAR_HOST:      "-Dsonar.host.url=$SONAR_URL"
+  OPTION_SONAR_TOKEN:     "-Dsonar.login=$SONAR_LOGIN"
+  OPTION_SONAR_REFERENCE: "-Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME"
+  OPTION_SONAR_BRANCH:    "-Dsonar.branch.name=$CI_COMMIT_REF_NAME"
+
+stages: 
+  - build
+  - test
+  - package
+  - deploy
+  
+maven_build:
+  stage: build
+  script: 
+    - mvn clean
+    - mvn compile
+    - mvn test
+  artifacts:
+    paths:
+      - target
+    expire_in: 1 hour
+
+
+
+test_with_sonar:
+  stage: test
+  script:
+    - mvn --batch-mode verify sonar:sonar $OPTION_SONAR_HOST $OPTION_SONAR_TOKEN $OPTION_SONAR_REFERENCE $OPTION_SONAR_BRANCH
+  only:
+    - dev
+    - master
+
+package_jar:
+  stage: package
+  script:
+    - mvn package
+  artifacts:
+    paths:
+      - target
+    expire_in: 30 minutes
+  only:
+    - master
+
+deploy_on_docker:
+  image: docker:latest
+  stage: deploy
+  variables:
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker build -t "$CI_REGISTRY_IMAGE":latest .
+    - docker push "$CI_REGISTRY_IMAGE":latest
+  tags:
+    - dind
+  only:
+    - master
+
+    
