@@ -7,7 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -16,7 +18,9 @@ import java.util.TreeSet;
 @Getter
 @Table(name = "item")
 @NoArgsConstructor
-public class Item extends AuditModel {
+public class Item extends AuditModel implements Serializable {
+
+    public static final long serialVersionUID = 69L;
 
     @ManyToOne
     private User seller;
@@ -42,10 +46,6 @@ public class Item extends AuditModel {
     private Set<Bid> bids = new TreeSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "started_at")
-    private Date startedAt;
-
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "ends_at")
     private Date endsAt;
 
@@ -55,10 +55,10 @@ public class Item extends AuditModel {
     @Column(name = "description", length = 250)
     private String description;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "fk_picture")
     @JsonIgnore
-    private DBFile media;
+    private List<DBFile> media;
 
 
 //    @ManyToMany
@@ -70,6 +70,10 @@ public class Item extends AuditModel {
 //    private Set<User> blockedBy = new TreeSet<>();
 
     public boolean isAuctionCompleted() { return this.auctionCompleted; }
+
+    public Item(final Date createdAt) {
+        super(createdAt);
+    }
 }
 
 

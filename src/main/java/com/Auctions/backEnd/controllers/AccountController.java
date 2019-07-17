@@ -37,7 +37,7 @@ public class AccountController extends BaseController {
      * User can check if a username exists or not
      *
      * @param userName
-     * @return false if username exists and true if it does not
+     * @return false (BAD_REQUEST) if username exists and true (OK) if it does not
      */
     @GetMapping("/checkUsername")
     public ResponseEntity checkUserName(@RequestParam(value="username") String userName) {
@@ -53,7 +53,7 @@ public class AccountController extends BaseController {
      * User can check if an email exists or not
      *
      * @param email
-     * @return false if email exists and true if it does not
+     * @return false (BAD_REQUEST) if email exists and true (OK) if it does not
      */
     @GetMapping("/checkEmail")
     public ResponseEntity checkEmail(@RequestParam(value="email") String email) {

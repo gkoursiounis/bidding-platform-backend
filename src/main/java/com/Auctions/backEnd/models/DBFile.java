@@ -19,18 +19,13 @@ public class DBFile implements Serializable {
     public static final long MAXIMUM_VIDEO_SIZE = 100000000L;
     public static final long MAXIMUM_IMAGE_SIZE = 10000000L;
 
-
-
-
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     @JsonIgnore
     private String id;
 
-    // ------
-    // Fields
-    // ------
+
     @Column
     private String fileName;
 
@@ -40,9 +35,7 @@ public class DBFile implements Serializable {
     @Column
     private String downloadLink;
 
-    // ------------
-    // Constructors
-    // ------------
+
     public DBFile(String fileName, String fileType, byte[] data) {
         this.fileName = fileName;
         this.fileType = fileType;

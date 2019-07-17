@@ -113,11 +113,13 @@ public class AuthControllerTest{
     public void signup2() throws Exception {
 
 	    final String content = "{" +
-                                "\"userName\" : \"user0\", " +
+                                "\"username\" : \"user0\", " +
                                 "\"password\" : \"myPwd123\", " +
                                 "\"email\" : \"email1@usi.ch\", " +
                                 "\"firstName\" : \"FirstName1\", " +
-                                "\"lastName\" : \"LastName1\" " +
+                                "\"lastName\" : \"LastName1\", " +
+                                "\"telNumber\" : \"1234567890\", " +
+                                "\"taxNumber\" : \"123345\" " +
                                 "}";
 
         performSignup(content)
@@ -139,7 +141,9 @@ public class AuthControllerTest{
                                 "\"password\" : \"myPwd123\", " +
                                 "\"email\" : \"" + email + "\", " +
                                 "\"firstName\" : \"FirstName0\", " +
-                                "\"lastName\" : \"LastName1\" " +
+                                "\"lastName\" : \"LastName1\", " +
+                                "\"telNumber\" : \"1234567890\", " +
+                                "\"taxNumber\" : \"123345\" " +
                                 "}";
 
         performSignup(content)
@@ -160,19 +164,21 @@ public class AuthControllerTest{
     @DisplayName("Signup without email")
     public void signup4() throws Exception {
 
-        final String userName = "user0" ;
+        final String username = "user0" ;
 
         final String content = "{" +
-                "\"userName\" : \"" + userName +"\", " +
+                "\"username\" : \"" + username +"\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"firstName\" : \"FirstName11\", " +
-                "\"lastName\" : \"LastName1\" " +
+                "\"lastName\" : \"LastName1\", " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"taxNumber\" : \"123345\" " +
                 "}";
 
         performSignup(content)
                 .andExpect(status().isBadRequest());
 
-        checkUsername(userName)
+        checkUsername(username)
                 .andExpect(status().isBadRequest());
     }
 
@@ -185,19 +191,21 @@ public class AuthControllerTest{
     @DisplayName("Signup without password")
     public void signup5() throws Exception {
 
-        final String userName = "user0" ;
+        final String username = "user0" ;
 
         final String content = "{" +
-                "\"userName\" : \"" + userName +"\", " +
+                "\"username\" : \"" + username +"\", " +
                 "\"email\" : \"email0@usi.ch\", " +
                 "\"firstName\" : \"FirstName01\", " +
-                "\"lastName\" : \"LastName1\" " +
+                "\"lastName\" : \"LastName1\", " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"taxNumber\" : \"123345\" " +
                 "}";
 
         performSignup(content)
                 .andExpect(status().isBadRequest());
 
-        checkUsername(userName)
+        checkUsername(username)
                 .andExpect(status().isBadRequest());
     }
 
@@ -210,19 +218,21 @@ public class AuthControllerTest{
     @DisplayName("Signup without first name")
     public void signup6() throws Exception {
 
-        final String userName = "user4" ;
+        final String username = "user4" ;
 
         final String content = "{" +
-                "\"userName\" : \"" + userName +"\", " +
+                "\"username\" : \"" + username +"\", " +
                 "\"email\" : \"email4@usi.ch\", " +
                 "\"password\" : \"myPwd123\", " +
-                "\"lastName\" : \"LastName1\" " +
+                "\"lastName\" : \"LastName1\", " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"taxNumber\" : \"123345\" " +
                 "}";
 
         performSignup(content)
                 .andExpect(status().isBadRequest());
 
-        checkUsername(userName)
+        checkUsername(username)
                 .andExpect(status().isBadRequest());
     }
 
@@ -235,19 +245,21 @@ public class AuthControllerTest{
     @DisplayName("Signup without last name")
     public void signup7() throws Exception {
 
-        final String userName = "user0" ;
+        final String username = "user0" ;
 
         final String content = "{" +
-                "\"userName\" : \"" + userName + "\", " +
+                "\"username\" : \"" + username + "\", " +
                 "\"email\" : \"email0@usi.ch\", " +
                 "\"firstName\" : \"FirstName01\", " +
-                "\"password\" : \"myPwd123\" " +
+                "\"password\" : \"myPwd123\", " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"taxNumber\" : \"123345\" " +
                 "}";
 
         performSignup(content)
                 .andExpect(status().isBadRequest());
 
-        checkUsername(userName);
+        checkUsername(username);
     }
 
     /**
@@ -260,11 +272,13 @@ public class AuthControllerTest{
     public void signup8() throws Exception {
 
         final String content = "{" +
-                                "\"userName\" : \"signup\", " +
+                                "\"username\" : \"signup\", " +
                                 "\"password\" : \"myPwd123\", " +
                                 "\"email\" : \"email0@usi.ch\", " +
                                 "\"firstName\" : \"FirstName1\", " +
-                                "\"lastName\" : \"LastName1\" " +
+                                "\"lastName\" : \"LastName1\", " +
+                                "\"telNumber\" : \"1234567890\", " +
+                                "\"taxNumber\" : \"123345\" " +
                                 "}";
 
         performSignup(content)
@@ -282,11 +296,13 @@ public class AuthControllerTest{
     public void signup9() throws Exception {
 
         final String content = "{" +
-                "\"userName\" : \"u\", " +
+                "\"username\" : \"u\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"email\" : \"email4@usi.ch\", " +
                 "\"firstName\" : \"FirstName1\", " +
-                "\"lastName\" : \"LastName1\" " +
+                "\"lastName\" : \"LastName1\", " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"taxNumber\" : \"123345\" " +
                 "}";
 
         performSignup(content)
@@ -303,11 +319,13 @@ public class AuthControllerTest{
     public void signup10() throws Exception {
 
         final String content = "{" +
-                "\"userName\" : \"thisIsALargeUsername\", " +
+                "\"username\" : \"thisIsALargeUsername\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"email\" : \"email4@usi.ch\", " +
                 "\"firstName\" : \"FirstName1\", " +
-                "\"lastName\" : \"LastName1\" " +
+                "\"lastName\" : \"LastName1\", " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"taxNumber\" : \"123345\" " +
                 "}";
 
         performSignup(content)
@@ -323,21 +341,25 @@ public class AuthControllerTest{
     @DisplayName("Successful signup")
     public void signup11() throws Exception {
 
-        final String userName = "user4";
+        final String username = "user4";
         final String firstName = "firstName";
         final String lastName = "lastName";
+        final String telNumber = "lastName";
+        final String taxNumber = "lastName";
 
         final String content = "{" +
-                "\"userName\" : \"" + userName + "\", " +
+                "\"username\" : \"" + username + "\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"email\" : \"email4@usi.ch\", " +
                 "\"firstName\" : \"" + firstName + "\", " +
                 "\"lastName\" : \"" + lastName + "\" " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"taxNumber\" : \"123345\" " +
                 "}";
 
         performSignup(content)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("user.userName", is(userName)))
+                .andExpect(jsonPath("user.username", is(username)))
                 .andExpect(jsonPath("user.firstName", is(firstName)))
                 .andExpect(jsonPath("user.lastName", is(lastName)));
     }
@@ -374,7 +396,7 @@ public class AuthControllerTest{
     public void authorize2() throws Exception {
 
         final String content = "{" +
-                "\"userName\" : \"wrongUser\", " +
+                "\"username\" : \"wrongUser\", " +
                 "\"password\" : \"myPwd123\" " +
                 "}";
 
@@ -396,7 +418,7 @@ public class AuthControllerTest{
         final String username = "user1";
 
         final String content = "{" +
-                "\"userName\" : \"" + username + "\", " +
+                "\"username\" : \"" + username + "\", " +
                 "\"password\" : \"myPwd123\" " +
                 "}";
 
@@ -404,7 +426,7 @@ public class AuthControllerTest{
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("user.userName", is(username)));
+                .andExpect(jsonPath("user.username", is(username)));
     }
 
     /**
@@ -454,7 +476,7 @@ public class AuthControllerTest{
         final String email = "email2@usi.ch";
 
         final String content = "{" +
-                "\"userName\" : \"" + username + "\", " +
+                "\"username\" : \"" + username + "\", " +
                 "\"email\" : \"" + email + "\", " +
                 "\"password\" : \"myPwd123\" " +
                 "}";
@@ -477,7 +499,7 @@ public class AuthControllerTest{
     public void authorize6() throws Exception {
 
         final String content = "{" +
-                "\"userName\" : \"user1\", " +
+                "\"username\" : \"user1\", " +
                 "\"password\" : \"wrongPassword\" " +
                 "}";
 

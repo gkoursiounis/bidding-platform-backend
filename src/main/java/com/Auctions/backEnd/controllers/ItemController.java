@@ -36,7 +36,7 @@ public class ItemController extends BaseController {
     }
 
 
-    @GetMapping("/item/{itemId}")
+    @GetMapping("/{itemId}")
     public ResponseEntity getItem(@PathVariable (value = "itemId") long itemId){
 
         Item item = itemRepository.findItemById(itemId);
@@ -51,6 +51,7 @@ public class ItemController extends BaseController {
     }
 
 
+    //TODO check if Set<Integer> works
     @PostMapping
     public ResponseEntity createItem(@RequestParam String name,
                                      @RequestParam Double buyPrice,
@@ -88,8 +89,8 @@ public class ItemController extends BaseController {
             item.setDescription(description);
         }
 
-
         if(categoriesId != null){
+
             for(Integer id: categoriesId){
                 ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
 
@@ -104,7 +105,7 @@ public class ItemController extends BaseController {
             }
         }
 
-        if (media != null){
+        if(media != null){
 
             //check for proper content type
             if (!contentTypes.contains(media.getContentType())) {
@@ -128,13 +129,7 @@ public class ItemController extends BaseController {
             DBFile dbFile = dBFileStorageService.storeFile(media);
             dbFile.setDownloadLink("/downloadFile/" + dbFile.getId() + "." + dbFile.getFileType().split("/")[1]);
             dbFile = dbFileRepository.save(dbFile);
-            item.setMedia(dbFile);
-
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "you must choose a photo or a video"
-            ));
+            item.getMedia().add(dbFile);
         }
 
         /* Location */
@@ -147,9 +142,11 @@ public class ItemController extends BaseController {
 //            }
 //            post.setLocation(geolocationRepository.save(geolocationRepository.save(location)));
 //        }
+//        if (post.getLocation() != null) {
+//            post.getLocation().getPosts().add(post);
+//            geolocationRepository.save(post.getLocation());
+//        }
 
-
-        item.setStartedAt(new Date());
         itemRepository.save(item);
 
         requestUser.getItems().add(item);
@@ -159,7 +156,7 @@ public class ItemController extends BaseController {
     }
 
 
-    @PatchMapping("/item/{itemId}")
+    @PatchMapping("/{itemId}")
     public ResponseEntity modifyItem(@PathVariable (value = "itemId") long itemId,
                                      @Nullable @RequestParam String name,
                                      @Nullable @RequestParam Double buyPrice,
@@ -220,7 +217,7 @@ public class ItemController extends BaseController {
     }
 
 
-    @DeleteMapping("/item/{itemId}")
+    @DeleteMapping("/{itemId}")
     public ResponseEntity deleteItem(@PathVariable (value = "itemId") long itemId){
 
         Item item = itemRepository.findItemById(itemId);

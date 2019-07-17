@@ -129,7 +129,6 @@ public class UserController extends BaseController {
     }
 
 
-
 //    @GetMapping("/search")
 //    public ResponseEntity getPartialMatchedUsers(@RequestParam String name) {
 //        User requester = requestUser();
