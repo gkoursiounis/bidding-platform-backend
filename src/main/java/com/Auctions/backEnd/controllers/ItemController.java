@@ -30,6 +30,21 @@ public class ItemController extends BaseController {
     }
 
 
+    @GetMapping("/item/{itemId}")
+    public ResponseEntity getItem(@PathVariable (value = "itemId") long itemId){
+
+        Item item = itemRepository.findItemById(itemId);
+        if(item == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Invalid itemId"
+            ));
+        }
+
+        return ResponseEntity.ok(item);
+    }
+
+
     @PostMapping
     public ResponseEntity createItem(@RequestParam String name,
                                      @RequestParam Double buyPrice,
