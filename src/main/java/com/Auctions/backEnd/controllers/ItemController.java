@@ -121,7 +121,7 @@ public class ItemController extends BaseController {
             ));
         }
 
-        if(item.getBids() != null){
+        if(!item.getBids().isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "You cannot modify the item's details after the first bid"

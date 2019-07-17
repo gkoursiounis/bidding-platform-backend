@@ -2,6 +2,7 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
+import com.Auctions.backEnd.responses.BidRes;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -94,12 +95,11 @@ public class UserController extends BaseController {
             ));
         }
 
-        //In case there are bids: (offer, item.getCurrently()) < 0
-        //The second argument is a guard in case there are no bids
-        //The third argument is a guard in case an offer = getCurrently = firstBid = BuyPrice
-        if(java.lang.Double.compare(offer, item.getCurrently()) <= 0 &&
-                java.lang.Double.compare(offer, item.getFirstBid()) != 0 &&
-                java.lang.Double.compare(item.getBuyPrice(), offer) != 0){
+        //In case there are bids: (offer, item.getCurrently()) <= 0
+        //Tn case there are no bids: (offer, item.getCurrently()) < 0
+        //In case offer = getCurrently = firstBid = BuyPrice
+        if((!item.getBids().isEmpty() && java.lang.Double.compare(offer, item.getCurrently()) <= 0) ||
+                (item.getBids().isEmpty() && java.lang.Double.compare(offer, item.getFirstBid()) < 0)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "Offer cannot be less than the current best offer or the initial price"
@@ -116,10 +116,9 @@ public class UserController extends BaseController {
         bid.setBidder(requester);
         bid.setItem(item);
         bid.setOffer(offer);
-
         bidRepository.save(bid);
 
-        return ResponseEntity.ok(bid);
+        return ResponseEntity.ok(new BidRes(bid, item.isAuctionCompleted()));
     }
 
 
