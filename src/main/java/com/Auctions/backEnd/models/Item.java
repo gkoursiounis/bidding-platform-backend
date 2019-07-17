@@ -60,6 +60,9 @@ public class Item extends AuditModel implements Serializable {
     @JsonIgnore
     private List<DBFile> media;
 
+    @OneToOne
+    private Geolocation location;
+
 
 //    @ManyToMany
 //    @JoinTable(

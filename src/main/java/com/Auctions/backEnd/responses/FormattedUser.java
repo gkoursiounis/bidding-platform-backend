@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class FormattedUser {
             private Long id;
-    @Setter private String userName;
+    @Setter private String username;
     @Setter private String firstName;
     @Setter private String lastName;
     @Setter private String telNumber;
@@ -22,7 +22,7 @@ public class FormattedUser {
 
     public FormattedUser(User user) {
         this.id= user.getId();
-        this.userName = user.getUsername();
+        this.username = user.getUsername();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.telNumber = user.getTelNumber();
@@ -36,7 +36,7 @@ public class FormattedUser {
                          String telNumber, String taxNumber, Boolean verified, Boolean visitor,
                          Date createdAt){
         this.id = id;
-        this.userName = userName;
+        this.username = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.telNumber = telNumber;

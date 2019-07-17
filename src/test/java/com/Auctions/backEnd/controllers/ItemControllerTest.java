@@ -69,14 +69,144 @@ public class ItemControllerTest {
         testUtils.clearDB();
     }
 
+    private void unverify(final String username) {
+
+        Account account = accountRepository.findByUsername(username);
+        assertNotNull(account);
+        account.setVerified(false);
+        accountRepository.save(account);
+    }
+
+
+    /**
+     * User successfully tries to create an item/auction
+     *
+     * @throws Exception - mvc.perform
+     */
     @Test
-    @DisplayName("U")
+    @DisplayName("Successful item creation")
     public void createItem1() throws Exception {
         mvc.perform(
                 post("/item")
                         .param("name", "item1")
                         .param("buyPrice", "10.4")
-                        //.param("categoriesId", "1,2,3")
+                        .param("firstBid", "5.3")
+                        .param("endsAt", "2015-09-26T01:30:00.000-04:00")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User tries to create an item with missing parameters
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Name parameter missing")
+    public void createItem2() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("endsAt", "2015-09-26T01:30:00.000-04:00")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item with missing parameters
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Date parameter missing")
+    public void createItem3() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item with missing parameters
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("firstBid parameter missing")
+    public void createItem4() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("endsAt", "2015-09-26T01:30:00.000-04:00")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item without being verified
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Unverified user tries to create an item")
+    public void createItem5() throws Exception {
+
+        unverify("user1");
+
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("endsAt", "2015-09-26T01:30:00.000-04:00")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item as a visitor
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Visitor tries to create an item/auction")
+    public void createItem6() throws Exception {
+
+        final String content = "{" +
+                "\"username\" : \"user1\", " +
+                "\"password\" : \"myPwd123\", " +
+                "\"email\" : \"email0@usi.ch\", " +
+                "\"firstName\" : \"FirstName1\", " +
+                "\"lastName\" : \"LastName1\", " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"visitor\" : \"true\" " +
+                "}";
+
+        mvc.perform(post("/auth/signup")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content))
+                .andExpect(status().isOk());
+
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
                         .param("firstBid", "5.3")
                         .param("endsAt", "2015-09-26T01:30:00.000-04:00")
                         .header("Authorization", user1)

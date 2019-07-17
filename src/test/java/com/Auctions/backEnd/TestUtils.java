@@ -98,89 +98,49 @@ public class TestUtils {
 		return "Bearer " + token;
 	}
 
+
 	/**
-	 * Helper function to follow another user
+	 * Utility function that creates an account and a user
 	 *
 	 * @param mvc - mvc
-	 * @param followerToken - The token of the person following
-	 * @param followeeUsername - The username of the person being followed
+	 * @param username - username of the new account
+	 * @param password - password of the new account
+	 * @param firstName - first name of the new account
+	 * @param lastName - last name of the new account
+	 * @param email	- email
+	 * @return user token
 	 * @throws Exception - mvc.perform throws exception
 	 */
-	public static ResultActions follow(@NonNull final MockMvc mvc,
-							  @NonNull final String followerToken,
-							  @NonNull final String followeeUsername) throws Exception {
+	public static String createAccount(@NonNull final MockMvc mvc,
+									   @NonNull final String  username,
+									   @NonNull final String  password,
+									   @NonNull final String  firstName,
+									   @NonNull final String  lastName,
+									   @NonNull final String  email) throws Exception {
 
-		return mvc.perform(post("/user/follows/" + followeeUsername)
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", followerToken));
+		final String token = ((JSONObject) new JSONParser().parse(mvc.perform(post("/auth/signup")
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(String.format(
+						"{" +
+								"\"username\" : \"%s\", " +
+								"\"password\" : \"%s\", " +
+								"\"email\" : \"%s\", " +
+								"\"firstName\" : \"%s\", " +
+								"\"lastName\" : \"%s\", " +
+								"\"telNumber\" : \"1234567890\", " +
+								"\"taxNumber\" : \"123345\", " +
+								"\"visitor\" : \"false\" " +
+								"}",
+						username, password, email, firstName, lastName)))
+				.andExpect(status().isOk())
+				.andReturn()
+				.getResponse()
+				.getContentAsString()))
+				.get("token").toString();
+
+		return "Bearer " + token;
 	}
 
-	/**
-	 * Helper function to unfollow another user
-	 *
-	 * @param mvc - mvc
-	 * @param followerToken - The token of the person following
-	 * @param followeeUsername - The username of the person being followed
-	 * @throws Exception - mvc.perform throws exception
-	 */
-	public static ResultActions unfollow(@NonNull final MockMvc mvc,
-										 @NonNull final String followerToken,
-										 @NonNull final String followeeUsername) throws Exception {
-
-		return mvc.perform(delete("/user/follows/" + followeeUsername)
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", followerToken));
-	}
-
-	/**
-	 * Helper function
-	 * Given a user token and the post ID,
-	 * creates a like to the relative post
-	 *
-	 * @param token - token of the user
-	 * @throws Exception - mvc.perform throws Exception
-	 */
-	public static ResultActions like(@NonNull final MockMvc mvc,
-									 @NonNull final String postID,
-									 @NonNull final String token) throws Exception {
-		return mvc.perform(post("/post/" + postID + "/like")
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", token));
-	}
-
-	/**
-	 * Helper function
-	 * Given a user token and the post ID,
-	 * deletes a like to the relative post
-	 *
-	 * @param token - token of the user
-	 * @throws Exception - mvc.perform throws Exception
-	 */
-	public static ResultActions dislike(@NonNull final MockMvc mvc,
-									 	@NonNull final String postID,
-									 	@NonNull final String token) throws Exception {
-		return mvc.perform(delete("/post/" + postID + "/like")
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", token));
-	}
-
-    /**
-     * Flips a user's private status between true and false
-     * @param mvc - mvc
-     * @param token - token of the user
-     * @param status - the wished status after the execution of this method
-     * @throws Exception - mvc.perform throws exception
-     */
-	public static void  makePrivate(@NonNull final MockMvc mvc,
-								   @NonNull final String token,
-								   @NonNull final Boolean status) throws Exception{
-
-		mvc.perform(put("/user/updateDetails")
-				.param("privateProfile", status.toString())
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", token))
-				.andExpect(status().isOk());
-	}
 
 
 	/**
@@ -238,64 +198,6 @@ public class TestUtils {
                 .andReturn().getResponse().getContentAsString()))
                 .get("id").toString();
     }
-
-    /**
-     * Blocks the specified user by the user who did the request
-     * @param mvc - mvc
-     * @param token - token of the user who did the request
-     * @param userId - userId of the person who will be blocked
-     * @return - ResultActions(response from the server)
-     * @throws Exception - mvc.perform block
-     */
-	public static ResultActions blockUser(@NonNull final MockMvc mvc,
-										  @NonNull final String token,
-										  @NonNull final String userId) throws Exception {
-		return mvc.perform(patch("/user/block/" + userId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", token));
-	}
-
-	/**
-	 * Unblocks the specified user by the user who did the request
-	 * @param mvc - mvc
-	 * @param token - token of the user who did the request
-	 * @param userId - userId of the person who will be unblocked
-	 * @return - ResultActions(response from the server)
-	 * @throws Exception - mvc.perform unblock
-	 */
-	public static ResultActions unblockUser(@NonNull final MockMvc mvc,
-										  	@NonNull final String token,
-										  	@NonNull final String userId) throws Exception {
-		return mvc.perform(patch("/user/unblock/" + userId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.header("Authorization", token));
-	}
-
-
-	public static String getLastRequest(@NonNull final MockMvc mvc,
-										@NonNull final String token) throws Exception{
-
-		return (new org.json.JSONArray(
-				mvc.perform((get("/user/following-requests")
-						.contentType(MediaType.APPLICATION_JSON)
-						.header("Authorization", token)))
-						.andExpect(status().isOk())
-						.andReturn().getResponse().getContentAsString()))
-				.getJSONObject(0).get("id").toString();
-	}
-
-	public static ResultActions storiesPerform(@NonNull final MockMvc mvc,
-											   @NonNull final String token,
-											   @RequestParam int expiration,
-											   @NonNull final MockMultipartFile file) throws Exception{
-		return mvc.perform(
-				multipart("/stories")
-						.file(file)
-						.param("expiration", ""+expiration+"")
-						.header("Authorization", token)
-						.contentType(MediaType.MULTIPART_FORM_DATA));
-
-	}
 
 
 	/**

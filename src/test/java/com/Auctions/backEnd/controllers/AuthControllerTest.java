@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -344,24 +343,26 @@ public class AuthControllerTest{
         final String username = "user4";
         final String firstName = "firstName";
         final String lastName = "lastName";
-        final String telNumber = "lastName";
-        final String taxNumber = "lastName";
+        final String telNumber = "1234567890";
+        final String taxNumber = "12345";
 
         final String content = "{" +
                 "\"username\" : \"" + username + "\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"email\" : \"email4@usi.ch\", " +
                 "\"firstName\" : \"" + firstName + "\", " +
-                "\"lastName\" : \"" + lastName + "\" " +
-                "\"telNumber\" : \"1234567890\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"lastName\" : \"" + lastName + "\", " +
+                "\"telNumber\" : \"" + telNumber + "\", " +
+                "\"taxNumber\" : \"" + taxNumber + "\" " +
                 "}";
 
         performSignup(content)
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("user.username", is(username)))
                 .andExpect(jsonPath("user.firstName", is(firstName)))
-                .andExpect(jsonPath("user.lastName", is(lastName)));
+                .andExpect(jsonPath("user.lastName", is(lastName)))
+                .andExpect(jsonPath("user.telNumber", is(telNumber)))
+                .andExpect(jsonPath("user.taxNumber", is(taxNumber)));
     }
 
     /**
