@@ -3,6 +3,7 @@ package com.Auctions.backEnd.controllers;
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.Message;
+import com.Auctions.backEnd.services.File.DBFileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,18 @@ public class ItemController extends BaseController {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final ItemCategoryRepository itemCategoryRepository;
+    private final DBFileRepository dbFileRepository;
+    private final DBFileStorageService dBFileStorageService;
 
     @Autowired
     public ItemController(UserRepository userRepository,ItemRepository itemRepository,
-                          ItemCategoryRepository itemCategoryRepository){
+                          ItemCategoryRepository itemCategoryRepository, DBFileRepository dbFileRepository,
+                          DBFileStorageService dBFileStorageService){
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.itemCategoryRepository = itemCategoryRepository;
+        this.dbFileRepository = dbFileRepository;
+        this.dBFileStorageService = dBFileStorageService;
     }
 
 
@@ -98,7 +104,57 @@ public class ItemController extends BaseController {
             }
         }
 
+        if (media != null){
+
+            //check for proper content type
+            if (!contentTypes.contains(media.getContentType())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                        "Error",
+                        "Image type not supported"
+                ));
+            }
+
+            //check for size limitations (less than 10 MB)
+            if (media.getSize() > DBFile.MAXIMUM_IMAGE_SIZE && (
+                    "image/png".equals(media.getContentType())  || "image/jpeg".equals(media.getContentType()) ||
+                            "image/gif".equals(media.getContentType()))) {
+
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                        "Error",
+                        "Image over limits"
+                ));
+            }
+
+            DBFile dbFile = dBFileStorageService.storeFile(media);
+            dbFile.setDownloadLink("/downloadFile/" + dbFile.getId() + "." + dbFile.getFileType().split("/")[1]);
+            dbFile = dbFileRepository.save(dbFile);
+            item.setMedia(dbFile);
+
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "you must choose a photo or a video"
+            ));
+        }
+
+        /* Location */
+//        if (apiIdentifier != null && longitude != null && latitude != null &&
+//                locationType != null && locationTitle != null) {
+//            Geolocation location = geolocationRepository.findByLocationTitle(locationTitle);
+//            if (location == null) {
+//                location = new Geolocation(apiIdentifier, longitude, latitude, locationType, locationTitle);
+//
+//            }
+//            post.setLocation(geolocationRepository.save(geolocationRepository.save(location)));
+//        }
+
+
+        item.setStartedAt(new Date());
         itemRepository.save(item);
+
+        requestUser.getItems().add(item);
+        userRepository.save(requestUser);
+
         return ResponseEntity.ok(item);
     }
 

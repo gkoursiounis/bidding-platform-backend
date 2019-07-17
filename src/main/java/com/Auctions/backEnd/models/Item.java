@@ -1,5 +1,6 @@
 package com.Auctions.backEnd.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,6 +54,12 @@ public class Item extends AuditModel {
 
     @Column(name = "description", length = 250)
     private String description;
+
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "fk_picture")
+    @JsonIgnore
+    private DBFile media;
+
 
 //    @ManyToMany
 //    @JoinTable(

@@ -20,10 +20,7 @@ public abstract class BaseController {
     static final Set<String> contentTypes = new HashSet<>(Arrays.asList(
             "image/png",
             "image/jpeg",
-            "image/gif",
-            "video/x-flv",
-            "video/mp4",
-            "video/ms-asf"
+            "image/gif"
     ));
 
     User requestUser() {

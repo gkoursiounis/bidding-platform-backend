@@ -112,11 +112,18 @@ public class UserController extends BaseController {
         }
         itemRepository.save(item);
 
+        //??????
+        item.getSeller().getItems().add(item);
+        userRepository.save(item.getSeller());
+
         Bid bid = new Bid();
         bid.setBidder(requester);
         bid.setItem(item);
         bid.setOffer(offer);
         bidRepository.save(bid);
+
+        requester.getBids().add(bid);
+        userRepository.save(requester);
 
         return ResponseEntity.ok(new BidRes(bid, item.isAuctionCompleted()));
     }
