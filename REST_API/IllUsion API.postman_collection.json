@@ -1,0 +1,587 @@
+{
+	"info": {
+		"_postman_id": "e169dd60-63aa-4f6b-9e95-34b304153210",
+		"name": "IllUsion API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Signup an account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userName\":\"kufklo2\",\"password\":\"password\",\"email\":\"garyf591@gmail.com\",\"firstName\":\"jeremy2\", \"lastName\":\"kevin\"}"
+				},
+				"url": {
+					"raw": "localhost:8080/auth/signup",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userName\":\"kufklo1\",\"password\":\"password\"}"
+				},
+				"url": {
+					"raw": "localhost:8080/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get reset password ",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\": \"garyf591@gmail.com\"}"
+				},
+				"url": {
+					"raw": "localhost:8080/account/get-reset-password",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"account",
+						"get-reset-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"password\":\"anewpassword\"}"
+				},
+				"url": {
+					"raw": "localhost:8080/account/reset-password?token=f7b4eec2-9e17-45d1-a4ef-a341426710d8",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"account",
+						"reset-password"
+					],
+					"query": [
+						{
+							"key": "token",
+							"value": "f7b4eec2-9e17-45d1-a4ef-a341426710d8"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Follow another user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI1MGVkZmQ0YS03OWY1LTRmYWYtOTZkYS1iZjBmNjdkMmY5NjUiLCJzdWIiOiJrdWZrbG8xIiwiaWF0IjoxNTUyNjA4MzAwLCJleHAiOjE1NTUyMDAzMDB9.oICCtNEAfoJSIbX2xsudm_hHoKrfAh1RSMLF7y30O3ilm0zdhCENlSZ3ca_rAxBoyNXxbXsy7n6HuAfVIc_uFA",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:8080/user/follows/2?",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"follows",
+						"2"
+					],
+					"query": [
+						{
+							"key": "userid",
+							"value": "2",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIzNjRiZDQ0OC1mMGVjLTRjODUtOTFiOC1kMGRhOGVmYzkzOGUiLCJzdWIiOiJrdWZrbG8yIiwiaWF0IjoxNTUyNjA4MzIxLCJleHAiOjE1NTUyMDAzMjF9.uDExzTSVwoXuvUiZicboRPe86Zue_iP-3qV6gWuWM3stXmYyJYjfVX0bDi5G_HYwIUipSac_My3ar51MHOlf7A",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"title\":\"this is a post 5\", \"caption\":\"this is a big 5\"}"
+				},
+				"url": {
+					"raw": "localhost:8080/post",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Accept or reject follow request",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIwOWZlZjc5Yy1jNGQ4LTQzYzUtOWRhMC01ZjA0ZmZmYTBiYjciLCJzdWIiOiJrdWZrbG8zIiwiaWF0IjoxNTUyNTkzODUxLCJleHAiOjE1NTUxODU4NTF9.VyDai8YL4ENW2E50JITQb048xfg1wAb_ZHHp9nWerzQcuSBGZZfgNl_-aQEoV3rg7rYkJnevmURs_q2U_DLeKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/user/following-request/3?accept=true",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"following-request",
+						"3"
+					],
+					"query": [
+						{
+							"key": "accept",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change password",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJlODk1ZmI2Zi01YTZkLTRlN2UtYWY5ZC02NDc2NTgxNDdjY2MiLCJzdWIiOiJrdWZrbG8iLCJpYXQiOjE1NTIyOTMxNDMsImV4cCI6MTU1NDg4NTE0M30.35dFOryIW50HP99jflnhRJ546abamLEByfQtbCnRZVXEBvBqdqmRcan6J_qP7NcZMilQS_0NJxH2venxyTUpfQ",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"newPassword\": \"password1\",\n\t\"oldPassword\": \"password\"\n}\n"
+				},
+				"url": {
+					"raw": "localhost:8080/account/change-password",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"account",
+						"change-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get my account details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/account/my-account",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"account",
+						"my-account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user details",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/user/my-details",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"my-details"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get feed post",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{Token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/post/feed",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"post",
+						"feed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get following requests",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIwOWZlZjc5Yy1jNGQ4LTQzYzUtOWRhMC01ZjA0ZmZmYTBiYjciLCJzdWIiOiJrdWZrbG8zIiwiaWF0IjoxNTUyNTkzODUxLCJleHAiOjE1NTUxODU4NTF9.VyDai8YL4ENW2E50JITQb048xfg1wAb_ZHHp9nWerzQcuSBGZZfgNl_-aQEoV3rg7rYkJnevmURs_q2U_DLeKQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/user/following-request?number=false",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"following-request"
+					],
+					"query": [
+						{
+							"key": "number",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get liker of a given post",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/post/{postId}/likes",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"post",
+						"{postId}",
+						"likes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check email",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check username",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get followers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get following",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiIyOThmY2RmMy1jZTFlLTQxOTgtYTExNS0xZjVjY2NlMTRjZTMiLCJzdWIiOiJrdWZrbG8iLCJpYXQiOjE1NTI4NDc3MTgsImV4cCI6MTU1NTQzOTcxOH0.o9q7c_ya_oNJgX2LHefsRjUNMzrmlE4H3hZrLm62KfFWPjKhXdNFoA16MA_DBPKy5JEEV_51_F73WopACFdkKA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/user/getFollowing/Kufklo1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"getFollowing",
+						"Kufklo1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update user details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Follow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI4YjQ5MjVkMS1kZjUwLTRkMDEtODQwOS05NjJjZGZmMzQ3MjQiLCJzdWIiOiJrdWZrbG8wIiwiaWF0IjoxNTUyOTUyODY3LCJleHAiOjE1NTU1NDQ4Njd9.SKAy1USkMc1gaidrsE7oBG0unDQDGYdfIyH0Cfj4HWA6UXVGhz1-Gx6tQD367jUmp6XCr_MyHYwTirbEJDPyow",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/user/follows/kufklo1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"follows",
+						"kufklo1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unfollow",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiI4YjQ5MjVkMS1kZjUwLTRkMDEtODQwOS05NjJjZGZmMzQ3MjQiLCJzdWIiOiJrdWZrbG8wIiwiaWF0IjoxNTUyOTUyODY3LCJleHAiOjE1NTU1NDQ4Njd9.SKAy1USkMc1gaidrsE7oBG0unDQDGYdfIyH0Cfj4HWA6UXVGhz1-Gx6tQD367jUmp6XCr_MyHYwTirbEJDPyow",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/user/follows/kufklo1",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"follows",
+						"kufklo1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
