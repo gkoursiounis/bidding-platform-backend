@@ -111,12 +111,13 @@ public class TestUtils {
 	 * @return user token
 	 * @throws Exception - mvc.perform throws exception
 	 */
-	public static String createAccount(@NonNull final MockMvc mvc,
-									   @NonNull final String  username,
-									   @NonNull final String  password,
-									   @NonNull final String  firstName,
-									   @NonNull final String  lastName,
-									   @NonNull final String  email) throws Exception {
+	public static <visitor> String createAccount(@NonNull final MockMvc mvc,
+												 @NonNull final String  username,
+												 @NonNull final String  password,
+												 @NonNull final String  firstName,
+												 @NonNull final String  lastName,
+												 @NonNull final String  email,
+												 @NonNull final boolean visitor) throws Exception {
 
 		final String token = ((JSONObject) new JSONParser().parse(mvc.perform(post("/auth/signup")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -129,9 +130,9 @@ public class TestUtils {
 								"\"lastName\" : \"%s\", " +
 								"\"telNumber\" : \"1234567890\", " +
 								"\"taxNumber\" : \"123345\", " +
-								"\"visitor\" : \"false\" " +
+								"\"visitor\" : \"%s\" " +
 								"}",
-						username, password, email, firstName, lastName)))
+						username, password, email, firstName, lastName, visitor)))
 				.andExpect(status().isOk())
 				.andReturn()
 				.getResponse()
