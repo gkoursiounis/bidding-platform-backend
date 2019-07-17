@@ -7,6 +7,7 @@ import com.Auctions.backEnd.repositories.ConfirmationTokenRepository;
 import com.Auctions.backEnd.requests.AccountEmail;
 import com.Auctions.backEnd.requests.AccountRequest;
 import com.Auctions.backEnd.requests.ResetPassword;
+import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.responses.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,13 @@ public class AccountController extends BaseController {
         this.accountRepository = accountRepository;
     }
 
+
+    /**
+     * User can check if a username exists or not
+     *
+     * @param userName
+     * @return false if username exists and true if it does not
+     */
     @GetMapping("/checkUsername")
     public ResponseEntity checkUserName(@RequestParam(value="username") String userName) {
         if (accountRepository.findByUsername(userName) != null) {
@@ -40,53 +48,30 @@ public class AccountController extends BaseController {
         }
     }
 
-//    @GetMapping("/checkEmail")
-//    public ResponseEntity checkEmail(@RequestParam(value="email") String email) {
-//        if (accountRepository.findByEmail(email)!=null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Valid(false));
-//        } else {
-//            return ResponseEntity.ok(new Valid(true));
-//        }
-//    }
-//
+
+    /**
+     * User can check if an email exists or not
+     *
+     * @param email
+     * @return false if email exists and true if it does not
+     */
+    @GetMapping("/checkEmail")
+    public ResponseEntity checkEmail(@RequestParam(value="email") String email) {
+        if (accountRepository.findByEmail(email) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Valid(false));
+        } else {
+            return ResponseEntity.ok(new Valid(true));
+        }
+    }
+
     @GetMapping
     public ResponseEntity getAccount() {
         Account account = requestUser().getAccount();
         account.setPassword(null);
         return ResponseEntity.ok(account);
     }
-//
-//    @GetMapping("resend-verify")
-//    public ResponseEntity resendVerificationEmail() {
-//        Account account = requestUser().getAccount();
-//
-//        if (account.isVerified()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-//                    "Error",
-//                    "account already isVerified"
-//            ));
-//        }
-//
-//        ConfirmationToken token = confirmationTokenRepository.findByAccount_Id(account.getId());
-//        if (token == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-//                    "Error",
-//                    "no previous request found"
-//            ));
-//        }
-//
-//        confirmationTokenRepository.delete(token);
-//        token = new ConfirmationToken(account);
-//        confirmationTokenRepository.save(token);
-//
-//        sendVerificationEmail(account.getEmail(), token.getConfirmationToken());
-//
-//        return ResponseEntity.ok(new Message(
-//                "Ok",
-//                "sent another verification email"
-//        ));
-//    }
-//
+
+
 //    @GetMapping("/confirm")
 //    public ResponseEntity confirmUserAccount(@RequestParam("token") String confirmationToken) {
 //        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
@@ -121,26 +106,26 @@ public class AccountController extends BaseController {
 //        ));
 //    }
 //
-//    @PutMapping("/change-password")
-//    public ResponseEntity changePassword(@RequestBody AccountRequest accountRequest) {
-//        Account account = requestUser().getAccount();
-//
-//        String oldPasswordFromAccount = account.getPassword();
-//        String oldPasswordFromRequest = accountRequest.getOldPassword();
-//
-//        if(!passwordEncoder.matches(oldPasswordFromRequest, oldPasswordFromAccount)){
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(
-//                    "Error",
-//                    "Your actual password is incorrect"
-//            ));
-//        }
-//
-//        account.setPassword(accountRequest.getNewPassword());
-//        account.encodePassword(passwordEncoder);
-//        accountRepository.save(account);
-//
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
+    @PutMapping("/change-password")
+    public ResponseEntity changePassword(@RequestBody AccountRequest accountRequest) {
+        Account account = requestUser().getAccount();
+
+        String oldPasswordFromAccount = account.getPassword();
+        String oldPasswordFromRequest = accountRequest.getOldPassword();
+
+        if(!passwordEncoder.matches(oldPasswordFromRequest, oldPasswordFromAccount)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(
+                    "Error",
+                    "Your actual password is incorrect"
+            ));
+        }
+
+        account.setPassword(accountRequest.getNewPassword());
+        account.encodePassword(passwordEncoder);
+        accountRepository.save(account);
+
+        return new ResponseEntity(HttpStatus.OK);
+    }
 //
 //    @PostMapping("/get-reset-password")
 //    public ResponseEntity getResetPassword(@RequestBody AccountEmail email) {

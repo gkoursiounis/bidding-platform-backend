@@ -35,9 +35,9 @@ public class ItemController extends BaseController {
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
-                    "Invalid itemId"
+                    "Item not found. Invalid item Id"
             ));
         }
 
@@ -75,6 +75,7 @@ public class ItemController extends BaseController {
         item.setName(name);
         item.setBuyPrice(buyPrice);
         item.setFirstBid(firstBid);
+        item.setCurrently(firstBid);
         item.setEndsAt(endsAt);
 
         if (description != null) {
@@ -87,9 +88,9 @@ public class ItemController extends BaseController {
                 ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
 
                 if(category == null) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                             "Error",
-                            "Invalid category id"
+                            "Category not found. Invalid category Id"
                     ));
                 }
 
@@ -114,9 +115,9 @@ public class ItemController extends BaseController {
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
-                    "Invalid itemId"
+                    "Item not found. Invalid item Id"
             ));
         }
 
@@ -124,6 +125,13 @@ public class ItemController extends BaseController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "You cannot modify the item's details after the first bid"
+            ));
+        }
+
+        if(java.lang.Double.compare(buyPrice, firstBid) < 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Buy price cannot be less than the first bid"
             ));
         }
 
@@ -141,9 +149,9 @@ public class ItemController extends BaseController {
                 ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
 
                 if(category == null) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                             "Error",
-                            "Invalid category id"
+                            "Category not found. Invalid category Id"
                     ));
                 }
 
@@ -161,9 +169,9 @@ public class ItemController extends BaseController {
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
-                    "Invalid itemId"
+                    "Item not found. Invalid item Id"
             ));
         }
 

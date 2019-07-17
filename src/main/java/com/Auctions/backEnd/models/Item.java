@@ -48,6 +48,9 @@ public class Item extends AuditModel {
     @Column(name = "ends_at")
     private Date endsAt;
 
+    @Column(name = "auction_completed")
+    private boolean auctionCompleted = false;
+
     @Column(name = "description", length = 250)
     private String description;
 
@@ -58,6 +61,8 @@ public class Item extends AuditModel {
 //            inverseJoinColumns = @JoinColumn(name = "blockers_id"))
 //    @JsonIgnore
 //    private Set<User> blockedBy = new TreeSet<>();
+
+    public boolean isAuctionCompleted() { return this.auctionCompleted; }
 }
 
 

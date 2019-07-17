@@ -23,4 +23,7 @@ public class Bid extends AuditModel {
     @ManyToOne
     private User bidder;
 
+    @Column(name = "offer_amount")
+    private Double offer;
+
 }
