@@ -50,6 +50,8 @@ public class AuthController extends BaseController {
     @Value("${app.chatKit.secret}")
     private String secret;
 
+    private String visitorToken;
+
     @Autowired
     public AuthController(PasswordEncoder passwordEncoder,
                           TokenProvider tokenProvider,
@@ -123,7 +125,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody SignUp signupAccount) throws NoSuchProviderException, NoSuchAlgorithmException {
+    public ResponseEntity signup(@RequestBody SignUp signupAccount) throws NoSuchProviderException, NoSuchAlgorithmException{
 
         if (signupAccount.getUsername() == null || !checkUsername(signupAccount.getUsername()) ||
                 signupAccount.getUsername().length() < 5 || signupAccount.getUsername().length() > 15) {
@@ -192,6 +194,21 @@ public class AuthController extends BaseController {
                 )
         );
     }
+
+
+    @PostMapping("/visitorLogin")
+    public ResponseEntity loginAsVisitor(){
+
+        String visitorUsername = "skatanafateoloi";
+
+        if(visitorToken != null) {
+            visitorToken = this.tokenProvider.createToken(visitorUsername);
+        }
+
+        System.out.println(visitorToken);
+        return ResponseEntity.ok(visitorToken);
+    }
+
 
     @GetMapping(value = "/chatkitToken", produces = "application/json")
     public ResponseEntity generateChatkitToken() {

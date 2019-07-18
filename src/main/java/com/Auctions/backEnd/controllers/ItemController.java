@@ -57,7 +57,7 @@ public class ItemController extends BaseController {
                                      @RequestParam Double buyPrice,
                                      @Nullable @RequestParam(name = "media") MultipartFile media,
                                      @RequestParam Double firstBid,
-                                     @RequestParam Integer[] categoriesId,
+                                     @Nullable @RequestParam Integer[] categoriesId,
                                      @Nullable @RequestParam String apiIdentifier,
                                      @Nullable @RequestParam Double longitude,
                                      @Nullable @RequestParam Double latitude,

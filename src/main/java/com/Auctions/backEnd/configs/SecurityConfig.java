@@ -24,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    //TODO update
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
@@ -41,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/signup").permitAll()
                 .antMatchers("/account/confirm").permitAll()
                 .antMatchers("/auth/login").permitAll()
+                .antMatchers("/auth/visitorLogin").permitAll()
                 .antMatchers("/account/get-reset-password").permitAll()
                 .antMatchers("/account/reset-password").permitAll()
                 .antMatchers("/file/upload").permitAll()
@@ -50,7 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/retry-reset-password").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .apply(new JWTConfigurer(this.tokenProvider));
+                .apply(new JWTConfigurer(this.tokenProvider))
+                .and()//???
+                .requiresChannel()//??
+                .anyRequest().requiresSecure(); //???
         // @formatter:on
     }
 

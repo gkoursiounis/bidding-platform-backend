@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findUserById(Long userId);
 
-    @Query( "SELECT * "+
+    @Query( "SELECT u "+
             "FROM User u")
     List<User> getAllUsers();
 
@@ -37,9 +37,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int getNumberOfRegistrationPerDay(Date date1, Date date2);
 
 
-    @Query( "SELECT * "+
+    @Query( "SELECT u "+
             "FROM User u, Account a "+
-            "WHERE u.id = a.id AND a.account_verified == false")
+            "WHERE u.id = a.id and a.verified = false")
     List<User> getPendingUsers();
 
     @Query( "SELECT min(u.createdAt) "+

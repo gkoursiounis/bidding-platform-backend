@@ -26,6 +26,13 @@ public class AdminController extends BaseController {
         this.itemCategoryRepository = itemCategoryRepository;
     }
 
+
+    /**
+     * The application administrator can get a list of all unverified users
+     * whose approval request is pending
+     *
+     * @return a list of unverified users
+     */
     @GetMapping("/pendingRegisters")
     public ResponseEntity getPendingRegisters(){
 
@@ -42,6 +49,12 @@ public class AdminController extends BaseController {
     }
 
 
+    /**
+     * The application administrator can get a list of all the existing users
+     * excluding everyone who is also an administrator
+     *
+     * @return a list of users
+     */
     @GetMapping("/allUsers")
     public ResponseEntity getAllUsers(){
 
@@ -54,7 +67,10 @@ public class AdminController extends BaseController {
             ));
         }
 
-        return ResponseEntity.ok(userRepository.getAllUsers());
+        List<User> users = userRepository.getAllUsers();
+        users.removeIf(user -> user.isAdmin());
+
+        return ResponseEntity.ok(users);
     }
 
 

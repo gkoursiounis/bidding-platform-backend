@@ -365,6 +365,30 @@ public class AuthControllerTest{
                 .andExpect(jsonPath("user.taxNumber", is(taxNumber)));
     }
 
+
+    /**
+     * Signup using 'visitor' as username
+     *
+     * @throws Exception - mvc.perform in performSignup() throws exception
+     */
+    @Test
+    @DisplayName("Signup using visitor as name")
+    public void signup12() throws Exception {
+
+        final String content = "{" +
+                "\"username\" : \"visitor\", " +
+                "\"password\" : \"myPwd123\", " +
+                "\"email\" : \"email5@usi.ch\", " +
+                "\"firstName\" : \"FirstName1\", " +
+                "\"lastName\" : \"LastName1\", " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"taxNumber\" : \"123345\" " +
+                "}";
+
+        performSignup(content)
+                .andExpect(status().isBadRequest());
+    }
+
     /**
      * Login with email that does not exist
      * We should receive HTTP <code>NOT FOUND</code>
@@ -537,5 +561,13 @@ public class AuthControllerTest{
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("token").exists());
+    }
+
+    @Test
+    @DisplayName("visitor login")
+    public void loginAsVisitor() throws Exception{
+        mvc.perform(post("/auth/visitorLogin")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }
