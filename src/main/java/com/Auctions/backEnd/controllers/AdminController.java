@@ -17,14 +17,14 @@ public class AdminController extends BaseController {
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
-    private final BidRepository bidRepository;
+    private final ItemCategoryRepository itemCategoryRepository;
 
     @Autowired
     public AdminController(UserRepository userRepository, AccountRepository accountRepository,
-                          BidRepository bidRepository){
+                          ItemCategoryRepository itemCategoryRepository){
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
-        this.bidRepository = bidRepository;
+        this.itemCategoryRepository = itemCategoryRepository;
     }
 
     @GetMapping("/pendingRegisters")
@@ -33,7 +33,7 @@ public class AdminController extends BaseController {
         User requester = requestUser();
         if(!requester.isAdmin()){
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
                     "Error",
                     "You need to be an admin to perform this action"
             ));
@@ -43,20 +43,35 @@ public class AdminController extends BaseController {
     }
 
 
+    @GetMapping("/allUsers")
+    public ResponseEntity getAllUsers(){
+
+        User requester = requestUser();
+        if(!requester.isAdmin()){
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You need to be an admin to perform this action"
+            ));
+        }
+
+        return ResponseEntity.ok(userRepository.getAllUsers());
+    }
+
+
     @PatchMapping("/verifyUser/{userId}")
     public ResponseEntity verifyUser(@PathVariable (value = "userId") long userId){
 
         User requester = requestUser();
         if(!requester.isAdmin()){
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
                     "Error",
                     "You need to be an admin to perform this action"
             ));
         }
 
         User user = userRepository.findUserById(userId);
-
         if (user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
@@ -78,6 +93,64 @@ public class AdminController extends BaseController {
         return ResponseEntity.status(HttpStatus.OK).body(new Message(
                 "Ok",
                 "User is now verified"
+        ));
+    }
+
+
+    @PostMapping("/newCategory")
+    public ResponseEntity createItemCategory(@RequestParam String name){
+
+        User requester = requestUser();
+        if(!requester.isAdmin()){
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You need to be an admin to perform this action"
+            ));
+        }
+
+        if(name == null){
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Category name is missing"
+            ));
+        }
+
+        ItemCategory category = new ItemCategory();
+        category.setName(name);
+        itemCategoryRepository.save(category);
+
+        return ResponseEntity.ok(category);
+    }
+
+
+    @DeleteMapping("/deleteUser/{userId}")
+    public ResponseEntity deleteUser(@PathVariable (value = "userId") long userId){
+
+        User requester = requestUser();
+        if(!requester.isAdmin()){
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You need to be an admin to perform this action"
+            ));
+        }
+
+        User user = userRepository.findUserById(userId);
+        if (user == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "User not found!"
+            ));
+        }
+
+        accountRepository.delete(user.getAccount());
+        userRepository.delete(user);
+
+        return ResponseEntity.ok(new Message(
+                "Ok",
+                "User has been deleted"
         ));
     }
 
