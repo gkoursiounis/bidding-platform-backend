@@ -1,10 +1,8 @@
 package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.Account;
-import com.Auctions.backEnd.models.ConfirmationToken;
 import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.AccountRepository;
-import com.Auctions.backEnd.repositories.ConfirmationTokenRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import com.Auctions.backEnd.requests.SignUp;
 import com.Auctions.backEnd.responses.FormattedUser;
@@ -39,7 +37,6 @@ public class AuthController extends BaseController {
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final ConfirmationTokenRepository confirmationTokenRepository;
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
@@ -57,14 +54,12 @@ public class AuthController extends BaseController {
     public AuthController(PasswordEncoder passwordEncoder,
                           TokenProvider tokenProvider,
                           AuthenticationManager authenticationManager,
-                          ConfirmationTokenRepository confirmationTokenRepository,
                           UserRepository userRepository,
                           AccountRepository accountRepository,
                           RequestMappingHandlerMapping requestMappingHandlerMapping) {
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        this.confirmationTokenRepository = confirmationTokenRepository;
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
@@ -189,9 +184,6 @@ public class AuthController extends BaseController {
         user.setAccount(account);
 
         userRepository.save(user);
-
-        ConfirmationToken confirmationToken = new ConfirmationToken(account);
-        confirmationTokenRepository.save(confirmationToken);
 
         String token = this.tokenProvider.createToken(account.getUsername());
         return ResponseEntity.ok(new LoginRes(

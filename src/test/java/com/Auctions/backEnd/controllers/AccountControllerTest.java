@@ -5,7 +5,6 @@ import com.Auctions.backEnd.TestUtils;
 import com.Auctions.backEnd.configs.TestConfig;
 import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.repositories.AccountRepository;
-import com.Auctions.backEnd.repositories.ConfirmationTokenRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,9 +38,6 @@ public class AccountControllerTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ConfirmationTokenRepository confirmationTokenRepository;
 
     private String user1;
     private String user2;

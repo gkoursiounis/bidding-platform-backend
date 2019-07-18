@@ -12,6 +12,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findByName(String name);
     Item findItemById(Long id);
 
-//    @Query("SELECT b FROM Bid b WHERE p.user IN :followings ORDER BY p.createdAt DESC")
-//    User getHighestBidder(@Param("followings") Set<User> followings);
+    @Query("SELECT i FROM Item i WHERE :category IN i.categories")
+    User findItemByCategory(@Param("category") String category);
 }

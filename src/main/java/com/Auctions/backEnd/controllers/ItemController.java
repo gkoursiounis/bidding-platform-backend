@@ -173,13 +173,6 @@ public class ItemController extends BaseController {
     }
 
 
-    @GetMapping("/test")
-    public ResponseEntity test(@RequestParam Set<Integer> categoriesId){
-
-        return ResponseEntity.ok(categoriesId);
-    }
-
-
     @PatchMapping("/{itemId}")
     public ResponseEntity modifyItem(@PathVariable (value = "itemId") long itemId,
                                      @Nullable @RequestParam String name,

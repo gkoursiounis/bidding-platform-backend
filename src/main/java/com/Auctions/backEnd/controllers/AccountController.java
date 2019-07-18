@@ -1,12 +1,8 @@
 package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.Account;
-import com.Auctions.backEnd.models.ConfirmationToken;
 import com.Auctions.backEnd.repositories.AccountRepository;
-import com.Auctions.backEnd.repositories.ConfirmationTokenRepository;
-import com.Auctions.backEnd.requests.AccountEmail;
 import com.Auctions.backEnd.requests.AccountRequest;
-import com.Auctions.backEnd.requests.ResetPassword;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.responses.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/account")
 public class AccountController extends BaseController {
 
-    private final ConfirmationTokenRepository confirmationTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
 
     @Autowired
-    public AccountController(ConfirmationTokenRepository confirmationTokenRepository,
-                             PasswordEncoder passwordEncoder,
-                             AccountRepository accountRepository) {
-        this.confirmationTokenRepository = confirmationTokenRepository;
+    public AccountController(PasswordEncoder passwordEncoder, AccountRepository accountRepository) {
         this.passwordEncoder = passwordEncoder;
         this.accountRepository = accountRepository;
     }
@@ -72,40 +64,6 @@ public class AccountController extends BaseController {
     }
 
 
-//    @GetMapping("/confirm")
-//    public ResponseEntity confirmUserAccount(@RequestParam("token") String confirmationToken) {
-//        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
-//        if (token == null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-//                    "Error",
-//                    "token not valid"
-//            ));
-//        }
-//
-//        Account account = accountRepository.findByUsername(token.getAccount().getUsername());
-//        if (account == null){
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-//                    "Error",
-//                    "Account not found"
-//            ));
-//        }
-//
-//        if (account.isVerified()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-//                    "Error",
-//                    "Account already isVerified"
-//            ));
-//        }
-//
-//        account.setVerified(true);
-//        confirmationTokenRepository.delete(token);
-//        accountRepository.save(account);
-//        return ResponseEntity.ok(new Message(
-//                "Ok",
-//                "Account isVerified"
-//        ));
-//    }
-//
     @PutMapping("/change-password")
     public ResponseEntity changePassword(@RequestBody AccountRequest accountRequest) {
         Account account = requestUser().getAccount();

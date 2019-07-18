@@ -2,14 +2,13 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
-import com.Auctions.backEnd.responses.BidRes;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
@@ -56,6 +55,32 @@ public class AdminController extends BaseController {
         }
 
         return ResponseEntity.ok(userRepository.getAllUsers());
+    }
+
+
+    @PatchMapping("/verifyAll")
+    public ResponseEntity verifyAllUsers(){
+
+        User requester = requestUser();
+        if(!requester.isAdmin()){
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You need to be an admin to perform this action"
+            ));
+        }
+
+        List<User> pending = userRepository.getPendingUsers();
+        pending.forEach(user -> {
+            user.getAccount().setVerified(true);
+            accountRepository.save(user.getAccount());
+            userRepository.save(user);
+        });
+
+        return ResponseEntity.ok(new Message(
+                "Ok",
+                "All pending users have been verified"
+        ));
     }
 
 

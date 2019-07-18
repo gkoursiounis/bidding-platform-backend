@@ -1,10 +1,5 @@
 package com.Auctions.backEnd;
 
-import com.Auctions.backEnd.repositories.ConfirmationTokenRepository;
-import com.Auctions.backEnd.models.Account;
-import com.Auctions.backEnd.models.ConfirmationToken;
-import com.Auctions.backEnd.models.User;
-import com.Auctions.backEnd.repositories.*;
 import lombok.NoArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,15 +9,11 @@ import org.springframework.lang.NonNull;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import com.Auctions.backEnd.repositories.AccountRepository;
-import com.Auctions.backEnd.repositories.ConfirmationTokenRepository;
 
 import com.Auctions.backEnd.repositories.UserRepository;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.RandomAccessFile;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,15 +28,10 @@ public class TestUtils {
 	@Autowired
     private AccountRepository accountRepository;
 
-    @Autowired
-    private ConfirmationTokenRepository confirmationTokenRepository;
     
 
 
 	public void clearDB() {
-		
-        confirmationTokenRepository.deleteAll();
-        confirmationTokenRepository.flush();
 
         
 		userRepository.deleteAll();
