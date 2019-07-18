@@ -111,7 +111,7 @@ public class TestUtils {
 	 * @return user token
 	 * @throws Exception - mvc.perform throws exception
 	 */
-	public static <visitor> String createAccount(@NonNull final MockMvc mvc,
+	public static String createAccount(@NonNull final MockMvc mvc,
 												 @NonNull final String  username,
 												 @NonNull final String  password,
 												 @NonNull final String  firstName,

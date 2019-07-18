@@ -187,21 +187,7 @@ public class ItemControllerTest {
     @DisplayName("Visitor tries to create an item/auction")
     public void createItem6() throws Exception {
 
-        final String content = "{" +
-                "\"username\" : \"user1\", " +
-                "\"password\" : \"myPwd123\", " +
-                "\"email\" : \"email0@usi.ch\", " +
-                "\"firstName\" : \"FirstName1\", " +
-                "\"lastName\" : \"LastName1\", " +
-                "\"telNumber\" : \"1234567890\", " +
-                "\"taxNumber\" : \"123345\", " +
-                "\"visitor\" : \"true\" " +
-                "}";
-
-        mvc.perform(post("/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
-                .andExpect(status().isOk());
+        String user4 = createAccount(mvc, "user4", "myPwd123", "FirstName4", "LastName4", "email4@usi.ch", true);
 
         mvc.perform(
                 post("/item")
@@ -209,6 +195,24 @@ public class ItemControllerTest {
                         .param("buyPrice", "10.4")
                         .param("firstBid", "5.3")
                         .param("endsAt", "2015-09-26T01:30:00.000-04:00")
+                        .header("Authorization", user4)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item as a visitor
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Visitor tries to create an item/auction")
+    public void createItem7() throws Exception {
+
+        mvc.perform(
+                get("/item/test")
+                        .param("categoriesId", "1,2,3,4")
                         .header("Authorization", user1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

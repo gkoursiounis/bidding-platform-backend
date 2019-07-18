@@ -60,7 +60,7 @@ public class UserController extends BaseController {
      *
      * @return list of auctions
      */
-    @GetMapping("/getAuctions")
+    @GetMapping("/myAuctions")
     public ResponseEntity getMyAuctions() {
 
         User requester = requestUser();
@@ -69,63 +69,15 @@ public class UserController extends BaseController {
 
 
     /**
-     * User can participate to an auction making a bid
+     * User can get a list of the bids he has made
      *
-     * @param offer
-     * @return created bid
+     * @return list of bids
      */
-    @GetMapping("/makeBid/{itemId}")
-    public ResponseEntity makeBid(@PathVariable (value = "itemId") long itemId,
-                                         @RequestParam Double offer) {
+    @GetMapping("/myBids")
+    public ResponseEntity getMyBids() {
 
         User requester = requestUser();
-
-        Item item = itemRepository.findItemById(itemId);
-        if (item == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-                    "Error",
-                    "Item not found. Invalid item Id"
-            ));
-        }
-
-        if(item.isAuctionCompleted()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "Auction has been completed and no bids can be made"
-            ));
-        }
-
-        //In case there are bids: (offer, item.getCurrently()) <= 0
-        //Tn case there are no bids: (offer, item.getCurrently()) < 0
-        //In case offer = getCurrently = firstBid = BuyPrice
-        if((!item.getBids().isEmpty() && java.lang.Double.compare(offer, item.getCurrently()) <= 0) ||
-                (item.getBids().isEmpty() && java.lang.Double.compare(offer, item.getFirstBid()) < 0)){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "Offer cannot be less than the current best offer or the initial price"
-            ));
-        }
-
-        item.setCurrently(offer);
-        if(java.lang.Double.compare(item.getBuyPrice(), offer) >= 0){
-            item.setAuctionCompleted(true);
-        }
-        itemRepository.save(item);
-
-        //??????
-        item.getSeller().getItems().add(item);
-        userRepository.save(item.getSeller());
-
-        Bid bid = new Bid();
-        bid.setBidder(requester);
-        bid.setItem(item);
-        bid.setOffer(offer);
-        bidRepository.save(bid);
-
-        requester.getBids().add(bid);
-        userRepository.save(requester);
-
-        return ResponseEntity.ok(new BidRes(bid, item.isAuctionCompleted()));
+        return ResponseEntity.ok(requester.getBids());
     }
 
 

@@ -23,16 +23,18 @@ public class ItemController extends BaseController {
     private final ItemCategoryRepository itemCategoryRepository;
     private final DBFileRepository dbFileRepository;
     private final DBFileStorageService dBFileStorageService;
+    private final GeolocationRepository geolocationRepository;
 
     @Autowired
     public ItemController(UserRepository userRepository,ItemRepository itemRepository,
                           ItemCategoryRepository itemCategoryRepository, DBFileRepository dbFileRepository,
-                          DBFileStorageService dBFileStorageService){
+                          DBFileStorageService dBFileStorageService, GeolocationRepository geolocationRepository){
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.itemCategoryRepository = itemCategoryRepository;
         this.dbFileRepository = dbFileRepository;
         this.dBFileStorageService = dBFileStorageService;
+        this.geolocationRepository = geolocationRepository;
     }
 
 
@@ -50,14 +52,17 @@ public class ItemController extends BaseController {
         return ResponseEntity.ok(item);
     }
 
-
-    //TODO check if Set<Integer> works
     @PostMapping
     public ResponseEntity createItem(@RequestParam String name,
                                      @RequestParam Double buyPrice,
                                      @Nullable @RequestParam(name = "media") MultipartFile media,
                                      @RequestParam Double firstBid,
-                                     @Nullable @RequestParam Integer[] categoriesId,
+                                     @RequestParam Integer[] categoriesId,
+                                     @Nullable @RequestParam String apiIdentifier,
+                                     @Nullable @RequestParam Double longitude,
+                                     @Nullable @RequestParam Double latitude,
+                                     @Nullable @RequestParam String locationType,
+                                     @Nullable @RequestParam String locationTitle,
                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
@@ -89,7 +94,20 @@ public class ItemController extends BaseController {
             item.setDescription(description);
         }
 
-        if(categoriesId != null){
+
+        if (categoriesId.length > 5) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "You cannot set more than 5 categories for an item"
+            ));
+        }
+        else if(categoriesId.length == 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "You need to set at least one category for an item"
+            ));
+        }
+        else{
 
             for(Integer id: categoriesId){
                 ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
@@ -100,22 +118,19 @@ public class ItemController extends BaseController {
                             "Category not found. Invalid category Id"
                     ));
                 }
-
                 item.getCategories().add(category);
             }
         }
 
         if(media != null){
 
-            //check for proper content type
-            if (!contentTypes.contains(media.getContentType())) {
+            if (!contentTypes.contains(media.getContentType())){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                         "Error",
                         "Image type not supported"
                 ));
             }
 
-            //check for size limitations (less than 10 MB)
             if (media.getSize() > DBFile.MAXIMUM_IMAGE_SIZE && (
                     "image/png".equals(media.getContentType())  || "image/jpeg".equals(media.getContentType()) ||
                             "image/gif".equals(media.getContentType()))) {
@@ -132,20 +147,22 @@ public class ItemController extends BaseController {
             item.getMedia().add(dbFile);
         }
 
-        /* Location */
-//        if (apiIdentifier != null && longitude != null && latitude != null &&
-//                locationType != null && locationTitle != null) {
-//            Geolocation location = geolocationRepository.findByLocationTitle(locationTitle);
-//            if (location == null) {
-//                location = new Geolocation(apiIdentifier, longitude, latitude, locationType, locationTitle);
-//
-//            }
-//            post.setLocation(geolocationRepository.save(geolocationRepository.save(location)));
-//        }
-//        if (post.getLocation() != null) {
-//            post.getLocation().getPosts().add(post);
-//            geolocationRepository.save(post.getLocation());
-//        }
+
+        if (apiIdentifier != null && longitude != null && latitude != null &&
+                locationType != null && locationTitle != null){
+
+            Geolocation location = geolocationRepository.findByLocationTitle(locationTitle);
+            if (location == null) {
+                location = new Geolocation(apiIdentifier, longitude, latitude, locationType, locationTitle);
+
+            }
+            item.setLocation(geolocationRepository.save(geolocationRepository.save(location)));
+        }
+
+        if (item.getLocation() != null) {
+            item.getLocation().getItems().add(item);
+            geolocationRepository.save(item.getLocation());
+        }
 
         itemRepository.save(item);
 
@@ -153,6 +170,13 @@ public class ItemController extends BaseController {
         userRepository.save(requestUser);
 
         return ResponseEntity.ok(item);
+    }
+
+
+    @GetMapping("/test")
+    public ResponseEntity test(@RequestParam Set<Integer> categoriesId){
+
+        return ResponseEntity.ok(categoriesId);
     }
 
 
@@ -194,9 +218,20 @@ public class ItemController extends BaseController {
         if(endsAt != null){ item.setEndsAt(endsAt); }
         if (description != null) { item.setDescription(description); }
 
-        if(categoriesId != null){
 
-            item.getCategories().clear();
+        if (categoriesId.length > 5) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "You cannot set more than 5 categories for an item"
+            ));
+        }
+        else if(categoriesId.length == 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "You need to set at least one category for an item"
+            ));
+        }
+        else{
 
             for(Integer id: categoriesId){
                 ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
@@ -207,7 +242,6 @@ public class ItemController extends BaseController {
                             "Category not found. Invalid category Id"
                     ));
                 }
-
                 item.getCategories().add(category);
             }
         }
@@ -228,11 +262,18 @@ public class ItemController extends BaseController {
             ));
         }
 
+        if(!item.getBids().isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "You cannot delete the auction after the first bid"
+            ));
+        }
+
         itemRepository.delete(item);
 
         return ResponseEntity.status(HttpStatus.OK).body(new Message(
                 "Ok",
-                "Item has been deleted"
+                "Auction has been deleted"
         ));
     }
 }

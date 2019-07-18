@@ -97,31 +97,6 @@ public class StatisticsControllerTest {
     }
 
 
-    /**
-     * Admin checks statistics regarding public/private profiles
-     *
-     * @throws Exception - mvc.perform throws exception
-     */
-    @Test
-    @DisplayName("Admin statistics - type of profiles")
-    public void getStatistics2() throws Exception{
-
-        makeAdmin("user1");
-
-        String user4 = TestUtils.createAccount(mvc, "user4", "myPwd123", "FirstName4", "LastName4", "email4@usi.ch");
-
-        TestUtils.makePrivate(mvc, user4, true);
-
-        mvc.perform(get("/statistics/admin")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("totalNumberUser", is(4)))
-                .andExpect(jsonPath("numberPublicProfile", is(3)))
-                .andExpect(jsonPath("numberPrivateProfile", is(1)))
-        ;
-    }
-
 
     /**
      * Admin checks statistics regarding registration dates
@@ -300,83 +275,10 @@ public class StatisticsControllerTest {
     }
 
 
-    /**
-     * User successfully tries to get his statistics
-     * with correct numbers regarding his followings
-     *
-     * @throws Exception - mvc.perform throws exception
-     */
-    @Test
-    @DisplayName("User statistics - check followings")
-    public void getUserStatistic2() throws Exception{
-
-        TestUtils.follow(mvc, user1, "user2").andExpect(status().isOk());
-
-        TestUtils.follow(mvc, user1, "user3").andExpect(status().isOk());
-        TestUtils.makePrivate(mvc, user3, true);
-
-        mvc.perform(get("/statistics/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("numberFollowing", is(2)))
-                .andExpect(jsonPath("numberPrivateFollowing", is(1)))
-                .andExpect(jsonPath("numberPublicFollowing", is(1)))
-
-                .andExpect(jsonPath("numberFollower", is(0)))
-                .andExpect(jsonPath("numberPrivateFollower", is(0)))
-                .andExpect(jsonPath("numberPublicFollower", is(0)));
-    }
 
 
-    /**
-     * User successfully tries to get his statistics
-     * with correct numbers regarding his followers
-     *
-     * @throws Exception - mvc.perform throws exception
-     */
-    @Test
-    @DisplayName("User statistics - check followers")
-    public void getUserStatistic3() throws Exception{
-
-        TestUtils.follow(mvc, user2, "user1").andExpect(status().isOk());
-
-        TestUtils.makePrivate(mvc, user3, true);
-        TestUtils.follow(mvc, user3, "user1").andExpect(status().isOk());
-
-        mvc.perform(get("/statistics/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("numberFollower", is(2)))
-                .andExpect(jsonPath("numberPrivateFollower", is(1)))
-                .andExpect(jsonPath("numberPublicFollower", is(1)));
-    }
 
 
-    /**
-     * User successfully tries to get his statistics
-     * with correct numbers regarding his posts per day
-     *
-     * @throws Exception - mvc.perform throws exception
-     */
-    @Test
-    @DisplayName("User statistics - check posts per week")
-    public void getUserStatistic4() throws Exception{
-
-        TestUtils.follow(mvc, user2, "user1").andExpect(status().isOk());
-
-        TestUtils.makePrivate(mvc, user3, true);
-        TestUtils.follow(mvc, user3, "user1").andExpect(status().isOk());
-
-        mvc.perform(get("/statistics/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("numberFollower", is(2)))
-                .andExpect(jsonPath("numberPrivateFollower", is(1)))
-                .andExpect(jsonPath("numberPublicFollower", is(1)));
-    }
 
 
     /**
@@ -486,97 +388,11 @@ public class StatisticsControllerTest {
 //    }
 
 
-    /**
-     * User successfully tries to get his statistics
-     * with correct numbers regarding his followers per day
-     *
-     * @throws Exception - mvc.perform throws exception
-     */
-    @Test
-    @DisplayName("User statistics - check followers per day(2)")
-    public void getUserStatistic8() throws Exception{
-
-        TestUtils.follow(mvc, user1, "user2").andExpect(status().isOk());
-        TestUtils.follow(mvc, user3, "user2").andExpect(status().isOk());
-
-        mvc.perform(get("/statistics/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user2))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("numberFollower", is(2)))
-                .andExpect(jsonPath("followersLastSevenDays.7", is(2)));
-    }
-
-
-    /**
-     * User successfully tries to get his statistics
-     * with correct numbers regarding his followers per day
-     *
-     * @throws Exception - mvc.perform throws exception
-     */
-    @Test
-    @DisplayName("User statistics - check followers per day(3)")
-    public void getUserStatistic9() throws Exception{
-
-        TestUtils.follow(mvc, user1, "user2").andExpect(status().isOk());
-        TestUtils.follow(mvc, user3, "user2").andExpect(status().isOk());
-
-        TestUtils.unfollow(mvc, user1, "user2").andExpect(status().isOk());
-        TestUtils.unfollow(mvc, user3, "user2").andExpect(status().isOk());
-
-        mvc.perform(get("/statistics/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user2))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("numberFollower", is(0)))
-                .andExpect(jsonPath("followersLastSevenDays.7", is(0)));
-    }
 
 
 
 
-    /**
-     * User successfully tries to get his statistics
-     * with correct numbers regarding his most liked post
-     *
-     * @throws Exception - mvc.perform throws exception
-     */
-    @Test
-    @DisplayName("User statistics - check most liked post")
-    public void getUserStatistic10() throws Exception{
 
-        String user4 = TestUtils.createAccount(mvc, "user4", "myPwd123", "FirstName4", "LastName4", "email4@usi.ch");
-
-        String post1 = TestUtils.makePost2(mvc, user1);
-        String post2 = TestUtils.makePost2(mvc, user1);
-        String post3 = TestUtils.makePost2(mvc, user1);
-        String post4 = TestUtils.makePost2(mvc, user1);
-
-        TestUtils.like(mvc, post1, user2).andExpect(status().isOk());
-        TestUtils.like(mvc, post1, user3).andExpect(status().isOk());
-        TestUtils.like(mvc, post1, user4).andExpect(status().isOk());
-
-        TestUtils.like(mvc, post2, user2).andExpect(status().isOk());
-        TestUtils.like(mvc, post2, user3).andExpect(status().isOk());
-
-        TestUtils.like(mvc, post3, user2).andExpect(status().isOk());
-
-        mvc.perform(get("/statistics/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("totalPostNumber", is(4)))
-                .andExpect(jsonPath("mostLikedPost.*", hasSize(3)))
-
-                .andExpect(jsonPath("mostLikedPost[0].nLikes", is(3)))
-                .andExpect(jsonPath("mostLikedPost[0].id", is(Integer.valueOf(post1))))
-
-                .andExpect(jsonPath("mostLikedPost[1].nLikes", is(2)))
-                .andExpect(jsonPath("mostLikedPost[1].id", is(Integer.valueOf(post2))))
-
-                .andExpect(jsonPath("mostLikedPost[2].nLikes", is(1)))
-                .andExpect(jsonPath("mostLikedPost[2].id", is(Integer.valueOf(post3))));
-    }
 
 
     /**
@@ -632,33 +448,6 @@ public class StatisticsControllerTest {
     }
 
 
-    /**
-     * User successfully tries to get his statistics
-     * with correct numbers regarding his most liked post
-     *
-     * @throws Exception - mvc.perform throws exception
-     */
-    @Test
-    @DisplayName("User statistics - check most liked post(3)")
-    public void getUserStatistic16() throws Exception{
-
-        String post_id = TestUtils.makePost2(mvc, user1);
-        TestUtils.makePost(mvc, user1);
-        TestUtils.makePost(mvc, user1);
-
-        TestUtils.like(mvc, post_id, user2).andExpect(status().isOk());
-
-        mvc.perform(get("/statistics/user")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("totalPostNumber", is(3)))
-                .andExpect(jsonPath("mostLikedPost.*", hasSize(3)))
-                .andExpect(jsonPath("mostLikedPost[0].id", is(Integer.valueOf(post_id))))
-                .andExpect(jsonPath("mostLikedPost[0].nLikes", is(1)))
-                .andExpect(jsonPath("mostLikedPost[1].nLikes", is(0)))
-                .andExpect(jsonPath("mostLikedPost[2].nLikes", is(0)));
-    }
 
 
     /**

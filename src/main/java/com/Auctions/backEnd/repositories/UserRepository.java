@@ -37,6 +37,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE u.createdAt>=:date1 and u.createdAt<:date2")
     int getNumberOfRegistrationPerDay(Date date1, Date date2);
 
+
+    @Query( "SELECT * "+
+            "FROM User u, Account a "+
+            "WHERE u.id = a.id AND a.account_verified == false")
+    List<User> getPendingUsers();
+
     @Query( "SELECT min(u.createdAt) "+
             "FROM User u ")
     Timestamp getFirstRegistrationDate();
