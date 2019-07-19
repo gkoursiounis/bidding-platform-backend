@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/bid")
 public class BidController extends BaseController {
@@ -80,7 +82,7 @@ public class BidController extends BaseController {
         item.getSeller().getItems().add(item);
         userRepository.save(item.getSeller());
 
-        Bid bid = new Bid();
+        Bid bid = new Bid(new Date());
         bid.setBidder(requester);
         bid.setItem(item);
         bid.setOffer(offer);

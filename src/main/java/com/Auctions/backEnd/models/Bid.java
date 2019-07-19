@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -26,4 +27,7 @@ public class Bid extends AuditModel {
     @Column(name = "offer_amount")
     private Double offer;
 
+    public Bid(final Date createdAt) {
+        super(createdAt);
+    }
 }

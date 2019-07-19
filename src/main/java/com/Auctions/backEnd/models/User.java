@@ -54,29 +54,12 @@ public class User extends AuditModel {
 //    @JsonIgnore
 //    private Set<User> blockedBy = new TreeSet<>();
 
-
-
-
-//
-//    @OneToMany(mappedBy = "receiver")
-//    @OrderBy(value = "createdAt DESC")
-//    @JsonIgnore
-//    private Set<Notification> receivedActivities = new TreeSet<>();
-
-//    @OneToMany(mappedBy = "user")
-//    @OrderBy(value = "createdAt DESC")
-//    @JsonIgnore
-//    private Set<FollowingRequest> followingRequests = new TreeSet<>();
-//
-//
-
-    //as a seller
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     @OrderBy(value = "createdAt DESC")
     @JsonIgnore
     private Set<Item> items = new TreeSet<>();
 
-    //as a bidder
+
     @OneToMany(mappedBy = "bidder")
     @OrderBy(value = "createdAt DESC")
     @JsonIgnore
@@ -119,6 +102,13 @@ public class User extends AuditModel {
     @NotNull
     @Column(name = "taxNumber")
     private String taxNumber;
+
+    @OneToOne
+    private Geolocation address;
+
+    private Integer sellerRating;
+
+    private Integer bidderRating;
 
 
 //    @JsonIgnore

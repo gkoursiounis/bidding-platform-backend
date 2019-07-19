@@ -23,18 +23,15 @@ import java.util.TreeSet;
 @Table(name = "geolocation")
 public class Geolocation extends AuditModel {
 
-    @Size(max=512)
-    private String apiIdentifier;
-
     private double longitude;
 
     private double latitude;
 
-    private String locationType;
-
-    private String locationTitle;
-
     @OneToMany(mappedBy = "location")
     @JsonIgnore
     private final Set<Item> items = new TreeSet<>();
+
+    @OneToMany(mappedBy = "address")
+    @JsonIgnore
+    private final Set<User> users = new TreeSet<>();
 }

@@ -188,6 +188,13 @@ public class AdminController extends BaseController {
             ));
         }
 
+        if (user.isAdmin()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "You cannot delete an administrator"
+            ));
+        }
+
         accountRepository.delete(user.getAccount());
         userRepository.delete(user);
 

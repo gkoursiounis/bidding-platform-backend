@@ -60,12 +60,9 @@ public class ItemController extends BaseController {
                                      @RequestParam Double buyPrice,
                                      @Nullable @RequestParam(name = "media") MultipartFile media,
                                      @RequestParam Double firstBid,
-                                     @Nullable @RequestParam Integer[] categoriesId,
-                                     @Nullable @RequestParam String apiIdentifier,
+                                     @Nullable @RequestParam Integer[] categoriesId,    //nullable
                                      @Nullable @RequestParam Double longitude,
                                      @Nullable @RequestParam Double latitude,
-                                     @Nullable @RequestParam String locationType,
-                                     @Nullable @RequestParam String locationTitle,
                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
@@ -85,7 +82,7 @@ public class ItemController extends BaseController {
             ));
         }
 
-        Item item = new Item();
+        Item item = new Item(new Date());
         item.setSeller(requestUser);
         item.setName(name);
         item.setBuyPrice(buyPrice);
@@ -151,12 +148,11 @@ public class ItemController extends BaseController {
         }
 
 
-        if (apiIdentifier != null && longitude != null && latitude != null &&
-                locationType != null && locationTitle != null){
+        if (longitude != null && latitude != null){
 
-            Geolocation location = geolocationRepository.findByLocationTitle(locationTitle);
+            Geolocation location = geolocationRepository.findByLocationLatitudeAndLongtitude(latitude, longitude);
             if (location == null) {
-                location = new Geolocation(apiIdentifier, longitude, latitude, locationType, locationTitle);
+                location = new Geolocation(longitude, latitude);
 
             }
             item.setLocation(geolocationRepository.save(geolocationRepository.save(location)));
@@ -264,6 +260,8 @@ public class ItemController extends BaseController {
             ));
         }
 
+        item.getSeller().getItems().remove(item);
+        userRepository.save(item.getSeller());
         itemRepository.delete(item);
 
         return ResponseEntity.status(HttpStatus.OK).body(new Message(
