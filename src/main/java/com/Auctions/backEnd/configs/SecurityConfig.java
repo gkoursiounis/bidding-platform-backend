@@ -55,7 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(new JWTConfigurer(this.tokenProvider))
                 .and()//???
                 .requiresChannel()//??
-                .anyRequest().requiresSecure(); //???
+                .anyRequest().requiresSecure();
+//                .and()
+//                .userDetailsService(userDetailsService()); //???
         // @formatter:on
     }
 

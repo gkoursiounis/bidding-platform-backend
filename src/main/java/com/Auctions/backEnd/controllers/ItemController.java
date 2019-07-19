@@ -2,6 +2,7 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
+import com.Auctions.backEnd.requests.RequestUser;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.File.DBFileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +25,20 @@ public class ItemController extends BaseController {
     private final DBFileRepository dbFileRepository;
     private final DBFileStorageService dBFileStorageService;
     private final GeolocationRepository geolocationRepository;
+    private AccountController accountController;
 
     @Autowired
     public ItemController(UserRepository userRepository,ItemRepository itemRepository,
                           ItemCategoryRepository itemCategoryRepository, DBFileRepository dbFileRepository,
-                          DBFileStorageService dBFileStorageService, GeolocationRepository geolocationRepository){
+                          DBFileStorageService dBFileStorageService, GeolocationRepository geolocationRepository,
+                          AccountController accountController){
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.itemCategoryRepository = itemCategoryRepository;
         this.dbFileRepository = dbFileRepository;
         this.dBFileStorageService = dBFileStorageService;
         this.geolocationRepository = geolocationRepository;
+        this.accountController = accountController;
     }
 
 
@@ -66,7 +70,8 @@ public class ItemController extends BaseController {
                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
-        User requestUser = requestUser();
+        RequestUser user = new RequestUser();
+        User requestUser = user.requestUser();
 
         if (!requestUser.getAccount().isVerified()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
@@ -171,8 +176,7 @@ public class ItemController extends BaseController {
 
         return ResponseEntity.ok(item);
     }
-
-
+    
     @PatchMapping("/{itemId}")
     public ResponseEntity modifyItem(@PathVariable (value = "itemId") long itemId,
                                      @Nullable @RequestParam String name,

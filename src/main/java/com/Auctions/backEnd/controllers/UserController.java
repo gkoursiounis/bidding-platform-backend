@@ -2,6 +2,7 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
+import com.Auctions.backEnd.requests.RequestUser;
 import com.Auctions.backEnd.responses.BidRes;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class UserController extends BaseController {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BidRepository bidRepository;
+    private AccountController accountController;
 
     @Autowired
     public UserController(UserRepository userRepository, ItemRepository itemRepository,
@@ -37,7 +39,9 @@ public class UserController extends BaseController {
     @GetMapping("/{username}")
     public ResponseEntity getUserDetails(@PathVariable String username) {
 
-        User requester = requestUser();
+        RequestUser reqUser = new RequestUser();
+        User requester = reqUser.requestUser();
+
         User user = userRepository.findByAccount_Username(username);
 
         if (user == null){
@@ -63,7 +67,8 @@ public class UserController extends BaseController {
     @GetMapping("/myAuctions")
     public ResponseEntity getMyAuctions() {
 
-        User requester = requestUser();
+        RequestUser user = new RequestUser();
+        User requester = user.requestUser();
         return ResponseEntity.ok(requester.getItems());
     }
 
@@ -76,7 +81,8 @@ public class UserController extends BaseController {
     @GetMapping("/myBids")
     public ResponseEntity getMyBids() {
 
-        User requester = requestUser();
+        RequestUser user = new RequestUser();
+        User requester = user.requestUser();
         return ResponseEntity.ok(requester.getBids());
     }
 

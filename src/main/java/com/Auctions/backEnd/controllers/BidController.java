@@ -2,6 +2,7 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
+import com.Auctions.backEnd.requests.RequestUser;
 import com.Auctions.backEnd.responses.BidRes;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.File.DBFileStorageService;
@@ -10,10 +11,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import com.Auctions.backEnd.services.security.TokenProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+
+import static com.Auctions.backEnd.services.security.JWTFilter.resolveToken;
 
 @RestController
 @RequestMapping("/bid")
@@ -42,7 +51,8 @@ public class BidController extends BaseController {
     public ResponseEntity makeBid(@PathVariable (value = "itemId") long itemId,
                                   @RequestParam Double offer) {
 
-        User requester = requestUser();
+        RequestUser reqUser = new RequestUser();
+        User requester = reqUser.requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if (item == null) {
@@ -95,4 +105,14 @@ public class BidController extends BaseController {
 
         return ResponseEntity.ok(new BidRes(bid, item.isAuctionCompleted()));
     }
+
+
+//    public ResponseEntity my(){
+//
+////        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+////        attr.getRequest().getSession(true);
+////        attr.getSessionId();
+////        System.out.println(attr.getAttribute("SPRING_SECURITY_CONTEXT", 1));
+//    }
+
 }

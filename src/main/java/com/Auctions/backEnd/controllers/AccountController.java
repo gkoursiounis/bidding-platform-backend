@@ -2,7 +2,9 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.repositories.AccountRepository;
+import com.Auctions.backEnd.repositories.UserRepository;
 import com.Auctions.backEnd.requests.AccountRequest;
+import com.Auctions.backEnd.requests.RequestUser;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.responses.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +19,14 @@ public class AccountController extends BaseController {
 
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public AccountController(PasswordEncoder passwordEncoder, AccountRepository accountRepository) {
+    public AccountController(PasswordEncoder passwordEncoder, AccountRepository accountRepository,
+                             UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -58,32 +63,34 @@ public class AccountController extends BaseController {
 
     @GetMapping
     public ResponseEntity getAccount() {
-        Account account = requestUser().getAccount();
+
+        RequestUser user = new RequestUser();
+        Account account = user.requestUser().getAccount();
         account.setPassword(null);
         return ResponseEntity.ok(account);
     }
 
 
-    @PutMapping("/change-password")
-    public ResponseEntity changePassword(@RequestBody AccountRequest accountRequest) {
-        Account account = requestUser().getAccount();
-
-        String oldPasswordFromAccount = account.getPassword();
-        String oldPasswordFromRequest = accountRequest.getOldPassword();
-
-        if(!passwordEncoder.matches(oldPasswordFromRequest, oldPasswordFromAccount)){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(
-                    "Error",
-                    "Your actual password is incorrect"
-            ));
-        }
-
-        account.setPassword(accountRequest.getNewPassword());
-        account.encodePassword(passwordEncoder);
-        accountRepository.save(account);
-
-        return new ResponseEntity(HttpStatus.OK);
-    }
+//    @PutMapping("/change-password")
+//    public ResponseEntity changePassword(@RequestBody AccountRequest accountRequest) {
+//        Account account = requestUser().getAccount();
+//
+//        String oldPasswordFromAccount = account.getPassword();
+//        String oldPasswordFromRequest = accountRequest.getOldPassword();
+//
+//        if(!passwordEncoder.matches(oldPasswordFromRequest, oldPasswordFromAccount)){
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(
+//                    "Error",
+//                    "Your actual password is incorrect"
+//            ));
+//        }
+//
+//        account.setPassword(accountRequest.getNewPassword());
+//        account.encodePassword(passwordEncoder);
+//        accountRepository.save(account);
+//
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 //
 //    @PostMapping("/get-reset-password")
 //    public ResponseEntity getResetPassword(@RequestBody AccountEmail email) {

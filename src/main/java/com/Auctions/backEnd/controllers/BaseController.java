@@ -3,14 +3,29 @@ package com.Auctions.backEnd.controllers;
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.repositories.UserRepository;
+import com.Auctions.backEnd.services.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.Auctions.backEnd.services.security.JWTFilter.resolveToken;
 
 public abstract class BaseController {
 
@@ -22,16 +37,6 @@ public abstract class BaseController {
             "image/jpeg",
             "image/gif"
     ));
-
-    User requestUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        org.springframework.security.core.userdetails.User account;
-        account = (org.springframework.security.core.userdetails.User) principal;
-
-        User user = userRepository.findByAccount_Username(account.getUsername());
-       // user.setFollowed(true);
-        return user;
-    }
 
 //    void sendResetPasswordEmail(String email, String token) {
 //        Thread mailSender = new Thread(){ 	// Creating an anonymous thread

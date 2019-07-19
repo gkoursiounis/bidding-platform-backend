@@ -5,6 +5,7 @@ import com.Auctions.backEnd.models.Item;
 import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.ItemRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
+import com.Auctions.backEnd.requests.RequestUser;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.exception.FileStorageException;
 import com.Auctions.backEnd.models.DBFile;
@@ -55,7 +56,8 @@ public class FileController extends BaseController {
     public ResponseEntity uploadPicture(@PathVariable(value = "itemId") long itemId,
                                         @RequestParam(name = "media") MultipartFile media){
 
-        User requestUser = requestUser();
+        RequestUser user = new RequestUser();
+        User requestUser = user.requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){

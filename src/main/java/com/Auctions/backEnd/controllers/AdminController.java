@@ -2,6 +2,7 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
+import com.Auctions.backEnd.requests.RequestUser;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,8 @@ public class AdminController extends BaseController {
     @GetMapping("/pendingRegisters")
     public ResponseEntity getPendingRegisters(){
 
-        User requester = requestUser();
+        RequestUser user = new RequestUser();
+        User requester = user.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -58,7 +60,8 @@ public class AdminController extends BaseController {
     @GetMapping("/allUsers")
     public ResponseEntity getAllUsers(){
 
-        User requester = requestUser();
+        RequestUser reqUser = new RequestUser();
+        User requester = reqUser.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -77,7 +80,8 @@ public class AdminController extends BaseController {
     @PatchMapping("/verifyAll")
     public ResponseEntity verifyAllUsers(){
 
-        User requester = requestUser();
+        RequestUser reqUser = new RequestUser();
+        User requester = reqUser.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -103,7 +107,8 @@ public class AdminController extends BaseController {
     @PatchMapping("/verifyUser/{userId}")
     public ResponseEntity verifyUser(@PathVariable (value = "userId") long userId){
 
-        User requester = requestUser();
+        RequestUser reqUser = new RequestUser();
+        User requester = reqUser.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -141,7 +146,8 @@ public class AdminController extends BaseController {
     @PostMapping("/newCategory")
     public ResponseEntity createItemCategory(@RequestParam String name){
 
-        User requester = requestUser();
+        RequestUser reqUser = new RequestUser();
+        User requester = reqUser.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -169,7 +175,8 @@ public class AdminController extends BaseController {
     @DeleteMapping("/deleteUser/{userId}")
     public ResponseEntity deleteUser(@PathVariable (value = "userId") long userId){
 
-        User requester = requestUser();
+        RequestUser reqUser = new RequestUser();
+        User requester = reqUser.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
