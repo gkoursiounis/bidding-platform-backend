@@ -51,6 +51,7 @@ public class AuthController extends BaseController {
     private String secret;
 
     private String visitorToken;
+    private AccountController accountController;
 
     @Autowired
     public AuthController(PasswordEncoder passwordEncoder,
@@ -58,13 +59,15 @@ public class AuthController extends BaseController {
                           AuthenticationManager authenticationManager,
                           UserRepository userRepository,
                           AccountRepository accountRepository,
-                          RequestMappingHandlerMapping requestMappingHandlerMapping) {
+                          RequestMappingHandlerMapping requestMappingHandlerMapping,
+                          AccountController accountController) {
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
+        this.accountController = accountController;
     }
 
     @GetMapping("/authenticate")
@@ -210,29 +213,29 @@ public class AuthController extends BaseController {
     }
 
 
-//    @GetMapping(value = "/chatkitToken", produces = "application/json")
-//    public ResponseEntity generateChatkitToken() {
-//        User requester = requestUser();
-//
-//        Calendar c = Calendar.getInstance();
-//        c.setTime(new Date());
-//        c.add(Calendar.MINUTE, 1);
-//        Map<String, Object> header = new HashMap<>();
-//        header.put("typ", "JWT");
-//        header.put("alg", "HS256");
-//        // Creation of a JWT token for Chatkit auth
-//        String JWTtoken = Jwts.builder()
-//                .setHeader(header)
-//                .setIssuer("api_keys/"+keyId)
-//                .setSubject(requester.getUsername())
-//                .setIssuedAt(new Date())
-//                .setExpiration(c.getTime())
-//                .claim("instance", instanceId)
-//                .claim("su", Boolean.TRUE)
-//                .signWith(SignatureAlgorithm.HS256, new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"))
-//                .compact();
-//        return ResponseEntity.ok("{ \"token\": \""+JWTtoken+"\"}");
-//    }
+    @GetMapping(value = "/chatkitToken", produces = "application/json")
+    public ResponseEntity generateChatkitToken() {
+        User requester = accountController.requestUser();
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.add(Calendar.MINUTE, 1);
+        Map<String, Object> header = new HashMap<>();
+        header.put("typ", "JWT");
+        header.put("alg", "HS256");
+        // Creation of a JWT token for Chatkit auth
+        String JWTtoken = Jwts.builder()
+                .setHeader(header)
+                .setIssuer("api_keys/"+keyId)
+                .setSubject(requester.getUsername())
+                .setIssuedAt(new Date())
+                .setExpiration(c.getTime())
+                .claim("instance", instanceId)
+                .claim("su", Boolean.TRUE)
+                .signWith(SignatureAlgorithm.HS256, new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"))
+                .compact();
+        return ResponseEntity.ok("{ \"token\": \""+JWTtoken+"\"}");
+    }
 
     private boolean checkUsername(String userName) {
         Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);

@@ -1,17 +1,23 @@
 package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.Account;
+import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
-import com.Auctions.backEnd.requests.AccountRequest;
-import com.Auctions.backEnd.requests.RequestUser;
-import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.responses.Valid;
+import com.Auctions.backEnd.services.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static com.Auctions.backEnd.services.security.JWTFilter.resolveToken;
 
 @RestController
 @RequestMapping("/account")
@@ -20,13 +26,15 @@ public class AccountController extends BaseController {
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
     private final UserRepository userRepository;
+    private final TokenProvider tokenProvider;
 
     @Autowired
     public AccountController(PasswordEncoder passwordEncoder, AccountRepository accountRepository,
-                             UserRepository userRepository) {
+                             UserRepository userRepository, TokenProvider tokenProvider) {
         this.passwordEncoder = passwordEncoder;
         this.accountRepository = accountRepository;
         this.userRepository = userRepository;
+        this.tokenProvider = tokenProvider;
     }
 
 
@@ -63,9 +71,7 @@ public class AccountController extends BaseController {
 
     @GetMapping
     public ResponseEntity getAccount() {
-
-        RequestUser user = new RequestUser();
-        Account account = user.requestUser().getAccount();
+        Account account = requestUser().getAccount();
         account.setPassword(null);
         return ResponseEntity.ok(account);
     }
@@ -188,4 +194,18 @@ public class AccountController extends BaseController {
 //                "Password changed"
 //        ));
 //    }
+
+
+    public User requestUser() {
+
+        final HttpServletRequest currentRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+
+        String r = resolveToken(currentRequest);
+        System.out.println(r);
+        Authentication a = tokenProvider.getAuthentication(r);
+        System.out.println(a);
+
+        User user = userRepository.findByAccount_Username(a.getName());
+        return user;
+    }
 }

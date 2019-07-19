@@ -2,7 +2,6 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
-import com.Auctions.backEnd.requests.RequestUser;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.File.DBFileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +69,7 @@ public class ItemController extends BaseController {
                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
-        RequestUser user = new RequestUser();
-        User requestUser = user.requestUser();
+        User requestUser = accountController.requestUser();
 
         if (!requestUser.getAccount().isVerified()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(

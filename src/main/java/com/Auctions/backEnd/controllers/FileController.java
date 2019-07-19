@@ -5,12 +5,8 @@ import com.Auctions.backEnd.models.Item;
 import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.ItemRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
-import com.Auctions.backEnd.requests.RequestUser;
 import com.Auctions.backEnd.responses.Message;
-import com.Auctions.backEnd.exception.FileStorageException;
-import com.Auctions.backEnd.models.DBFile;
 import com.Auctions.backEnd.repositories.DBFileRepository;
-import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.File.DBFileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -23,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 @RestController
@@ -34,15 +29,17 @@ public class FileController extends BaseController {
     private final DBFileRepository dbFileRepository;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private AccountController accountController;
 
     @Autowired
     public FileController(DBFileStorageService dBFileStorageService,
                           DBFileRepository dbFileRepository, ItemRepository itemRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository, AccountController accountController) {
         this.dBFileStorageService = dBFileStorageService;
         this.dbFileRepository = dbFileRepository;
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
+        this.accountController = accountController;
     }
 
     /**
@@ -56,8 +53,7 @@ public class FileController extends BaseController {
     public ResponseEntity uploadPicture(@PathVariable(value = "itemId") long itemId,
                                         @RequestParam(name = "media") MultipartFile media){
 
-        RequestUser user = new RequestUser();
-        User requestUser = user.requestUser();
+        User requestUser = accountController.requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){

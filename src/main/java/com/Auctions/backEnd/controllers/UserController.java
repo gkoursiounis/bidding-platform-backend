@@ -2,15 +2,11 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
-import com.Auctions.backEnd.requests.RequestUser;
-import com.Auctions.backEnd.responses.BidRes;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -39,8 +35,7 @@ public class UserController extends BaseController {
     @GetMapping("/{username}")
     public ResponseEntity getUserDetails(@PathVariable String username) {
 
-        RequestUser reqUser = new RequestUser();
-        User requester = reqUser.requestUser();
+        User requester = accountController.requestUser();
 
         User user = userRepository.findByAccount_Username(username);
 
@@ -67,8 +62,7 @@ public class UserController extends BaseController {
     @GetMapping("/myAuctions")
     public ResponseEntity getMyAuctions() {
 
-        RequestUser user = new RequestUser();
-        User requester = user.requestUser();
+        User requester = accountController.requestUser();
         return ResponseEntity.ok(requester.getItems());
     }
 
@@ -81,8 +75,7 @@ public class UserController extends BaseController {
     @GetMapping("/myBids")
     public ResponseEntity getMyBids() {
 
-        RequestUser user = new RequestUser();
-        User requester = user.requestUser();
+        User requester = accountController.requestUser();
         return ResponseEntity.ok(requester.getBids());
     }
 
