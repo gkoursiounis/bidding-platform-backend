@@ -39,7 +39,7 @@ public class AccountController extends BaseController {
 
 
     /**
-     * User can check if a username exists or not
+     * A user can check if a username exists or not
      *
      * @param userName
      * @return false (BAD_REQUEST) if username exists and true (OK) if it does not

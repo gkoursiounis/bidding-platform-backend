@@ -30,7 +30,7 @@ public class AdminController extends BaseController {
 
 
     /**
-     * The application administrator can get a list of all unverified users
+     * The administrator can get a list of all unverified users
      * whose approval request is pending
      *
      * @return a list of unverified users
@@ -52,8 +52,8 @@ public class AdminController extends BaseController {
 
 
     /**
-     * The application administrator can get a list of all the existing users
-     * excluding everyone who is also an administrator
+     * The administrator can get a list of all the existing users
+     * excluding the users who are also administrators
      *
      * @return a list of users
      */
@@ -76,6 +76,11 @@ public class AdminController extends BaseController {
     }
 
 
+    /**
+     * The administrator can verify all the unverified users in once
+     *
+     * @return <HTTP>OK</HTTP>
+     */
     @PatchMapping("/verifyAll")
     public ResponseEntity verifyAllUsers(){
 
@@ -102,6 +107,12 @@ public class AdminController extends BaseController {
     }
 
 
+    /**
+     * The administrator can verify a single user using his userId
+     *
+     * @param userId
+     * @return <HTTP>OK</HTTP>
+     */
     @PatchMapping("/verifyUser/{userId}")
     public ResponseEntity verifyUser(@PathVariable (value = "userId") long userId){
 
@@ -140,6 +151,13 @@ public class AdminController extends BaseController {
     }
 
 
+    /**
+     * The administrator can create an new auction/item category
+     * If the category name exists then we get an <HTTP>BAD REQUEST</HTTP>
+     *
+     * @param name
+     * @return a new item category
+     */
     @PostMapping("/newCategory")
     public ResponseEntity createItemCategory(@RequestParam String name){
 
@@ -175,6 +193,13 @@ public class AdminController extends BaseController {
     }
 
 
+    /**
+     * The administrator can delete a user using his userId
+     * If the user is an administrator then we get an <HTTP>BAD REQUEST</HTTP>
+     *
+     * @param userId
+     * @return <HTTP>OK</HTTP>
+     */
     @DeleteMapping("/deleteUser/{userId}")
     public ResponseEntity deleteUser(@PathVariable (value = "userId") long userId){
 

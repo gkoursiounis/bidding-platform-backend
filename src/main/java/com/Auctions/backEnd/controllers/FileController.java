@@ -43,10 +43,12 @@ public class FileController extends BaseController {
     }
 
     /**
-     * User can upload more pictures for each item
+     * A user can optionally upload more pictures for each item
+     * The basic picture can be uploaded during the item creation
+     * in ItemController
      *
-     * @param itemId
-     * @param media
+     * @param itemId - the id of the item portrayed in the picture
+     * @param media - the picture (.jpg, .png, .gif)
      * @return the updated item
      */
     @PatchMapping("/uploadPicture/{itemId}")
@@ -65,7 +67,6 @@ public class FileController extends BaseController {
 
         if(media != null){
 
-            //check for proper content type
             if (!contentTypes.contains(media.getContentType())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                         "Error",
@@ -73,7 +74,6 @@ public class FileController extends BaseController {
                 ));
             }
 
-            //check for size limitations (less than 10 MB)
             if (media.getSize() > DBFile.MAXIMUM_IMAGE_SIZE && (
                     "image/png".equals(media.getContentType())  || "image/jpeg".equals(media.getContentType()) ||
                             "image/gif".equals(media.getContentType()))) {
@@ -104,7 +104,12 @@ public class FileController extends BaseController {
     }
 
 
-
+    /**
+     * A user can download an item picture
+     *
+     * @param fileId
+     * @return
+     */
     @GetMapping("/downloadPicture/{fileId}")
     public ResponseEntity downloadFile(@PathVariable(value = "fileId") String fileId) {
 

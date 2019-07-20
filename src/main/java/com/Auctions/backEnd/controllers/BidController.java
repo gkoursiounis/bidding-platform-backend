@@ -31,10 +31,10 @@ public class BidController extends BaseController {
 
 
     /**
-     * User can participate to an auction making a bid
+     * A user can participate in an auction by making a bid
      *
-     * @param offer
-     * @return created bid
+     * @param offer - the amount of the bid
+     * @return the created bid
      */
     @GetMapping("/makeBid/{itemId}")
     public ResponseEntity makeBid(@PathVariable (value = "itemId") long itemId,

@@ -198,7 +198,7 @@ public class AuthController extends BaseController {
         );
     }
 
-
+    //TODO do we finally need this?
     @PostMapping("/visitorLogin")
     public ResponseEntity loginAsVisitor(){
 
