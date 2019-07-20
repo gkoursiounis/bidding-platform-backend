@@ -78,7 +78,7 @@ public class BidController extends BaseController {
         }
         itemRepository.save(item);
 
-        //??????
+       //TODO check if ok
         item.getSeller().getItems().add(item);
         userRepository.save(item.getSeller());
 

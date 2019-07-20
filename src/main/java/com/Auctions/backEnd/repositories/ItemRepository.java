@@ -7,20 +7,26 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findByName(String name);
     Item findItemById(Long id);
 
-    @Query("SELECT i FROM Item i WHERE :category IN i.categories")
-    User findItemByCategory(@Param("category") String category);
+    //DISPLAY COMPLETED AUCTION
+    @Query("SELECT i FROM Item i WHERE :categories IN i.categories")
+    List<Item> findItemByCategory(@Param("categories") List<String> categories);
 
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'true'")
-    User getAllcompletedAuctions();
+    List<Item> getAllcompletedAuctions();
 
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false'")
-    User getAllopenAuctions();
+    List<Item> getAllopenAuctions();
 
     @Query("SELECT i FROM Item i")
-    User getAllAuctions();
+    List<Item> getAllAuctions();
+
+    @Query("SELECT i FROM Item i where i.currently >= :lowerPrice and i.buyPrice <= :higherPrice")
+    List<Item> searchByPrice(Double lowerPrice, Double higherPrice);
 }

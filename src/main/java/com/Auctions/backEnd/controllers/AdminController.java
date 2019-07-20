@@ -144,8 +144,8 @@ public class AdminController extends BaseController {
     public ResponseEntity createItemCategory(@RequestParam String name){
 
         User requester = accountController.requestUser();
-        if(!requester.isAdmin()){
 
+        if(!requester.isAdmin()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
                     "Error",
                     "You need to be an admin to perform this action"
@@ -153,10 +153,17 @@ public class AdminController extends BaseController {
         }
 
         if(name == null){
-
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "Category name is missing"
+            ));
+        }
+
+        ItemCategory search = itemCategoryRepository.findItemCategoryByName(name);
+        if(search != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Category name already exists"
             ));
         }
 

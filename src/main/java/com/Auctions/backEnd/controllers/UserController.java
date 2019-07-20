@@ -105,12 +105,7 @@ public class UserController extends BaseController {
 //        return ResponseEntity.ok(res);
 //    }
 
-//    @GetMapping("/following-requests")
-//    public ResponseEntity getFollowingRequests() {
-//        User currentUser = requestUser();
 //
-//        return ResponseEntity.ok(currentUser.getFollowingRequests());
-//    }
 
 //    @PostMapping("/following-request/{followingRequestId}")
 //    public ResponseEntity acceptOrRejectFollowingRequest(@PathVariable long followingRequestId,

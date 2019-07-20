@@ -55,6 +55,76 @@ public class ItemController extends BaseController {
         return ResponseEntity.ok(item);
     }
 
+
+    @GetMapping("/completedAuctions")
+    public ResponseEntity getCompletedAuctions(){
+        return ResponseEntity.ok(itemRepository.getAllcompletedAuctions());
+    }
+
+
+    @GetMapping("/openAuctions")
+    public ResponseEntity getOpenAuctions(){
+        return ResponseEntity.ok(itemRepository.getAllopenAuctions());
+    }
+
+
+    @GetMapping("/allAuctions")
+    public ResponseEntity getAllItems(){
+        return ResponseEntity.ok(itemRepository.getAllAuctions());
+    }
+
+
+    /**
+     * User can search for items/auctions based on a category
+     *
+     * If uniqueSearch is True then we search only for items
+     * that belong to one and only one category (the first given)
+     *
+     * If uniqueSearch is False then we search for items that belong
+     * at least to the specified categories (they might belong to more)
+     *
+     * @param categoryNames
+     * @param uniqueSearch
+     * @return a list of items
+     */
+    @GetMapping("/search")
+    public ResponseEntity categorySearch(@RequestParam List<String> categoryNames,
+                                                @RequestParam boolean uniqueSearch){
+
+        if(categoryNames == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Names of the categories are missing"
+            ));
+        }
+
+        if(uniqueSearch){
+            return ResponseEntity.ok(itemCategoryRepository.getAllitemsOfCategory(categoryNames.get(0)));
+        }
+        else{
+            return ResponseEntity.ok(itemRepository.findItemByCategory(categoryNames));
+        }
+    }
+
+
+    //TODO complete
+    @GetMapping("/search/filters")
+    public ResponseEntity multipleSearch(@Nullable @RequestParam List<String> categoryNames,
+                                         @Nullable @RequestParam Double lowerPrice,
+                                         @Nullable @RequestParam Double higherPrice,
+                                         @Nullable @RequestParam String freeText){
+
+        if(categoryNames == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Names of the categories are missing"
+            ));
+        }
+
+        return ResponseEntity.ok(itemRepository.searchByPrice(lowerPrice, higherPrice));
+    }
+
+
     @PostMapping
     public ResponseEntity createItem(@RequestParam String name,
                                      @RequestParam Double buyPrice,
@@ -170,7 +240,8 @@ public class ItemController extends BaseController {
 
         return ResponseEntity.ok(item);
     }
-    
+
+
     @PatchMapping("/{itemId}")
     public ResponseEntity modifyItem(@PathVariable (value = "itemId") long itemId,
                                      @Nullable @RequestParam String name,
@@ -267,23 +338,5 @@ public class ItemController extends BaseController {
                 "Ok",
                 "Auction has been deleted"
         ));
-    }
-
-
-    @GetMapping("/completedAuctions")
-    public ResponseEntity getCompletedAuctions(){
-        return ResponseEntity.ok(itemRepository.getAllcompletedAuctions());
-    }
-
-
-    @GetMapping("/openAuctions")
-    public ResponseEntity getOpenAuctions(){
-        return ResponseEntity.ok(itemRepository.getAllopenAuctions());
-    }
-
-
-    @GetMapping("/allAuctions")
-    public ResponseEntity getAllItems(){
-        return ResponseEntity.ok(itemRepository.getAllAuctions());
     }
 }
