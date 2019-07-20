@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.Set;
 
 public interface GeolocationRepository extends JpaRepository<Geolocation, Long> {
-    @Query("select g from Geolocation g where (locate(:query, lower(g.locationTitle)) <> 0)")
-    Set<Geolocation> searchLocations(@Param("query") String query);
+//    @Query("select g from Geolocation g where (locate(:query, lower(g.locationTitle)) <> 0)")
+//    Set<Geolocation> searchLocations(@Param("query") String query);
 
-    Geolocation findByLocationLatitudeAndLongtitude(double Latitude, double Longtitude);
+    Geolocation findLocationByLatitudeAndLongitude(double Latitude, double Longtitude);
 }

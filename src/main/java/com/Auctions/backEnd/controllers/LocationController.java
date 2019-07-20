@@ -16,9 +16,9 @@ public class LocationController {
     public LocationController(GeolocationRepository geolocationRepository) {
         this.geolocationRepository = geolocationRepository;
     }
-
-    @GetMapping("/search")
-    public ResponseEntity getPartialMatchedLocations(@RequestParam String query) {
-        return ResponseEntity.ok(geolocationRepository.searchLocations(query.toLowerCase()));
-    }
+///?????????????????????????
+//    @GetMapping("/search")
+//    public ResponseEntity getPartialMatchedLocations(@RequestParam String query) {
+//        return ResponseEntity.ok(geolocationRepository.searchLocations(query.toLowerCase()));
+//    }
 }

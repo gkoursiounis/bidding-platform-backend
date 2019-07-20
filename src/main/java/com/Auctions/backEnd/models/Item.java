@@ -58,7 +58,7 @@ public class Item extends AuditModel implements Serializable {
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "fk_picture")
     @JsonIgnore
-    private List<DBFile> media;
+    private List<DBFile> media;         //how to delete picture?
 
     @OneToOne
     private Geolocation location;

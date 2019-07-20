@@ -150,7 +150,7 @@ public class ItemController extends BaseController {
 
         if (longitude != null && latitude != null){
 
-            Geolocation location = geolocationRepository.findByLocationLatitudeAndLongtitude(latitude, longitude);
+            Geolocation location = geolocationRepository.findLocationByLatitudeAndLongitude(latitude, longitude);
             if (location == null) {
                 location = new Geolocation(longitude, latitude);
 
@@ -175,7 +175,6 @@ public class ItemController extends BaseController {
     public ResponseEntity modifyItem(@PathVariable (value = "itemId") long itemId,
                                      @Nullable @RequestParam String name,
                                      @Nullable @RequestParam Double buyPrice,
-                                     @Nullable @RequestParam(name = "media") MultipartFile media,
                                      @Nullable @RequestParam Double firstBid,
                                      @Nullable @RequestParam Integer[] categoriesId,
                                      @Nullable @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
@@ -268,5 +267,23 @@ public class ItemController extends BaseController {
                 "Ok",
                 "Auction has been deleted"
         ));
+    }
+
+
+    @GetMapping("/completedAuctions")
+    public ResponseEntity getCompletedAuctions(){
+        return ResponseEntity.ok(itemRepository.getAllcompletedAuctions());
+    }
+
+
+    @GetMapping("/openAuctions")
+    public ResponseEntity getOpenAuctions(){
+        return ResponseEntity.ok(itemRepository.getAllopenAuctions());
+    }
+
+
+    @GetMapping("/allAuctions")
+    public ResponseEntity getAllItems(){
+        return ResponseEntity.ok(itemRepository.getAllAuctions());
     }
 }
