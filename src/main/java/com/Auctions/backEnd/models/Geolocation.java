@@ -27,6 +27,8 @@ public class Geolocation extends AuditModel {
 
     private double latitude;
 
+    private String locationTitle;
+
     @OneToMany(mappedBy = "location")
     @JsonIgnore
     private final Set<Item> items = new TreeSet<>();
@@ -34,4 +36,10 @@ public class Geolocation extends AuditModel {
     @OneToMany(mappedBy = "address")
     @JsonIgnore
     private final Set<User> users = new TreeSet<>();
+
+    public Geolocation(Double longitude, Double latitude, String locationTitle) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.locationTitle = locationTitle;
+    }
 }

@@ -12,25 +12,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminController extends BaseController {
+public class AdminController {
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final ItemCategoryRepository itemCategoryRepository;
-    private AccountController accountController;
+    private final BaseController baseController;
 
     @Autowired
     public AdminController(UserRepository userRepository, AccountRepository accountRepository,
-                          ItemCategoryRepository itemCategoryRepository, AccountController accountController){
+                          ItemCategoryRepository itemCategoryRepository, BaseController baseController){
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.itemCategoryRepository = itemCategoryRepository;
-        this.accountController = accountController;
+        this.baseController = baseController;
     }
 
 
     /**
-     * The administrator can get a list of all unverified users
+     * The Administrator can get a list of all unverified users
      * whose approval request is pending
      *
      * @return a list of unverified users
@@ -38,7 +38,7 @@ public class AdminController extends BaseController {
     @GetMapping("/pendingRegisters")
     public ResponseEntity getPendingRegisters(){
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -52,7 +52,7 @@ public class AdminController extends BaseController {
 
 
     /**
-     * The administrator can get a list of all the existing users
+     * The Administrator can get a list of all the existing users
      * excluding the users who are also administrators
      *
      * @return a list of users
@@ -60,7 +60,7 @@ public class AdminController extends BaseController {
     @GetMapping("/allUsers")
     public ResponseEntity getAllUsers(){
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -84,7 +84,7 @@ public class AdminController extends BaseController {
     @PatchMapping("/verifyAll")
     public ResponseEntity verifyAllUsers(){
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -116,7 +116,7 @@ public class AdminController extends BaseController {
     @PatchMapping("/verifyUser/{userId}")
     public ResponseEntity verifyUser(@PathVariable (value = "userId") long userId){
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -129,7 +129,7 @@ public class AdminController extends BaseController {
         if (user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
-                    "User not found!"
+                    "User not found"
             ));
         }
 
@@ -152,7 +152,7 @@ public class AdminController extends BaseController {
 
 
     /**
-     * The administrator can create an new auction/item category
+     * The administrator can create an new auction/item category (ItemCategory)
      * If the category name exists then we get an <HTTP>BAD REQUEST</HTTP>
      *
      * @param name
@@ -161,7 +161,7 @@ public class AdminController extends BaseController {
     @PostMapping("/newCategory")
     public ResponseEntity createItemCategory(@RequestParam String name){
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
 
         if(!requester.isAdmin()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -170,10 +170,10 @@ public class AdminController extends BaseController {
             ));
         }
 
-        if(name == null){
+        if(name.isEmpty() || name == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "Category name is missing"
+                    "Invalid category name"
             ));
         }
 
@@ -203,7 +203,7 @@ public class AdminController extends BaseController {
     @DeleteMapping("/deleteUser/{userId}")
     public ResponseEntity deleteUser(@PathVariable (value = "userId") long userId){
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -216,7 +216,7 @@ public class AdminController extends BaseController {
         if (user == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
-                    "User not found!"
+                    "User not found"
             ));
         }
 

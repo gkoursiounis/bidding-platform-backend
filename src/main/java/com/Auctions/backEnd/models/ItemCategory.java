@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Setter
@@ -20,5 +20,5 @@ public class ItemCategory extends AuditModel {
     private String name;
 
     @ManyToMany
-    private Set<Item> items;
+    private List<Item> items;
 }

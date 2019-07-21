@@ -32,14 +32,15 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController extends BaseController {
+public class AuthController {
 
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
+    private final RequestMappingHandlerMapping requestMappingHandlerMapping;
+    private final BaseController baseController;
 
     @Value("${app.chatKit.instanceId}")
     private String instanceId;
@@ -60,7 +61,8 @@ public class AuthController extends BaseController {
                           UserRepository userRepository,
                           AccountRepository accountRepository,
                           RequestMappingHandlerMapping requestMappingHandlerMapping,
-                          AccountController accountController) {
+                          AccountController accountController,
+                          BaseController baseController) {
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -68,7 +70,9 @@ public class AuthController extends BaseController {
         this.accountRepository = accountRepository;
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.accountController = accountController;
+        this.baseController = baseController;
     }
+
 
     @GetMapping("/authenticate")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -79,6 +83,7 @@ public class AuthController extends BaseController {
         // this service is called at startup of the app to check
         // if the jwt token is still valid
     }
+
 
     @PostMapping("/login")
     public ResponseEntity authorize(@RequestBody Account account) {
@@ -126,6 +131,7 @@ public class AuthController extends BaseController {
             ));
         }
     }
+
 
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody SignUp signupAccount) throws NoSuchProviderException, NoSuchAlgorithmException{
@@ -199,23 +205,23 @@ public class AuthController extends BaseController {
     }
 
     //TODO do we finally need this?
-    @PostMapping("/visitorLogin")
-    public ResponseEntity loginAsVisitor(){
-
-        String visitorUsername = "skatanafateoloi";
-
-        if(visitorToken != null) {
-            visitorToken = this.tokenProvider.createToken(visitorUsername);
-        }
-
-        System.out.println(visitorToken);
-        return ResponseEntity.ok(visitorToken);
-    }
+//    @PostMapping("/visitorLogin")
+//    public ResponseEntity loginAsVisitor(){
+//
+//        String visitorUsername = "skatanafateoloi";
+//
+//        if(visitorToken != null) {
+//            visitorToken = this.tokenProvider.createToken(visitorUsername);
+//        }
+//
+//        System.out.println(visitorToken);
+//        return ResponseEntity.ok(visitorToken);
+//    }
 
 
     @GetMapping(value = "/chatkitToken", produces = "application/json")
     public ResponseEntity generateChatkitToken() {
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
 
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());

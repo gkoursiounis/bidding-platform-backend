@@ -13,20 +13,20 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/bid")
-public class BidController extends BaseController {
+public class BidController {
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BidRepository bidRepository;
-    private AccountController accountController;
+    private final BaseController baseController;
 
     @Autowired
     public BidController(UserRepository userRepository, ItemRepository itemRepository,
-                          BidRepository bidRepository, AccountController accountController) {
+                          BidRepository bidRepository, BaseController baseController) {
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.bidRepository = bidRepository;
-        this.accountController = accountController;
+        this.baseController = baseController;
     }
 
 
@@ -38,9 +38,9 @@ public class BidController extends BaseController {
      */
     @GetMapping("/makeBid/{itemId}")
     public ResponseEntity makeBid(@PathVariable (value = "itemId") long itemId,
-                                  @RequestParam Double offer) {
+                                  @RequestParam Double offer){
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if (item == null) {
@@ -93,14 +93,4 @@ public class BidController extends BaseController {
 
         return ResponseEntity.ok(new BidRes(bid, item.isAuctionCompleted()));
     }
-
-
-//    public ResponseEntity my(){
-//
-////        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-////        attr.getRequest().getSession(true);
-////        attr.getSessionId();
-////        System.out.println(attr.getAttribute("SPRING_SECURITY_CONTEXT", 1));
-//    }
-
 }

@@ -23,23 +23,23 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/media")
-public class FileController extends BaseController {
+public class FileController {
 
     private final DBFileStorageService dBFileStorageService;
     private final DBFileRepository dbFileRepository;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private AccountController accountController;
+    private final BaseController baseController;
 
     @Autowired
     public FileController(DBFileStorageService dBFileStorageService,
                           DBFileRepository dbFileRepository, ItemRepository itemRepository,
-                          UserRepository userRepository, AccountController accountController) {
+                          UserRepository userRepository, BaseController baseController) {
         this.dBFileStorageService = dBFileStorageService;
         this.dbFileRepository = dbFileRepository;
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
-        this.accountController = accountController;
+        this.baseController = baseController;
     }
 
     /**
@@ -55,7 +55,7 @@ public class FileController extends BaseController {
     public ResponseEntity uploadPicture(@PathVariable(value = "itemId") long itemId,
                                         @RequestParam(name = "media") MultipartFile media){
 
-        User requestUser = accountController.requestUser();
+        User requestUser = baseController.requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){
@@ -67,14 +67,14 @@ public class FileController extends BaseController {
 
         if(media != null){
 
-            if (!contentTypes.contains(media.getContentType())) {
+            if(!baseController.contentTypes.contains(media.getContentType())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                         "Error",
                         "Image type not supported"
                 ));
             }
 
-            if (media.getSize() > DBFile.MAXIMUM_IMAGE_SIZE && (
+            if(media.getSize() > DBFile.MAXIMUM_IMAGE_SIZE && (
                     "image/png".equals(media.getContentType())  || "image/jpeg".equals(media.getContentType()) ||
                             "image/gif".equals(media.getContentType()))) {
 
@@ -104,6 +104,7 @@ public class FileController extends BaseController {
     }
 
 
+    //TODO check
     /**
      * A user can download an item picture
      *

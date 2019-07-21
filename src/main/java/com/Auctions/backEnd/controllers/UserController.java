@@ -10,19 +10,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
-public class UserController extends BaseController {
+public class UserController {
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BidRepository bidRepository;
-    private AccountController accountController;
+    private final BaseController baseController;
 
     @Autowired
     public UserController(UserRepository userRepository, ItemRepository itemRepository,
-                          BidRepository bidRepository){
+                          BidRepository bidRepository, BaseController baseController){
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.bidRepository = bidRepository;
+        this.baseController = baseController;
     }
 
 
@@ -35,7 +36,7 @@ public class UserController extends BaseController {
     @GetMapping("/{username}")
     public ResponseEntity getUserDetails(@PathVariable String username) {
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
 
         User user = userRepository.findByAccount_Username(username);
 
@@ -62,7 +63,7 @@ public class UserController extends BaseController {
     @GetMapping("/myAuctions")
     public ResponseEntity getMyAuctions() {
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
         return ResponseEntity.ok(requester.getItems());
     }
 
@@ -75,7 +76,7 @@ public class UserController extends BaseController {
     @GetMapping("/myBids")
     public ResponseEntity getMyBids() {
 
-        User requester = accountController.requestUser();
+        User requester = baseController.requestUser();
         return ResponseEntity.ok(requester.getBids());
     }
 

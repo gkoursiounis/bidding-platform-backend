@@ -4,6 +4,7 @@ import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.File.DBFileStorageService;
+import com.Auctions.backEnd.services.Search.SortComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/item")
-public class ItemController extends BaseController {
+public class ItemController {
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -24,23 +26,30 @@ public class ItemController extends BaseController {
     private final DBFileRepository dbFileRepository;
     private final DBFileStorageService dBFileStorageService;
     private final GeolocationRepository geolocationRepository;
-    private AccountController accountController;
+    private final BaseController baseController;
 
     @Autowired
     public ItemController(UserRepository userRepository,ItemRepository itemRepository,
                           ItemCategoryRepository itemCategoryRepository, DBFileRepository dbFileRepository,
                           DBFileStorageService dBFileStorageService, GeolocationRepository geolocationRepository,
-                          AccountController accountController){
+                          BaseController baseController){
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.itemCategoryRepository = itemCategoryRepository;
         this.dbFileRepository = dbFileRepository;
         this.dBFileStorageService = dBFileStorageService;
         this.geolocationRepository = geolocationRepository;
-        this.accountController = accountController;
+        this.baseController = baseController;
     }
 
 
+    /**
+     * A User can get an item/auction details using its itemId
+     * If the itemId is invalid then we get an <HTTP>NOT FOUND</HTTP>
+     *
+     * @param itemId
+     * @return the item details
+     */
     @GetMapping("/{itemId}")
     public ResponseEntity getItem(@PathVariable (value = "itemId") long itemId){
 
@@ -55,36 +64,52 @@ public class ItemController extends BaseController {
         return ResponseEntity.ok(item);
     }
 
+    //TODO additional features --> modify user details
+    //TODO HUGE ---> filter time to close open auctions and modify search queries
 
+    /**
+     * A User can get a list of His completed auctions
+     * i.e. a list of items where the field auctionCompleted is True
+     *
+     * @return list of items
+     */
     @GetMapping("/completedAuctions")
-    public ResponseEntity getCompletedAuctions(){
-        return ResponseEntity.ok(itemRepository.getAllcompletedAuctions());
+    public ResponseEntity getUserCompletedAuctions(){
+        User requester = baseController.requestUser();
+        return ResponseEntity.ok(itemRepository.getAllcompletedAuctions(requester));
     }
 
 
+    /**
+     * A User can get a list of All the open auctions
+     * i.e. a list of items where the field auctionCompleted is False
+     *
+     * @return list of items
+     */
     @GetMapping("/openAuctions")
-    public ResponseEntity getOpenAuctions(){
+    public ResponseEntity getAllOpenAuctions(){
         return ResponseEntity.ok(itemRepository.getAllopenAuctions());
     }
 
 
+    /**
+     * A User can get a list of All the items/auctions existing in the database
+     *
+     * @return list of all items
+     */
     @GetMapping("/allAuctions")
     public ResponseEntity getAllItems(){
         return ResponseEntity.ok(itemRepository.getAllAuctions());
     }
 
 
-    /**
-     * User can search for items/auctions based on a category
-     *
-     * @return a list of items
-     */
-    @GetMapping("/search")
-    public ResponseEntity searchBar(@RequestParam String keyword){
+
+    @GetMapping("/search/partialMatch")
+    public ResponseEntity getPartialMatchedSearch(@RequestParam String keyword){
 
         List<Item> res = new ArrayList<>();
 
-        if ("".equals(keyword)) {
+        if (keyword == null || keyword.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "Invalid keyword"
@@ -100,36 +125,141 @@ public class ItemController extends BaseController {
     }
 
 
-    //TODO complete
-    @GetMapping("/search/filters")
-    public ResponseEntity filterSearch(@Nullable @RequestParam List<String> categoryNames,
-                                         @Nullable @RequestParam Double lowerPrice,
-                                         @Nullable @RequestParam Double higherPrice,
-                                         @Nullable @RequestParam String freeText){
+    /**
+     * A User can use a search bar to find items/auctions based on:
+     * the category name, the item's name and the item's description
+     *
+     * @return a list of items
+     */
+    @GetMapping("/search/searchBar")
+    public ResponseEntity searchBar(@RequestParam String text){
 
-        if(categoryNames == null){
+        if(text.isEmpty() || text == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "Names of the categories are missing"
+                    "No keywords given"
             ));
         }
 
-        return ResponseEntity.ok(itemRepository.searchByPrice(lowerPrice, higherPrice));
+        Set<Item> res = new HashSet<Item>();
+
+        //split string to words
+        String[] values = text.split(" ");
+        for (String element : values) {
+            res.addAll(itemRepository.searchItems(element));
+        }
+
+        //algorithm for sorting elements by frequency was taken from:
+        //https://www.geeksforgeeks.org/sort-elements-by-frequency-set-5-using-java-map/
+
+        Map<Item, Integer> map = new HashMap<>();
+        List<Item> outputArray = new ArrayList<>();
+
+        //assign elements and their count in the list and map
+        for (Item current : res) {
+            int count = map.getOrDefault(current, 0);
+            map.put(current, count + 1);
+            outputArray.add(current);
+        }
+
+        //compare the map by value
+        SortComparator comp = new SortComparator(map);
+
+        //sort the map using Collections CLass
+        Collections.sort(outputArray, comp);
+
+        LinkedHashSet<Item> hashSet = new LinkedHashSet<>(outputArray);
+
+        ArrayList<Item> listWithoutDuplicates = new ArrayList<>(hashSet);
+
+        return ResponseEntity.ok(listWithoutDuplicates);
     }
 
 
+    //TODO complete
+    @GetMapping("/search/filters")
+    public ResponseEntity filterSearch(@Nullable @RequestParam String category,
+                                       @Nullable @RequestParam Double lowerPrice,
+                                       @Nullable @RequestParam Double higherPrice,
+                                       @Nullable @RequestParam String locationTitle,
+                                       @Nullable @RequestParam String description){
+
+        List<Item> byCategory = new ArrayList<>();
+        List<Item> byPrice = new ArrayList<>();
+        List<Item> byHigherPrice = new ArrayList<>();
+        List<Item> byLowerPrice = new ArrayList<>();
+        List<Item> byLocationTitle = new ArrayList<>();
+        List<Item> byDescription = new ArrayList<>();
+
+        if(category != null){
+
+            ItemCategory cat = itemCategoryRepository.findItemCategoryByName(category);
+            if(cat != null) {
+                byCategory = cat.getItems();
+            }
+        }
+
+        if(lowerPrice != null && higherPrice != null){
+            byPrice = itemRepository.searchByPrice(lowerPrice, higherPrice);
+        }
+        else if(lowerPrice == null){
+            byHigherPrice = itemRepository.searchByHigherPrice(higherPrice);
+        }
+        else{
+            byLowerPrice = itemRepository.searchByLowerPrice(lowerPrice);
+        }
+
+        if(locationTitle != null){
+            byLocationTitle = itemRepository.searchByLocation(locationTitle);
+        }
+
+        if(description != null){
+            byDescription = itemRepository.searchByDescription(description);
+        }
+
+        //https://www.baeldung.com/java-lists-intersection
+        Set<Item> result = byCategory.stream()
+                .distinct()
+                .filter( byPrice::contains)
+                .filter( byHigherPrice::contains)
+                .filter( byLowerPrice::contains)
+                .filter( byLocationTitle::contains)
+                .filter( byDescription::contains)
+                .collect(Collectors.toSet());
+
+        return ResponseEntity.ok(result);
+    }
+
+
+    /**
+     * A user can crate an item
+     * By creating an item we consider an auction to have started
+     *
+     * @param name - item's name
+     * @param buyPrice - the price where a bidder can directly buy an item
+     * @param media - optional picture
+     * @param firstBid - the first bid
+     * @param categoriesId - list of Integers as the Id's of the item's categories
+     * @param longitude - location
+     * @param latitude - location
+     * @param locationTitle - location
+     * @param endsAt - when the auction ends
+     * @param description - item's description
+     * @return the item details
+     */
     @PostMapping
     public ResponseEntity createItem(@RequestParam String name,
-                                     @RequestParam Double buyPrice,
+                                     @RequestParam double buyPrice,
                                      @Nullable @RequestParam(name = "media") MultipartFile media,
                                      @RequestParam Double firstBid,
-                                     @Nullable @RequestParam Integer[] categoriesId,    //nullable
+                                     @Nullable @RequestParam Integer[] categoriesId,    //TODO fix nullable
                                      @Nullable @RequestParam Double longitude,
                                      @Nullable @RequestParam Double latitude,
+                                     @Nullable @RequestParam String locationTitle,
                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
-        User requestUser = accountController.requestUser();
+        User requestUser = baseController.requestUser();
 
         if (!requestUser.getAccount().isVerified()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
@@ -151,6 +281,7 @@ public class ItemController extends BaseController {
         item.setBuyPrice(buyPrice);
         item.setFirstBid(firstBid);
         item.setCurrently(firstBid);
+        item.setAuctionCompleted(false);
         item.setEndsAt(endsAt);
 
         if (description != null) {
@@ -187,7 +318,7 @@ public class ItemController extends BaseController {
 
         if(media != null){
 
-            if (!contentTypes.contains(media.getContentType())){
+            if (!baseController.contentTypes.contains(media.getContentType())){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                         "Error",
                         "Image type not supported"
@@ -211,11 +342,11 @@ public class ItemController extends BaseController {
         }
 
 
-        if (longitude != null && latitude != null){
+        if (longitude != null && latitude != null && locationTitle != null){
 
             Geolocation location = geolocationRepository.findLocationByLatitudeAndLongitude(latitude, longitude);
             if (location == null) {
-                location = new Geolocation(longitude, latitude);
+                location = new Geolocation(longitude, latitude, locationTitle);
 
             }
             item.setLocation(geolocationRepository.save(geolocationRepository.save(location)));
