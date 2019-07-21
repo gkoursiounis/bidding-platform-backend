@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
@@ -15,7 +16,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findItemById(Long id);
 
     //DISPLAY COMPLETED AUCTION
-    @Query("SELECT i FROM Item i WHERE :categories IN i.categories")
+    @Query("SELECT i FROM Item i WHERE :categories IN i.categories and i.auctionCompleted = 'false'")
     List<Item> findItemByCategory(@Param("categories") List<String> categories);
 
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'true'")
@@ -29,4 +30,12 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query("SELECT i FROM Item i where i.currently >= :lowerPrice and i.buyPrice <= :higherPrice")
     List<Item> searchByPrice(Double lowerPrice, Double higherPrice);
+
+    @Query(
+            "select i from Item i, ItemCategory ic " +
+                    "where (locate(:query, lower(i.name)) <> 0) or " +
+                    "(locate(:query, lower(i.description)) <> 0) or" +
+                    "(locate(:query, lower(ic.name)) <> 0 and ic in i.categories)"
+    )
+    List<Item> searchItems(@Param("query") String query);
 }

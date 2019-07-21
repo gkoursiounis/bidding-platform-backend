@@ -22,7 +22,6 @@ public class DBFile implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @JsonIgnore
     private String id;
 
 

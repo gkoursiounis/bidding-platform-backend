@@ -77,40 +77,32 @@ public class ItemController extends BaseController {
     /**
      * User can search for items/auctions based on a category
      *
-     * If uniqueSearch is True then we search only for items
-     * that belong to one and only one category (the first given)
-     *
-     * If uniqueSearch is False then we search for items that belong
-     * at least to the specified categories (they might belong to more)
-     *
-     * @param categoryNames
-     * @param uniqueSearch
      * @return a list of items
      */
     @GetMapping("/search")
-    public ResponseEntity categorySearch(@RequestParam List<String> categoryNames,
-                                                @RequestParam boolean uniqueSearch){
+    public ResponseEntity searchBar(@RequestParam String keyword){
 
-        if(categoryNames == null){
+        List<Item> res = new ArrayList<>();
+
+        if ("".equals(keyword)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "Names of the categories are missing"
+                    "Invalid keyword"
             ));
         }
 
-        if(uniqueSearch){
-          //  itemCategoryRepository.getAllitemsOfCategory(categoryNames.get(0))
-            return ResponseEntity.ok(null);
-        }
-        else{
-            return ResponseEntity.ok(itemRepository.findItemByCategory(categoryNames));
-        }
+        keyword = keyword.toLowerCase();
+
+        res = itemRepository.searchItems(keyword);
+        Collections.sort(res);
+
+        return ResponseEntity.ok(res);
     }
 
 
     //TODO complete
     @GetMapping("/search/filters")
-    public ResponseEntity multipleSearch(@Nullable @RequestParam List<String> categoryNames,
+    public ResponseEntity filterSearch(@Nullable @RequestParam List<String> categoryNames,
                                          @Nullable @RequestParam Double lowerPrice,
                                          @Nullable @RequestParam Double higherPrice,
                                          @Nullable @RequestParam String freeText){
@@ -341,11 +333,13 @@ public class ItemController extends BaseController {
         ));
     }
 
+    //TODO test delete
     @PostMapping("/test")
     public ResponseEntity upPic(@RequestParam(name = "media") MultipartFile media){
         DBFile dbFile = dBFileStorageService.storeFile(media);
         dbFile.setDownloadLink("/downloadFile/" + dbFile.getId() + "." + dbFile.getFileType().split("/")[1]);
         dbFile = dbFileRepository.save(dbFile);
+        System.out.println(dbFile.getId() + "\n" + dbFile.getFileName() + "\n" + dbFile.getDownloadLink());
         return ResponseEntity.ok(dbFile);
     }
 }

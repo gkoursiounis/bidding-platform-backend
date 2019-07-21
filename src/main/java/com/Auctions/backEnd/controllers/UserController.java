@@ -84,23 +84,23 @@ public class UserController extends BaseController {
 //    public ResponseEntity getPartialMatchedUsers(@RequestParam String name) {
 //        User requester = requestUser();
 //        List<FormattedUser> res = new ArrayList<>();
-
+//
 //        if ("".equals(name)) {
 //                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
 //                        "Error",
 //                        "Invalid name."
 //                ));
 //        }
-
-   //     name = name.toLowerCase();
-
+//
+//        name = name.toLowerCase();
+//
 //        userRepository.searchUsers(name).forEach(user -> {
 //            if (user != requester && !user.getBlocked().contains(requester) && !requester.getBlocked().contains(user)) {
 //                user.setFollowed(requester.getFollowing().contains(user));
 //                res.add(new FormattedUser(user));
 //            }
 //        });
-
+//
 //        Collections.sort(res);
 //        return ResponseEntity.ok(res);
 //    }
