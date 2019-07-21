@@ -2,7 +2,6 @@ package com.Auctions.backEnd.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,9 +19,7 @@ import java.util.*;
 @Table(name = "user")
 public class User extends AuditModel {
 
-    // ---------
-    // Relations
-    // ---------
+
     @OneToOne
     @JoinColumn(name = "fk_account")
     @JsonIgnore
@@ -83,9 +80,7 @@ public class User extends AuditModel {
 //    @ManyToMany(cascade = CascadeType.DETACH)
 //    private Set<HashTag> hashTags = new HashSet<>();
 
-    // ------
-    // Fields
-    // ------
+
     @NotNull
     @Column(name = "firstName")
     private String firstName;
@@ -111,18 +106,8 @@ public class User extends AuditModel {
     private Integer bidderRating;
 
 
-//    @JsonIgnore
-//    public List<Notification> getRecentReceivedActivities() {
-//        List<Notification> res = new ArrayList<>(this.getReceivedActivities());
-//        if (res.size() > 100) {
-//            res = res.subList(0, 100);
-//        }
-//        return res;
-//    }
 
-    // -------
-    // Methods
-    // -------
+
     @JsonIgnore
     public String getUsername() {
         return this.account.getUsername();

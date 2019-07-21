@@ -47,7 +47,7 @@ public class ItemController {
      * A User can get an item/auction details using its itemId
      * If the itemId is invalid then we get an <HTTP>NOT FOUND</HTTP>
      *
-     * @param itemId
+     * @param itemId - Id of the item
      * @return the item details
      */
     @GetMapping("/{itemId}")
@@ -107,7 +107,7 @@ public class ItemController {
     @GetMapping("/search/partialMatch")
     public ResponseEntity getPartialMatchedSearch(@RequestParam String keyword){
 
-        List<Item> res = new ArrayList<>();
+        List<Item> res;
 
         if (keyword == null || keyword.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
@@ -134,14 +134,14 @@ public class ItemController {
     @GetMapping("/search/searchBar")
     public ResponseEntity searchBar(@RequestParam String text){
 
-        if(text.isEmpty() || text == null){
+        if(text == null || text.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "No keywords given"
             ));
         }
 
-        Set<Item> res = new HashSet<Item>();
+        Set<Item> res = new HashSet<>();
 
         //split string to words
         String[] values = text.split(" ");
@@ -216,7 +216,7 @@ public class ItemController {
         if(description != null){
             byDescription = itemRepository.searchByDescription(description);
         }
-
+//TODO check the warning
         //https://www.baeldung.com/java-lists-intersection
         Set<Item> result = byCategory.stream()
                 .distinct()
@@ -289,13 +289,13 @@ public class ItemController {
         }
 
 
-        if (categoriesId.length > 5) {
+        if (categoriesId != null && categoriesId.length > 5) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "You cannot set more than 5 categories for an item"
             ));
         }
-        else if(categoriesId.length == 0){
+        else if(categoriesId != null && categoriesId.length == 0){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "You need to set at least one category for an item"
@@ -318,7 +318,7 @@ public class ItemController {
 
         if(media != null){
 
-            if (!baseController.contentTypes.contains(media.getContentType())){
+            if (!BaseController.contentTypes.contains(media.getContentType())){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                         "Error",
                         "Image type not supported"
@@ -366,6 +366,19 @@ public class ItemController {
     }
 
 
+    /**
+     * A user can modify the details of an item belonging to him
+     * The user cannot modify an item if the first bid has been submitted
+     *
+     * @param itemId - the id of the item
+     * @param name - optionally new name
+     * @param buyPrice - optionally new buy price
+     * @param firstBid - optionally new first bid
+     * @param categoriesId - optionally new categories
+     * @param endsAt - optionally new auction ending date
+     * @param description - optionally new description
+     * @return the modified item
+     */
     @PatchMapping("/{itemId}")
     public ResponseEntity modifyItem(@PathVariable (value = "itemId") long itemId,
                                      @Nullable @RequestParam String name,
@@ -375,11 +388,20 @@ public class ItemController {
                                      @Nullable @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
+        User requester = baseController.requestUser();
+
         Item item = itemRepository.findItemById(itemId);
         if(item == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
                     "Item not found. Invalid item Id"
+            ));
+        }
+
+        if(!requester.getItems().contains(item)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You cannot modify an item that does not belong to you"
             ));
         }
 
@@ -401,7 +423,7 @@ public class ItemController {
         if(buyPrice != null){ item.setBuyPrice(buyPrice); }
         if(firstBid != null){ item.setFirstBid(firstBid); }
         if(endsAt != null){ item.setEndsAt(endsAt); }
-        if (description != null) { item.setDescription(description); }
+        if(description != null) { item.setDescription(description); }
 
 
         if (categoriesId.length > 5) {
@@ -418,6 +440,7 @@ public class ItemController {
         }
         else{
 
+            item.getCategories().clear();
             for(Integer id: categoriesId){
                 ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
 
@@ -432,18 +455,39 @@ public class ItemController {
         }
 
         itemRepository.save(item);
+
+        //TODO check if correct
+        requester.getItems().add(item);
+        userRepository.save(requester);
+
         return ResponseEntity.ok(item);
     }
 
 
+    /**
+     * A User can delete one of his items/auctions
+     * provided that the first bid has not been made
+     *
+     * @param itemId - Id of the item
+     * @return an <HTTP>OK</HTTP>
+     */
     @DeleteMapping("/{itemId}")
     public ResponseEntity deleteItem(@PathVariable (value = "itemId") long itemId){
+
+        User requester = baseController.requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
                     "Item not found. Invalid item Id"
+            ));
+        }
+
+        if(!requester.getItems().contains(item)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You cannot delete an auction that does not belong to you"
             ));
         }
 
@@ -463,6 +507,8 @@ public class ItemController {
                 "Auction has been deleted"
         ));
     }
+
+
 
     //TODO test delete
     @PostMapping("/test")

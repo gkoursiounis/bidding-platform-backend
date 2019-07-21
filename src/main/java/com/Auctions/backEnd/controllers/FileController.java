@@ -67,7 +67,7 @@ public class FileController {
 
         if(media != null){
 
-            if(!baseController.contentTypes.contains(media.getContentType())) {
+            if(!BaseController.contentTypes.contains(media.getContentType())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                         "Error",
                         "Image type not supported"

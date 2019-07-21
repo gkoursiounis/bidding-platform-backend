@@ -53,7 +53,6 @@ public class BaseController {
         String token = resolveToken(currentRequest);
         Authentication authentication = tokenProvider.getAuthentication(token);
 
-        User user = userRepository.findByAccount_Username(authentication.getName());
-        return user;
+        return userRepository.findByAccount_Username(authentication.getName());
     }
 }

@@ -16,10 +16,18 @@ public class LocationController {
     public LocationController(GeolocationRepository geolocationRepository) {
         this.geolocationRepository = geolocationRepository;
     }
-//TODO do we need this?
 
-//    @GetMapping("/search")
-//    public ResponseEntity getPartialMatchedLocations(@RequestParam String query) {
-//        return ResponseEntity.ok(geolocationRepository.searchLocations(query.toLowerCase()));
-//    }
+
+    /**
+     * The system can provide the user with partial matching search in order
+     * to help him find a location during his filter search
+     * (see com.Auctions.backEnd.controllers.ItemController : filterSearch())
+     *
+     * @param query - location keyword
+     * @return a set of possible locations
+     */
+    @GetMapping("/search")
+    public ResponseEntity getPartialMatchedLocations(@RequestParam String query) {
+        return ResponseEntity.ok(geolocationRepository.searchLocations(query.toLowerCase()));
+    }
 }

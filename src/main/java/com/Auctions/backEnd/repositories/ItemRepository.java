@@ -8,14 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findByName(String name);
     Item findItemById(Long id);
 
-    //DISPLAY COMPLETED AUCTION
+    //TODO DISPLAY COMPLETED AUCTION
     @Query("SELECT i FROM Item i WHERE :categories IN i.categories and i.auctionCompleted = 'false'")
     List<Item> findItemByCategory(@Param("categories") List<String> categories);
 

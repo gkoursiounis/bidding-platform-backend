@@ -52,7 +52,6 @@ public class AuthController {
     private String secret;
 
     private String visitorToken;
-    private AccountController accountController;
 
     @Autowired
     public AuthController(PasswordEncoder passwordEncoder,
@@ -61,7 +60,6 @@ public class AuthController {
                           UserRepository userRepository,
                           AccountRepository accountRepository,
                           RequestMappingHandlerMapping requestMappingHandlerMapping,
-                          AccountController accountController,
                           BaseController baseController) {
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
@@ -69,7 +67,6 @@ public class AuthController {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
-        this.accountController = accountController;
         this.baseController = baseController;
     }
 

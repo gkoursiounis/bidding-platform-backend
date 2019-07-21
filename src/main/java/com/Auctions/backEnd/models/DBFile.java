@@ -1,6 +1,5 @@
 package com.Auctions.backEnd.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -38,6 +37,5 @@ public class DBFile implements Serializable {
     public DBFile(String fileName, String fileType, byte[] data) {
         this.fileName = fileName;
         this.fileType = fileType;
-        // this.data = data;
     }
 }

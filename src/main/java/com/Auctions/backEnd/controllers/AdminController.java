@@ -110,7 +110,7 @@ public class AdminController {
     /**
      * The administrator can verify a single user using his userId
      *
-     * @param userId
+     * @param userId - the Id of the user whom the admin wishes to verify
      * @return <HTTP>OK</HTTP>
      */
     @PatchMapping("/verifyUser/{userId}")
@@ -155,7 +155,7 @@ public class AdminController {
      * The administrator can create an new auction/item category (ItemCategory)
      * If the category name exists then we get an <HTTP>BAD REQUEST</HTTP>
      *
-     * @param name
+     * @param name - the name of the new category
      * @return a new item category
      */
     @PostMapping("/newCategory")
@@ -170,7 +170,7 @@ public class AdminController {
             ));
         }
 
-        if(name.isEmpty() || name == null){
+        if(name == null || name.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "Invalid category name"
@@ -197,7 +197,7 @@ public class AdminController {
      * The administrator can delete a user using his userId
      * If the user is an administrator then we get an <HTTP>BAD REQUEST</HTTP>
      *
-     * @param userId
+     * @param userId - the Id of the user whom the admin wishes to delete
      * @return <HTTP>OK</HTTP>
      */
     @DeleteMapping("/deleteUser/{userId}")

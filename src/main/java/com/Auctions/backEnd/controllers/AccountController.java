@@ -2,11 +2,9 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.repositories.AccountRepository;
-import com.Auctions.backEnd.repositories.UserRepository;
 import com.Auctions.backEnd.requests.AccountRequest;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.responses.Valid;
-import com.Auctions.backEnd.services.security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +17,13 @@ public class AccountController {
 
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
-    private final TokenProvider tokenProvider;
     private final BaseController baseController;
 
     @Autowired
     public AccountController(PasswordEncoder passwordEncoder, AccountRepository accountRepository,
-                             UserRepository userRepository, TokenProvider tokenProvider,
                              BaseController baseController) {
         this.passwordEncoder = passwordEncoder;
         this.accountRepository = accountRepository;
-        this.userRepository = userRepository;
-        this.tokenProvider = tokenProvider;
         this.baseController = baseController;
     }
 
@@ -42,7 +35,7 @@ public class AccountController {
      * If a username exists we get back an: <HTTP>BAD REQUEST</HTTP> with Valid.valid = false
      * If a username does not exist we get back an: <HTTP>OK</HTTP> with Valid.valid = true
      *
-     * @param username
+     * @param username - the username we wish to check
      * @return a validity field {false,true}
      */
     @GetMapping("/checkUsername")
@@ -62,7 +55,7 @@ public class AccountController {
      * If an email exists we get back an: <HTTP>BAD REQUEST</HTTP> with Valid.valid = false
      * If an email does not exist we get back an: <HTTP>OK</HTTP> with Valid.valid = true
      *
-     * @param email
+     * @param email - the email we wish to check
      * @return a validity field {false,true}
      */
     @GetMapping("/checkEmail")
@@ -92,7 +85,7 @@ public class AccountController {
     /**
      * A user can change his password
      *
-     * @param accountRequest
+     * @param accountRequest - HTTP request body containing the old and the new password
      * @return an <HTTP>OK</HTTP>
      */
     @PutMapping("/changePassword")

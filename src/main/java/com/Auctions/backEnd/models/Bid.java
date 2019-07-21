@@ -1,15 +1,11 @@
 package com.Auctions.backEnd.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ManyToAny;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Entity
 @Setter
