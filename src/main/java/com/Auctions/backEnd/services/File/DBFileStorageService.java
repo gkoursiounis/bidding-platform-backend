@@ -61,4 +61,6 @@ public class DBFileStorageService {
                 .orElseThrow(() -> new FileStorageException("File not found with id " + fileId));
     }
 
+    //TODO download file
+
 }

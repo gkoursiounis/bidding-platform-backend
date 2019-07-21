@@ -16,9 +16,6 @@ public interface ItemCategoryRepository extends JpaRepository<ItemCategory, Long
 
     ItemCategory findItemCategoryByName(String name);
 
-    @Query("SELECT ic.items FROM ItemCategory ic WHERE ic.name = :categories")
-    List<Item> getAllitemsOfCategory(@Param("name") String name);
-
-    @Query("SELECT DISTINCT(ic.names) FROM ItemCategory ic")
+    @Query("SELECT distinct(ic.name) FROM ItemCategory ic")
     List<Item> getAllCategoriesNames();
 }

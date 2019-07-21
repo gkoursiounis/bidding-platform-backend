@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
@@ -44,6 +46,9 @@ public class ItemControllerTest {
     private com.Auctions.backEnd.TestUtils testUtils;
 
     @Autowired
+    private WebApplicationContext wac;
+
+    @Autowired
     private AccountRepository accountRepository;
 
     @Autowired
@@ -58,6 +63,8 @@ public class ItemControllerTest {
     private void before() throws Exception {
 
         testUtils.clearDB();
+
+        mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         user1 = createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@usi.ch");
         user2 = createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@usi.ch");
@@ -210,11 +217,22 @@ public class ItemControllerTest {
     @DisplayName("Visitor tries to create an item/auction")
     public void createItem7() throws Exception {
 
+        MockMultipartFile file = new MockMultipartFile(
+                "media",
+                "Bloodhound.jpg",
+                "image/jpeg",
+                new FileInputStream("media/Bloodhound.jpg"));
+
         mvc.perform(
-                get("/item/test")
-                        .param("categoriesId", "1,2,3,4")
+                multipart("/item/test")
+                        .file(file)
+                        .secure(true)
                         .header("Authorization", user1)
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isBadRequest());
+
+
     }
+
+
 }

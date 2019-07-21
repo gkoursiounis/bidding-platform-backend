@@ -99,7 +99,8 @@ public class ItemController extends BaseController {
         }
 
         if(uniqueSearch){
-            return ResponseEntity.ok(itemCategoryRepository.getAllitemsOfCategory(categoryNames.get(0)));
+          //  itemCategoryRepository.getAllitemsOfCategory(categoryNames.get(0))
+            return ResponseEntity.ok(null);
         }
         else{
             return ResponseEntity.ok(itemRepository.findItemByCategory(categoryNames));
@@ -338,5 +339,13 @@ public class ItemController extends BaseController {
                 "Ok",
                 "Auction has been deleted"
         ));
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity upPic(@RequestParam(name = "media") MultipartFile media){
+        DBFile dbFile = dBFileStorageService.storeFile(media);
+        dbFile.setDownloadLink("/downloadFile/" + dbFile.getId() + "." + dbFile.getFileType().split("/")[1]);
+        dbFile = dbFileRepository.save(dbFile);
+        return ResponseEntity.ok(dbFile);
     }
 }
