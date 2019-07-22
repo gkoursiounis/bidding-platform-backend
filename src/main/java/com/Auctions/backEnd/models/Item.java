@@ -50,7 +50,7 @@ public class Item extends AuditModel implements Serializable {
     private Date endsAt;
 
     @Column(name = "auction_completed")
-    private boolean auctionCompleted = false;
+    private Boolean auctionCompleted = false;
 
     @Column(name = "description", length = 250)
     private String description;

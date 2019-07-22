@@ -53,7 +53,7 @@ public class AdminController {
 
     /**
      * The Administrator can get a list of all the existing users
-     * including administrators but excluding himself
+     * including administrators and himself
      *
      * @return a list of users
      */
@@ -69,10 +69,7 @@ public class AdminController {
             ));
         }
 
-        List<User> users = userRepository.getAllUsers();
-        users.removeIf(user -> user.equals(requester));
-
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userRepository.getAllUsers());
     }
 
 
@@ -97,7 +94,7 @@ public class AdminController {
         pending.forEach(user -> {
             user.getAccount().setVerified(true);
             accountRepository.save(user.getAccount());
-            userRepository.save(user);
+           // userRepository.save(user);
         });
 
         return ResponseEntity.ok(new Message(
@@ -142,7 +139,7 @@ public class AdminController {
 
         user.getAccount().setVerified(true);
         accountRepository.save(user.getAccount());
-        userRepository.save(user);
+      //  userRepository.save(user);
 
         return ResponseEntity.status(HttpStatus.OK).body(new Message(
                 "Ok",

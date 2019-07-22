@@ -1,5 +1,6 @@
 package com.Auctions.backEnd;
 
+import com.Auctions.backEnd.repositories.*;
 import lombok.NoArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -8,9 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import com.Auctions.backEnd.repositories.AccountRepository;
 
-import com.Auctions.backEnd.repositories.UserRepository;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.io.FileInputStream;
@@ -28,18 +27,37 @@ public class TestUtils {
 	@Autowired
     private AccountRepository accountRepository;
 
-    
+	@Autowired
+	private DBFileRepository dbFileRepository;
 
+	@Autowired
+	private GeolocationRepository geolocationRepository;
+
+	@Autowired
+	private ItemCategoryRepository itemCategoryRepository;
+
+	@Autowired
+	private ItemRepository itemRepository;
 
 	public void clearDB() {
 
-        
 		userRepository.deleteAll();
 		userRepository.flush();
 
         accountRepository.deleteAll();
         accountRepository.flush();
 
+		dbFileRepository.deleteAll();
+		dbFileRepository.flush();
+
+		geolocationRepository.deleteAll();
+		geolocationRepository.flush();
+
+		itemCategoryRepository.deleteAll();
+		itemCategoryRepository.flush();
+
+		itemRepository.deleteAll();
+		itemRepository.flush();
 	}
 
 	/**

@@ -4,10 +4,10 @@ import com.Auctions.backEnd.BackEndApplication;
 import com.Auctions.backEnd.TestUtils;
 import com.Auctions.backEnd.configs.TestConfig;
 import com.Auctions.backEnd.models.Account;
-import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +48,6 @@ public class AdminControllerTest {
     private String user1;
     private String user2;
     private String user3;
-    private String admin;
 
     @BeforeEach
     private void before() throws Exception {
@@ -62,7 +61,6 @@ public class AdminControllerTest {
         user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
     }
 
-
     private void unverify(final String username) {
 
         Account account = accountRepository.findByUsername(username);
@@ -71,11 +69,20 @@ public class AdminControllerTest {
         accountRepository.save(account);
     }
 
+    private void verify(final String username) {
+
+        Account account = accountRepository.findByUsername(username);
+        assertNotNull(account);
+        account.setVerified(true);
+        accountRepository.save(account);
+    }
+
     private void makeAdmin(final String username){
 
         Account user = accountRepository.findByUsername(username);
         assertNotNull(user);
         user.setAdmin(true);
+        user.setVerified(true);
         accountRepository.save(user);
     }
 
@@ -92,6 +99,7 @@ public class AdminControllerTest {
 
         makeAdmin("user3");
         unverify("user1");
+        verify("user2");
 
         mvc.perform(get("/admin/pendingRegisters")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -111,6 +119,8 @@ public class AdminControllerTest {
     public void getPendingRegisters2() throws Exception {
 
         makeAdmin("user3");
+        verify("user1");
+        verify("user2");
 
         mvc.perform(get("/admin/pendingRegisters")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -176,12 +186,12 @@ public class AdminControllerTest {
 
 
     /**
-     * Admin gets the list of all users except himself
+     * Admin gets the list of all users
      *
      * @throws Exception - mvc.perform throws exception
      */
     @Test
-    @DisplayName("Get all users")
+    @DisplayName("Get all users - get everyone")
     public void getAllUsers1() throws Exception {
 
         makeAdmin("user3");
@@ -190,7 +200,7 @@ public class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)));
+                .andExpect(jsonPath("$.*", hasSize(3)));
     }
 
 
@@ -210,18 +220,18 @@ public class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)));
+                .andExpect(jsonPath("$.*", hasSize(3)));
     }
 
 
     /**
-     * Admin gets the list of all users using invalid token
+     * A User gets the list of all users using invalid token
      * We should get back an <HTTP>BAD REQUEST</HTTP>
      *
      * @throws Exception - mvc.perform throws exception
      */
     @Test
-    @DisplayName("Get all registers - invalid token")
+    @DisplayName("Get all users - invalid token")
     public void getAllUsers3() throws Exception {
 
         mvc.perform(get("/admin/allUsers")
@@ -238,7 +248,7 @@ public class AdminControllerTest {
      * @throws Exception - mvc.perform throws exception
      */
     @Test
-    @DisplayName("Get pending registers - no admin")
+    @DisplayName("Get all users - no admin")
     public void getAllUsers4() throws Exception {
 
         mvc.perform(get("/admin/allUsers")
@@ -249,13 +259,12 @@ public class AdminControllerTest {
 
 
     /**
-     * A User gets the list of all users
-     * We should get back an <HTTP>UNAUTHORIZED</HTTP>
+     * Admin verifies all pending users in once
      *
      * @throws Exception - mvc.perform throws exception
      */
     @Test
-    @DisplayName("Get pending registers - no admin")
+    @DisplayName("Verify all users - successful")
     public void verifyAllUsers1() throws Exception {
 
         makeAdmin("user3");
@@ -273,4 +282,270 @@ public class AdminControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(0)));
     }
+
+
+    /**
+     * A User verifies all pending users
+     * We should get back an <HTTP>UNAUTHORIZED</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Verify all users - no admin")
+    public void verifyAllUsers2() throws Exception {
+
+        mvc.perform(patch("/admin/verifyAll")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    /**
+     * A User verifies all pending users using invalid token
+     * We should get back an <HTTP>BAD REQUEST</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Verify all users - invalid token")
+    public void verifyAllUsers3() throws Exception {
+
+        mvc.perform(get("/admin/verifyAll")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "invalidToken"))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * A User verifies another user
+     * We should get back an <HTTP>UNAUTHORIZED</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Verify user - no admin")
+    public void verifyUser1() throws Exception {
+
+        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+
+        mvc.perform(patch("/admin/verifyUser/" + user2_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    /**
+     * A User verifies another user using invalid token
+     * We should get back an <HTTP>BAD REQUEST</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Verify user - invalid token")
+    public void verifyUser2() throws Exception {
+
+        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+
+        mvc.perform(patch("/admin/verifyUser/" + user2_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "invalidToken"))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Admin verifies a user using invalid userId
+     * We should get back an <HTTP>NOT FOUND</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Verify user - invalid user id")
+    public void verifyUser3() throws Exception {
+
+        makeAdmin("user3");
+
+        mvc.perform(patch("/admin/verifyUser/123")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user3))
+                .andExpect(status().isNotFound());
+    }
+
+
+    /**
+     * Admin verifies an already verified user
+     * We should get back an <HTTP>BAD REQUEST</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Verify user - already verified")
+    public void verifyUser4() throws Exception {
+
+        makeAdmin("user3");
+        verify("user2");
+        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+
+        mvc.perform(patch("/admin/verifyUser/" + user2_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user3))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Admin successfully verifies a user
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Verify user - successful")
+    public void verifyUser5() throws Exception {
+
+        makeAdmin("user3");
+        unverify("user2");
+        verify("user1");
+
+        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+
+        String ver_before = ((JSONObject) new JSONParser().parse(TestUtils.getUser(mvc, user3, "user2")
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString()))
+                .get("verified").toString();
+
+        assertEquals(ver_before, "false");
+
+        mvc.perform(patch("/admin/verifyUser/" + user2_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user3))
+                .andExpect(status().isOk());
+
+        String ver_after = ((JSONObject) new JSONParser().parse(TestUtils.getUser(mvc, user3, "user2")
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString()))
+                .get("verified").toString();
+
+        assertEquals(ver_after, "true");
+    }
+
+
+    /**
+     * Admin creates a new item category
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Create category - successful")
+    public void createItemCategory1() throws Exception {
+
+        makeAdmin("user3");
+
+        mvc.perform(post("/admin/newCategory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "clothes")
+                .header("Authorization", user3))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * Admin creates a new item category with a null name
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Create category - null name")
+    public void createItemCategory2() throws Exception {
+
+        makeAdmin("user3");
+
+        mvc.perform(post("/admin/newCategory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user3))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Admin creates a new item category with an empty name
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Create category - empty name")
+    public void createItemCategory3() throws Exception {
+
+        makeAdmin("user3");
+
+        mvc.perform(post("/admin/newCategory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "")
+                .header("Authorization", user3))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Admin creates a new item category but it already exists
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Create category - name exists")
+    public void createItemCategory4() throws Exception {
+
+        makeAdmin("user3");
+
+        mvc.perform(post("/admin/newCategory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "clothes")
+                .header("Authorization", user3))
+                .andExpect(status().isOk());
+
+        mvc.perform(post("/admin/newCategory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "clothes")
+                .header("Authorization", user3))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * A User creates a new item category
+     * We should get back an <HTTP>UNAUTHORIZED</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Create category - no admin")
+    public void createItemCategory5() throws Exception {
+
+        mvc.perform(post("/admin/newCategory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "clothes")
+                .header("Authorization", user1))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    /**
+     * A User creates a new item category using invalid token
+     * We should get back an <HTTP>BAD REQUEST</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Create category - invalid token")
+    public void createItemCategory6() throws Exception {
+
+        mvc.perform(patch("/admin/newCategory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "clothes")
+                .header("Authorization", "invalidToken"))
+                .andExpect(status().isBadRequest());
+    }
+
 }
