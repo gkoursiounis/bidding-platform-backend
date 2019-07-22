@@ -1,4 +1,4 @@
-package com.Auctions.backEnd.services.security;
+package com.Auctions.backEnd.services.Security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

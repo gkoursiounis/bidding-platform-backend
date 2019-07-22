@@ -194,7 +194,7 @@ public class ItemControllerTest {
     @DisplayName("Visitor tries to create an item/auction")
     public void createItem6() throws Exception {
 
-        String user4 = createAccount(mvc, "user4", "myPwd123", "FirstName4", "LastName4", "email4@usi.ch", true);
+        String user4 = createAccount(mvc, "user4", "myPwd123", "FirstName4", "LastName4", "email4@usi.ch");
 
         mvc.perform(
                 post("/item")

@@ -61,23 +61,17 @@ public class ItemController {
             ));
         }
 
+        Date now = new Date();
+        if (!item.isAuctionCompleted() && now.compareTo(item.getEndsAt()) >= 0){
+            item.setAuctionCompleted(true);
+            itemRepository.save(item);
+        }
+
         return ResponseEntity.ok(item);
     }
 
     //TODO additional features --> modify user details
     //TODO HUGE ---> filter time to close open auctions and modify search queries
-
-    /**
-     * A User can get a list of His completed auctions
-     * i.e. a list of items where the field auctionCompleted is True
-     *
-     * @return list of items
-     */
-    @GetMapping("/completedAuctions")
-    public ResponseEntity getUserCompletedAuctions(){
-        User requester = baseController.requestUser();
-        return ResponseEntity.ok(itemRepository.getAllcompletedAuctions(requester));
-    }
 
 
     /**
@@ -88,7 +82,8 @@ public class ItemController {
      */
     @GetMapping("/openAuctions")
     public ResponseEntity getAllOpenAuctions(){
-        return ResponseEntity.ok(itemRepository.getAllopenAuctions());
+        baseController.auctionClosure();
+        return ResponseEntity.ok(itemRepository.getAllOpenAuctions());
     }
 
 
@@ -99,6 +94,7 @@ public class ItemController {
      */
     @GetMapping("/allAuctions")
     public ResponseEntity getAllItems(){
+        baseController.auctionClosure();
         return ResponseEntity.ok(itemRepository.getAllAuctions());
     }
 
@@ -129,6 +125,12 @@ public class ItemController {
      * A User can use a search bar to find items/auctions based on:
      * the category name, the item's name and the item's description
      *
+     * For every word of the text given we search for partial matching
+     * in the above mentioned fields and we collect the results in a set
+     * called 'res'. Afterwards, we sort the results on a best fit basis
+     * i.e. the items appearing more times in the set are moved first in
+     * the set
+     *
      * @return a list of items
      */
     @GetMapping("/search/searchBar")
@@ -140,6 +142,8 @@ public class ItemController {
                     "No keywords given"
             ));
         }
+
+        baseController.auctionClosure();
 
         Set<Item> res = new HashSet<>();
 
@@ -176,7 +180,6 @@ public class ItemController {
     }
 
 
-    //TODO complete
     @GetMapping("/search/filters")
     public ResponseEntity filterSearch(@Nullable @RequestParam String category,
                                        @Nullable @RequestParam Double lowerPrice,
@@ -202,10 +205,10 @@ public class ItemController {
         if(lowerPrice != null && higherPrice != null){
             byPrice = itemRepository.searchByPrice(lowerPrice, higherPrice);
         }
-        else if(lowerPrice == null){
+        else if(higherPrice != null){
             byHigherPrice = itemRepository.searchByHigherPrice(higherPrice);
         }
-        else{
+        else if(lowerPrice != null){
             byLowerPrice = itemRepository.searchByLowerPrice(lowerPrice);
         }
 
@@ -216,15 +219,15 @@ public class ItemController {
         if(description != null){
             byDescription = itemRepository.searchByDescription(description);
         }
-//TODO check the warning
+
         //https://www.baeldung.com/java-lists-intersection
         Set<Item> result = byCategory.stream()
                 .distinct()
                 .filter( byPrice::contains)
+                .filter( byDescription::contains)
+                .filter( byLocationTitle::contains)
                 .filter( byHigherPrice::contains)
                 .filter( byLowerPrice::contains)
-                .filter( byLocationTitle::contains)
-                .filter( byDescription::contains)
                 .collect(Collectors.toSet());
 
         return ResponseEntity.ok(result);

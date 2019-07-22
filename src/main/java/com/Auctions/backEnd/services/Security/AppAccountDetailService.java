@@ -1,4 +1,4 @@
-package com.Auctions.backEnd.services.security;
+package com.Auctions.backEnd.services.Security;
 
 import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.repositories.AccountRepository;

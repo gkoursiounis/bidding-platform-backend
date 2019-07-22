@@ -3,6 +3,8 @@ package com.Auctions.backEnd.controllers;
 import com.Auctions.backEnd.BackEndApplication;
 import com.Auctions.backEnd.TestUtils;
 import com.Auctions.backEnd.configs.TestConfig;
+import com.Auctions.backEnd.models.Account;
+import com.Auctions.backEnd.repositories.AccountRepository;
 import org.json.simple  .JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterEach;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,8 +44,9 @@ public class AuthControllerTest{
     private String user1;
     private String user2;
     private String user3;
+    private AccountRepository accountRepository;
 
-	@BeforeEach
+    @BeforeEach
     public void before() throws Exception {
 
         this.testUtils.clearDB();
@@ -54,6 +58,22 @@ public class AuthControllerTest{
         user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@usi.ch");
     }
 
+    private void verify(final String username) {
+
+        Account account = accountRepository.findByUsername(username);
+        assertNotNull(account);
+        account.setVerified(true);
+        accountRepository.save(account);
+    }
+
+    private void unverify(final String username) {
+
+        Account account = accountRepository.findByUsername(username);
+        assertNotNull(account);
+        account.setVerified(false);
+        accountRepository.save(account);
+    }
+    
     @AfterEach
     public void  after() {
         this.testUtils.clearDB();
@@ -99,7 +119,7 @@ public class AuthControllerTest{
         final String content = "{" +
                                 "\"username\" : \"user1\", " +
                                 "\"password\" : \"myPwd123\", " +
-                                "\"email\" : \"email0@usi.ch\", " +
+                                "\"email\" : \"email0@di.uoa.gr\", " +
                                 "\"firstName\" : \"FirstName1\", " +
                                 "\"lastName\" : \"LastName1\", " +
                                 "\"telNumber\" : \"1234567890\", " +
@@ -122,7 +142,7 @@ public class AuthControllerTest{
 	    final String content = "{" +
                                 "\"username\" : \"user0\", " +
                                 "\"password\" : \"myPwd123\", " +
-                                "\"email\" : \"email1@usi.ch\", " +
+                                "\"email\" : \"email1@di.uoa.gr\", " +
                                 "\"firstName\" : \"FirstName1\", " +
                                 "\"lastName\" : \"LastName1\", " +
                                 "\"telNumber\" : \"1234567890\", " +
@@ -142,7 +162,7 @@ public class AuthControllerTest{
     @DisplayName("Signup without username")
     public void signup3() throws Exception {
 
-	    final String email = "email0@usi.ch";
+	    final String email = "email0@di.uoa.gr";
 
 	    final String content = "{" +
                                 "\"password\" : \"myPwd123\", " +
@@ -174,7 +194,7 @@ public class AuthControllerTest{
         final String username = "user0" ;
 
         final String content = "{" +
-                "\"username\" : \"" + username +"\", " +
+                "\"username\" : \"" + username + "\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"firstName\" : \"FirstName11\", " +
                 "\"lastName\" : \"LastName1\", " +
@@ -202,7 +222,7 @@ public class AuthControllerTest{
 
         final String content = "{" +
                 "\"username\" : \"" + username +"\", " +
-                "\"email\" : \"email0@usi.ch\", " +
+                "\"email\" : \"email0@di.uoa.gr\", " +
                 "\"firstName\" : \"FirstName01\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
@@ -375,7 +395,7 @@ public class AuthControllerTest{
 
 
     /**
-     * Signup using 'visitor' as username
+     * Signup using with embed amdin data
      *
      * @throws Exception - mvc.perform in performSignup() throws exception
      */
@@ -384,9 +404,9 @@ public class AuthControllerTest{
     public void signup12() throws Exception {
 
         final String content = "{" +
-                "\"username\" : \"visitor\", " +
+                "\"username\" : \"tediadiktyoy\", " +
                 "\"password\" : \"myPwd123\", " +
-                "\"email\" : \"email5@usi.ch\", " +
+                "\"email\" : \"email5@di.uoa.gr\", " +
                 "\"firstName\" : \"FirstName1\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
@@ -543,6 +563,27 @@ public class AuthControllerTest{
                 .andExpect(status().isUnauthorized());
     }
 
+
+    /**
+     * Login with invalid credential
+     * We should get back an HTTP <Code>UNAUTHORIZED</Code>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Login with wrong credentials")
+    public void authorize7() throws Exception {
+
+        final String content = "{" +
+                "\"username\" : \"tediadiktyoy\", " +
+                "\"password\" : \"adminadmin\" " +
+                "}";
+
+        mvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content))
+                .andExpect(status().isOk());
+    }
 
     /**
      * User accesses secure endpoint and the JWTFilter validates the token

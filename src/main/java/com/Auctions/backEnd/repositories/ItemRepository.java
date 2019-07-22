@@ -22,7 +22,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> getAllcompletedAuctions(User requester);
 
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false'")
-    List<Item> getAllopenAuctions();
+    List<Item> getAllOpenAuctions();
 
     @Query("SELECT i FROM Item i")
     List<Item> getAllAuctions();

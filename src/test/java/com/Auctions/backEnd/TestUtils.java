@@ -91,34 +91,21 @@ public class TestUtils {
 	 * @param mvc - mvc
 	 * @param username - username of the new account
 	 * @param password - password of the new account
-	 * @param firstName - first name of the new account
-	 * @param lastName - last name of the new account
-	 * @param email	- email
 	 * @return user token
 	 * @throws Exception - mvc.perform throws exception
 	 */
-	public static String createAccount(@NonNull final MockMvc mvc,
-												 @NonNull final String  username,
-												 @NonNull final String  password,
-												 @NonNull final String  firstName,
-												 @NonNull final String  lastName,
-												 @NonNull final String  email,
-												 @NonNull final boolean visitor) throws Exception {
+	public static String login(@NonNull final MockMvc mvc,
+							   @NonNull final String  username,
+							   @NonNull final String  password) throws Exception {
 
-		final String token = ((JSONObject) new JSONParser().parse(mvc.perform(post("/auth/signup")
+		final String token = ((JSONObject) new JSONParser().parse(mvc.perform(post("/auth/login")
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(String.format(
 						"{" +
-								"\"username\" : \"%s\", " +
-								"\"password\" : \"%s\", " +
-								"\"email\" : \"%s\", " +
-								"\"firstName\" : \"%s\", " +
-								"\"lastName\" : \"%s\", " +
-								"\"telNumber\" : \"1234567890\", " +
-								"\"taxNumber\" : \"123345\", " +
-								"\"visitor\" : \"%s\" " +
-								"}",
-						username, password, email, firstName, lastName, visitor)))
+						"\"username\" : \"%s\", " +
+						"\"password\" : \"%s\" " +
+						"}",
+						username, password)))
 				.andExpect(status().isOk())
 				.andReturn()
 				.getResponse()

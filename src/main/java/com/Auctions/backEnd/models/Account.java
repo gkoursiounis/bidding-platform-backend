@@ -43,7 +43,7 @@ public class Account extends AuditModel {
     private boolean admin = false;
 
     @Column(name = "account_visitor")
-    private boolean visitor;
+    private boolean visitor;                //TODO remove
 
 
     // Constructors

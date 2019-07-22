@@ -16,3 +16,4 @@ public class Location {
     private String locationType;
     private String locationTitle;
 }
+//TODO maybe delete

@@ -53,7 +53,7 @@ public class AdminController {
 
     /**
      * The Administrator can get a list of all the existing users
-     * excluding the users who are also administrators
+     * including administrators but excluding himself
      *
      * @return a list of users
      */
@@ -70,7 +70,7 @@ public class AdminController {
         }
 
         List<User> users = userRepository.getAllUsers();
-        users.removeIf(user -> user.isAdmin());
+        users.removeIf(user -> user.equals(requester));
 
         return ResponseEntity.ok(users);
     }

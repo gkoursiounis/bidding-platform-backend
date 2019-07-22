@@ -1,4 +1,4 @@
-package com.Auctions.backEnd.services.security;
+package com.Auctions.backEnd.services.Security;
 
 import com.Auctions.backEnd.configs.AppConfig;
 import io.jsonwebtoken.Jwts;

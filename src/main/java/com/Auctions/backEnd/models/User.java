@@ -61,21 +61,11 @@ public class User extends AuditModel {
     @OrderBy(value = "createdAt DESC")
     @JsonIgnore
     private Set<Bid> bids = new TreeSet<>();
-////
-//    @OneToMany(mappedBy = "user")
-//    @OrderBy(value = "createdAt DESC")
-//    @JsonIgnore
-//    private Set<Bid> bids = new TreeSet<>();
-//
-//    @OneToMany(mappedBy = "user")
-//    @OrderBy(value = "createdAt DESC")
-//    @JsonIgnore
-//    private Set<Comment> comments = new TreeSet<>();
-//
-//    @OneToMany(mappedBy = "user")
-//    @OrderBy(value = "createdAt DESC")
-//    @JsonIgnore
-//    private Set<Story> stories = new TreeSet<>();
+
+    @OneToMany(mappedBy = "recipient")
+    @OrderBy(value = "createdAt DESC")
+    @JsonIgnore
+    private Set<Notification> notifications = new TreeSet<>();
 
 //    @ManyToMany(cascade = CascadeType.DETACH)
 //    private Set<HashTag> hashTags = new HashSet<>();
@@ -101,7 +91,7 @@ public class User extends AuditModel {
     @OneToOne
     private Geolocation address;
 
-    private Integer sellerRating;
+    private Integer sellerRating;   //TODO implement
 
     private Integer bidderRating;
 

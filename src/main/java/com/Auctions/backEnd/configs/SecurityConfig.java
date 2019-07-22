@@ -1,7 +1,7 @@
 package com.Auctions.backEnd.configs;
 
-import com.Auctions.backEnd.services.security.JWTConfigurer;
-import com.Auctions.backEnd.services.security.TokenProvider;
+import com.Auctions.backEnd.services.Security.JWTConfigurer;
+import com.Auctions.backEnd.services.Security.TokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

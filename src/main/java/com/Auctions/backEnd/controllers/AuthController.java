@@ -8,7 +8,7 @@ import com.Auctions.backEnd.requests.SignUp;
 import com.Auctions.backEnd.responses.FormattedUser;
 import com.Auctions.backEnd.responses.LoginRes;
 import com.Auctions.backEnd.responses.Message;
-import com.Auctions.backEnd.services.security.TokenProvider;
+import com.Auctions.backEnd.services.Security.TokenProvider;
 import io.jsonwebtoken.*;
 
 import java.nio.charset.StandardCharsets;

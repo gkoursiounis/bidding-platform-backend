@@ -39,7 +39,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query( "SELECT u "+
             "FROM User u, Account a "+
-            "WHERE u.id = a.id and a.verified = false")
+            "WHERE u.account = a and a.verified = 'false'")
     List<User> getPendingUsers();
 
     @Query( "SELECT min(u.createdAt) "+

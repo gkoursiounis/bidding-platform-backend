@@ -1,4 +1,4 @@
-package com.Auctions.backEnd.services.security;
+package com.Auctions.backEnd.services.Security;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
