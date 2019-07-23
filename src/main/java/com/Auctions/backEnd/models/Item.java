@@ -8,10 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 @Entity
 @Setter
@@ -39,7 +36,11 @@ public class Item extends AuditModel implements Serializable {
     private Double firstBid;
 
     @ManyToMany
-    private Set<ItemCategory> categories;
+//    @JoinTable(
+//            name = "item_category",
+//            joinColumns = @JoinColumn(name = "item_id"),
+//            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<ItemCategory> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "item")
     @OrderBy(value = "createdAt DESC")
@@ -52,10 +53,10 @@ public class Item extends AuditModel implements Serializable {
     @Column(name = "auction_completed")
     private Boolean auctionCompleted = false;
 
-    @Column(name = "description", length = 250)
+    @Column(name = "description", length = 250) //TODO o ihamod mas exei dosei kai description 2000 lekseis
     private String description;
 
-    @OneToMany(cascade = CascadeType.REMOVE)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_picture")
     @JsonIgnore
     private List<DBFile> media;         //TODO how to delete picture?

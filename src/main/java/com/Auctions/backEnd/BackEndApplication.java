@@ -122,7 +122,7 @@ public class BackEndApplication implements CommandLineRunner {
 			userRepository.save(user);
 			accountRepository.save(admin);
 
-			System.err.println("Creating admin account...");
+		//	System.err.println("Creating admin account...");
 
 			}
 		}, 0, 1, TimeUnit.HOURS);

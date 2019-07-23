@@ -193,6 +193,29 @@ public class TestUtils {
 
 
 	/**
+	 * Gets the id of the specified user
+	 * @param mvc - mvc
+	 * @param token - token of the user who did the request
+	 * @param categoryName - username of the user that we want to get
+	 * @return - the id of the user we want to get
+	 * @throws Exception - mvc.perform throws Exception
+	 */
+	public static String createCategory(@NonNull final MockMvc mvc,
+										@NonNull final String token,
+										@NonNull final String categoryName) throws Exception{
+
+		return ((JSONObject) new JSONParser().parse(
+					mvc.perform(post("/admin/newCategory")
+							.contentType(MediaType.APPLICATION_JSON)
+							.param("name", categoryName)
+							.header("Authorization", token))
+							.andExpect(status().isOk())
+							.andReturn().getResponse().getContentAsString()))
+				.get("id").toString();
+	}
+
+
+	/**
 	 * Helper function
 	 * Given a user token it creates a post of this user
 	 * using the media/Bloodhound.jpg

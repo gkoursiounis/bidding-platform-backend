@@ -111,7 +111,6 @@ public class AuthControllerTest{
     }
 
 
-
     /**
      * Signup using an already taken username
      *
@@ -407,30 +406,6 @@ public class AuthControllerTest{
 
 
     /**
-     * Signup as the embed admini
-     *
-     * @throws Exception - mvc.perform in performSignup() throws exception
-     */
-//    @Test
-//    @DisplayName("Signup using visitor as name")
-//    public void signup12() throws Exception {
-//
-//        final String content = "{" +
-//                "\"username\" : \"tediadiktyoy\", " +
-//                "\"password\" : \"adminadmin\", " +
-//                "\"email\" : \"sdi1600077@di.uoa.gr\", " +
-//                "\"firstName\" : \"TEDiadiktyoy\", " +
-//                "\"lastName\" : \"spring2019\", " +
-//                "\"telNumber\" : \"1234567890\", " +
-//                "\"taxNumber\" : \"1234\" " +
-//                "}";
-//
-//        performSignup(content)
-//                .andExpect(status().isBadRequest());
-//    }
-
-
-    /**
      * Signup using black list words as username (eg. signup, admin, user etc)
      *
      * @throws Exception - mvc.perform in performSignup() throws exception
@@ -681,27 +656,6 @@ public class AuthControllerTest{
                 .content(content))
                 .andExpect(status().isUnauthorized());
     }
-
-
-    /**
-     * Login as embed admin
-     *
-     * @throws Exception - mvc.perform throws exception
-     */
-//    @Test
-//    @DisplayName("Login as embed admin")
-//    public void authorize7() throws Exception {
-//
-//        final String content = "{" +
-//                "\"username\" : \"tediadiktyoy\", " +
-//                "\"password\" : \"adminadmin\" " +
-//                "}";
-//
-//        mvc.perform(post("/auth/login")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(content))
-//                .andExpect(status().isOk());
-//    }
 
     /**
      * User accesses secure endpoint and the JWTFilter validates the token

@@ -96,6 +96,17 @@ public class ItemController extends BaseController{
     }
 
 
+    /**
+     * A User can get a list of All the items/auctions existing in the database
+     *
+     * @return list of all items
+     */
+    @GetMapping("/allCategories")
+    public ResponseEntity getAllCategoriesNames(){
+        return ResponseEntity.ok(itemCategoryRepository.findAll());
+    }
+
+
 
     @GetMapping("/search/partialMatch")
     public ResponseEntity getPartialMatchedSearch(@RequestParam String keyword){
@@ -184,7 +195,7 @@ public class ItemController extends BaseController{
                                        @Nullable @RequestParam String locationTitle,
                                        @Nullable @RequestParam String description){
 
-        List<Item> byCategory = new ArrayList<>();
+        Set<Item> byCategory = null;
         List<Item> byPrice = new ArrayList<>();
         List<Item> byHigherPrice = new ArrayList<>();
         List<Item> byLowerPrice = new ArrayList<>();
@@ -249,15 +260,15 @@ public class ItemController extends BaseController{
      */
     @PostMapping
     public ResponseEntity createItem(@RequestParam String name,
-                                     @RequestParam double buyPrice,
+                                     @RequestParam Double buyPrice,
                                      @Nullable @RequestParam(name = "media") MultipartFile media,
                                      @RequestParam Double firstBid,
-                                     @Nullable @RequestParam Integer[] categoriesId,    //TODO fix nullable
-                                     @Nullable @RequestParam Double longitude,
-                                     @Nullable @RequestParam Double latitude,
-                                     @Nullable @RequestParam String locationTitle,
+                                     @RequestParam Integer[] categoriesId,    //TODO fix nullable
+                                     @RequestParam Double longitude,
+                                     @RequestParam Double latitude,
+                                     @RequestParam String locationTitle,
                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
-                                     @Nullable @RequestParam String description) {
+                                     @RequestParam String description) {
 
         User requestUser = requestUser();
 
@@ -276,10 +287,7 @@ public class ItemController extends BaseController{
         item.setCurrently(firstBid);
         item.setAuctionCompleted(false);
         item.setEndsAt(endsAt);
-
-        if (description != null) {
-            item.setDescription(description);
-        }
+        item.setDescription(description);
 
 
         if (categoriesId != null && categoriesId.length > 5) {
@@ -305,7 +313,9 @@ public class ItemController extends BaseController{
                             "Category not found. Invalid category Id"
                     ));
                 }
-                item.getCategories().add(category);
+                category.getItems().add(item);
+//                item.getCategories().add(category);
+                itemCategoryRepository.save(category);
             }
         }
 
@@ -342,12 +352,9 @@ public class ItemController extends BaseController{
                 location = new Geolocation(longitude, latitude, locationTitle);
 
             }
-            item.setLocation(geolocationRepository.save(geolocationRepository.save(location)));
-        }
-
-        if (item.getLocation() != null) {
-            item.getLocation().getItems().add(item);
-            geolocationRepository.save(item.getLocation());
+            item.setLocation(location);
+            location.getItems().add(item);  //TODO DO WE NEED THIS?
+            geolocationRepository.save(location);
         }
 
         itemRepository.save(item);
@@ -499,17 +506,5 @@ public class ItemController extends BaseController{
                 "Ok",
                 "Auction has been deleted"
         ));
-    }
-
-
-
-    //TODO test delete
-    @PostMapping("/test")
-    public ResponseEntity upPic(@RequestParam(name = "media") MultipartFile media){
-        DBFile dbFile = dBFileStorageService.storeFile(media);
-        dbFile.setDownloadLink("/downloadFile/" + dbFile.getId() + "." + dbFile.getFileType().split("/")[1]);
-        dbFile = dbFileRepository.save(dbFile);
-        System.out.println(dbFile.getId() + "\n" + dbFile.getFileName() + "\n" + dbFile.getDownloadLink());
-        return ResponseEntity.ok(dbFile);
     }
 }

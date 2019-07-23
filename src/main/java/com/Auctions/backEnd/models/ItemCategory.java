@@ -1,12 +1,14 @@
 package com.Auctions.backEnd.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -19,6 +21,7 @@ public class ItemCategory extends AuditModel {
     @Column(name = "category_name")
     private String name;
 
-    @ManyToMany
-    private List<Item> items;
+    @ManyToMany(mappedBy = "categories")
+    @JsonIgnore
+    private Set<Item> items = new HashSet<>();
 }
