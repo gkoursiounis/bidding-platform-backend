@@ -19,6 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -70,23 +71,30 @@ public class BackEndApplication implements CommandLineRunner {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
 	private AccountRepository accountRepository;
-	PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.err.println("App is running...");
+		System.out.println("App is running...");
 
 		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
 		exec.scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {
-				System.err.println("Creating admin account...");
+				//System.err.println("Creating admin account...");
 
+				userRepository.deleteAll();
+				accountRepository.deleteAll();
 				Account admin = new Account();
 				admin.setUsername("tediadiktyoy");
 				admin.setPassword(passwordEncoder.encode("adminadmin"));
+				//admin.setPassword("12348765487654");
 				admin.setEmail("sdi1600077@di.uoa.gr");
 				admin.setAdmin(true);
 				admin.setVerified(true);
@@ -98,9 +106,13 @@ public class BackEndApplication implements CommandLineRunner {
 				user.setLastName("spring2019");
 				user.setTelNumber("1234567890");
 				user.setTaxNumber("1234");
-				user.setAccount(admin);
+				//user.setAccount(admin);
 
 				userRepository.save(user);
+
+				List<User> users = userRepository.findAll();
+				System.out.println(users.size());
+				System.err.println("Creating admin account...");
 			}
 		}, 0, 1, TimeUnit.HOURS);
 	}

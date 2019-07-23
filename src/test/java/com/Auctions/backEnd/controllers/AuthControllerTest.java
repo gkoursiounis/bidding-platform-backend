@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -41,10 +40,13 @@ public class AuthControllerTest{
 	@Autowired
 	private MockMvc mvc;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
     private String user1;
     private String user2;
     private String user3;
-    private AccountRepository accountRepository;
+
 
     @BeforeEach
     public void before() throws Exception {
@@ -53,9 +55,14 @@ public class AuthControllerTest{
 
         mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
-        user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@usi.ch");
-        user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@usi.ch");
-        user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@usi.ch");
+        user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
+        user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
+        user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
+    }
+
+    @AfterEach
+    public void  after() {
+        this.testUtils.clearDB();
     }
 
     private void verify(final String username) {
@@ -73,34 +80,32 @@ public class AuthControllerTest{
         account.setVerified(false);
         accountRepository.save(account);
     }
-    
-    @AfterEach
-    public void  after() {
-        this.testUtils.clearDB();
-    }
+
 
     /**
      * Helper function to perform a signup
+     *
      * @param content - the content given for the signup
      * @return  return the response
      * @throws Exception mvc perform throws Exception
      */
     private ResultActions performSignup(final String content) throws Exception {
 
-	    return mvc.perform(post("/auth/signup").secure(true)
+	    return mvc.perform(post("/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content));
     }
 
     /**
      * Helper function to perform a signup
+     *
      * @param username - the name for the login
      * @return  return the response
      * @throws Exception mvc perform throws Exception
      */
     private ResultActions checkUsername(final String username) throws Exception {
 
-	    return mvc.perform(get("/account/checkUsername").secure(true)
+	    return mvc.perform(get("/account/checkUsername")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("\"username\" : \"" + username + "\""));
     }
@@ -130,6 +135,7 @@ public class AuthControllerTest{
                 .andExpect(status().isBadRequest());
     }
 
+
     /**
      * Signup using an already taken email
      *
@@ -152,6 +158,7 @@ public class AuthControllerTest{
         performSignup(content)
                 .andExpect(status().isBadRequest());
     }
+
 
     /**
      * Signup without username. User should not exist after signing up
@@ -176,14 +183,15 @@ public class AuthControllerTest{
         performSignup(content)
                 .andExpect(status().isBadRequest());
 
-        mvc.perform(get("/account/checkEmail").secure(true)
+        mvc.perform(get("/account/checkEmail")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content("\"email\" : \"" + email + "\""))
                 .andExpect(status().isBadRequest());
     }
 
+
     /**
-     * Signup without email. User should not exists after signing up
+     * Signup without email. User should not exist after signing up
      *
      * @throws Exception - mvc.perform in performSignup() and checkUsername() throws exception
      */
@@ -209,8 +217,9 @@ public class AuthControllerTest{
                 .andExpect(status().isBadRequest());
     }
 
+
     /**
-     * Signup without password. User should not exists after signing up
+     * Signup without password. User should not exist after signing up
      *
      * @throws Exception - mvc.perform in performSignup() and checkUsername() throws exception
      */
@@ -236,8 +245,9 @@ public class AuthControllerTest{
                 .andExpect(status().isBadRequest());
     }
 
+
     /**
-     * Signup without first name. User should not exists after signing up
+     * Signup without first name. User should not exist after signing up
      *
      * @throws Exception - mvc.perform in performSignup() and checkUsername() throws exception
      */
@@ -249,7 +259,7 @@ public class AuthControllerTest{
 
         final String content = "{" +
                 "\"username\" : \"" + username +"\", " +
-                "\"email\" : \"email4@usi.ch\", " +
+                "\"email\" : \"email4@di.uoa.gr\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
@@ -263,8 +273,9 @@ public class AuthControllerTest{
                 .andExpect(status().isBadRequest());
     }
 
+
     /**
-     * Signup without last name. User should not exists after signing up
+     * Signup without last name. User should not exist after signing up
      *
      * @throws Exception - mvc.perform in performSignup() and checkUsername() throws exception
      */
@@ -276,7 +287,7 @@ public class AuthControllerTest{
 
         final String content = "{" +
                 "\"username\" : \"" + username + "\", " +
-                "\"email\" : \"email0@usi.ch\", " +
+                "\"email\" : \"email0@di.uoa.gr\", " +
                 "\"firstName\" : \"FirstName01\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"telNumber\" : \"1234567890\", " +
@@ -286,11 +297,12 @@ public class AuthControllerTest{
         performSignup(content)
                 .andExpect(status().isBadRequest());
 
-        checkUsername(username);
+        checkUsername(username)
+                .andExpect(status().isBadRequest());
     }
 
     /**
-     * Signup using black list words as username (eg. signup, home, user etc)
+     * Signup using black list words as username (eg. signup, admin, user etc)
      *
      * @throws Exception - mvc.perform in performSignup() throws exception
      */
@@ -301,7 +313,7 @@ public class AuthControllerTest{
         final String content = "{" +
                                 "\"username\" : \"signup\", " +
                                 "\"password\" : \"myPwd123\", " +
-                                "\"email\" : \"email0@usi.ch\", " +
+                                "\"email\" : \"email0@di.uoa.gr\", " +
                                 "\"firstName\" : \"FirstName1\", " +
                                 "\"lastName\" : \"LastName1\", " +
                                 "\"telNumber\" : \"1234567890\", " +
@@ -325,7 +337,7 @@ public class AuthControllerTest{
         final String content = "{" +
                 "\"username\" : \"u\", " +
                 "\"password\" : \"myPwd123\", " +
-                "\"email\" : \"email4@usi.ch\", " +
+                "\"email\" : \"email4@di.uoa.gr\", " +
                 "\"firstName\" : \"FirstName1\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
@@ -348,7 +360,7 @@ public class AuthControllerTest{
         final String content = "{" +
                 "\"username\" : \"thisIsALargeUsername\", " +
                 "\"password\" : \"myPwd123\", " +
-                "\"email\" : \"email4@usi.ch\", " +
+                "\"email\" : \"email4@di.uoa.gr\", " +
                 "\"firstName\" : \"FirstName1\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
@@ -377,7 +389,7 @@ public class AuthControllerTest{
         final String content = "{" +
                 "\"username\" : \"" + username + "\", " +
                 "\"password\" : \"myPwd123\", " +
-                "\"email\" : \"email4@usi.ch\", " +
+                "\"email\" : \"email4@di.uoa.gr\", " +
                 "\"firstName\" : \"" + firstName + "\", " +
                 "\"lastName\" : \"" + lastName + "\", " +
                 "\"telNumber\" : \"" + telNumber + "\", " +
@@ -395,18 +407,42 @@ public class AuthControllerTest{
 
 
     /**
-     * Signup using with embed amdin data
+     * Signup as the embed admini
+     *
+     * @throws Exception - mvc.perform in performSignup() throws exception
+     */
+//    @Test
+//    @DisplayName("Signup using visitor as name")
+//    public void signup12() throws Exception {
+//
+//        final String content = "{" +
+//                "\"username\" : \"tediadiktyoy\", " +
+//                "\"password\" : \"adminadmin\", " +
+//                "\"email\" : \"sdi1600077@di.uoa.gr\", " +
+//                "\"firstName\" : \"TEDiadiktyoy\", " +
+//                "\"lastName\" : \"spring2019\", " +
+//                "\"telNumber\" : \"1234567890\", " +
+//                "\"taxNumber\" : \"1234\" " +
+//                "}";
+//
+//        performSignup(content)
+//                .andExpect(status().isBadRequest());
+//    }
+
+
+    /**
+     * Signup using black list words as username (eg. signup, admin, user etc)
      *
      * @throws Exception - mvc.perform in performSignup() throws exception
      */
     @Test
-    @DisplayName("Signup using visitor as name")
-    public void signup12() throws Exception {
+    @DisplayName("Signup using blacklisted name - admin")
+    public void signup13() throws Exception {
 
         final String content = "{" +
-                "\"username\" : \"tediadiktyoy\", " +
+                "\"username\" : \"admin\", " +
                 "\"password\" : \"myPwd123\", " +
-                "\"email\" : \"email5@di.uoa.gr\", " +
+                "\"email\" : \"email7@di.uoa.gr\", " +
                 "\"firstName\" : \"FirstName1\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
@@ -416,6 +452,89 @@ public class AuthControllerTest{
         performSignup(content)
                 .andExpect(status().isBadRequest());
     }
+
+
+    /**
+     * Signup without phone number. User should not exist after signing up
+     *
+     * @throws Exception - mvc.perform in performSignup() and checkUsername() throws exception
+     */
+    @Test
+    @DisplayName("Signup without phone number")
+    public void signup14() throws Exception {
+
+        final String username = "user0" ;
+
+        final String content = "{" +
+                "\"username\" : \"" + username + "\", " +
+                "\"email\" : \"email0@di.uoa.gr\", " +
+                "\"firstName\" : \"FirstName01\", " +
+                "\"password\" : \"myPwd123\", " +
+                "\"taxNumber\" : \"123345\" " +
+                "}";
+
+        performSignup(content)
+                .andExpect(status().isBadRequest());
+
+        checkUsername(username)
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Signup without tax number. User should not exist after signing up
+     *
+     * @throws Exception - mvc.perform in performSignup() and checkUsername() throws exception
+     */
+    @Test
+    @DisplayName("Signup without tax number")
+    public void signup15() throws Exception {
+
+        final String username = "user0" ;
+
+        final String content = "{" +
+                "\"username\" : \"" + username + "\", " +
+                "\"email\" : \"email0@di.uoa.gr\", " +
+                "\"firstName\" : \"FirstName01\", " +
+                "\"password\" : \"myPwd123\", " +
+                "\"telNumber\" : \"1234567890\" " +
+                "}";
+
+        performSignup(content)
+                .andExpect(status().isBadRequest());
+
+        checkUsername(username)
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Signup with short phone number. User should not exist after signing up
+     *
+     * @throws Exception - mvc.perform in performSignup() and checkUsername() throws exception
+     */
+    @Test
+    @DisplayName("Signup with short phone number")
+    public void signup16() throws Exception {
+
+        final String username = "user0" ;
+
+        final String content = "{" +
+                "\"username\" : \"" + username + "\", " +
+                "\"email\" : \"email0@di.uoa.gr\", " +
+                "\"firstName\" : \"FirstName01\", " +
+                "\"password\" : \"myPwd123\", " +
+                "\"telNumber\" : \"11880\", " +
+                "\"taxNumber\" : \"123345\" " +
+                "}";
+
+        performSignup(content)
+                .andExpect(status().isBadRequest());
+
+        checkUsername(username)
+                .andExpect(status().isBadRequest());
+    }
+
 
     /**
      * Login with email that does not exist
@@ -428,11 +547,11 @@ public class AuthControllerTest{
     public void authorize1() throws Exception {
 
         final String content = "{" +
-                "\"email\" : \"wrongmail@usi.ch\", " +
+                "\"email\" : \"wrongmail@di.uoa.gr\", " +
                 "\"password\" : \"myPwd123\" " +
                 "}";
 
-        mvc.perform(post("/auth/login").secure(true)
+        mvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content))
                 .andExpect(status().isNotFound());
@@ -453,7 +572,7 @@ public class AuthControllerTest{
                 "\"password\" : \"myPwd123\" " +
                 "}";
 
-        mvc.perform(post("/auth/login").secure(true)
+        mvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content))
                 .andExpect(status().isNotFound());
@@ -475,7 +594,7 @@ public class AuthControllerTest{
                 "\"password\" : \"myPwd123\" " +
                 "}";
 
-        mvc.perform(post("/auth/login").secure(true)
+        mvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content))
                 .andExpect(status().isOk())
@@ -490,28 +609,28 @@ public class AuthControllerTest{
     @Test
     @DisplayName("Successful login with email")
     public void authorize4() throws Exception {
-//
-//        final String email = "email2@usi.ch";
-//
-//        final String content = "{" +
-//                "\"email\" : \"" + email + "\", " +
-//                "\"password\" : \"myPwd123\" " +
-//                "}";
-//
-//        final String token = "Bearer " + ((JSONObject) new JSONParser().parse(
-//                mvc.perform(post("/auth/login").secure(true)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(content))
-//                .andExpect(status().isOk())
-//                .andReturn().getResponse().getContentAsString()))
-//                .get("token").toString();
 
-        System.out.println(user1);
-        mvc.perform(get("/account").secure(true)
+        final String email = "email2@di.uoa.gr";
+
+        final String content = "{" +
+                "\"email\" : \"" + email + "\", " +
+                "\"password\" : \"myPwd123\" " +
+                "}";
+
+        final String token = "Bearer " + ((JSONObject) new JSONParser().parse(
+                mvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk());
-               // .andExpect(jsonPath("email", is(email)));
+                .content(content))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString()))
+                .get("token").toString();
+
+
+        mvc.perform(get("/account")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("email", is(email)));
 
     }
 
@@ -535,7 +654,7 @@ public class AuthControllerTest{
                 "\"password\" : \"myPwd123\" " +
                 "}";
 
-        mvc.perform(post("/auth/login").secure(true)
+        mvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content))
                 .andExpect(status().isBadRequest());
@@ -557,7 +676,7 @@ public class AuthControllerTest{
                 "\"password\" : \"wrongPassword\" " +
                 "}";
 
-        mvc.perform(post("/auth/login").secure(true)
+        mvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content))
                 .andExpect(status().isUnauthorized());
@@ -565,25 +684,24 @@ public class AuthControllerTest{
 
 
     /**
-     * Login with invalid credential
-     * We should get back an HTTP <Code>UNAUTHORIZED</Code>
+     * Login as embed admin
      *
      * @throws Exception - mvc.perform throws exception
      */
-    @Test
-    @DisplayName("Login with wrong credentials")
-    public void authorize7() throws Exception {
-
-        final String content = "{" +
-                "\"username\" : \"tediadiktyoy\", " +
-                "\"password\" : \"adminadmin\" " +
-                "}";
-
-        mvc.perform(post("/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content))
-                .andExpect(status().isOk());
-    }
+//    @Test
+//    @DisplayName("Login as embed admin")
+//    public void authorize7() throws Exception {
+//
+//        final String content = "{" +
+//                "\"username\" : \"tediadiktyoy\", " +
+//                "\"password\" : \"adminadmin\" " +
+//                "}";
+//
+//        mvc.perform(post("/auth/login")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(content))
+//                .andExpect(status().isOk());
+//    }
 
     /**
      * User accesses secure endpoint and the JWTFilter validates the token
@@ -603,38 +721,20 @@ public class AuthControllerTest{
                 .andExpect(status().isNoContent());
     }
 
+
+    /**
+     * Get chat token
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
     @Test
-    @DisplayName("test for chat token")
+    @DisplayName("Get chat token")
     public void getChatToken() throws Exception{
-        mvc.perform(get("/auth/chatkitToken").secure(true)
+
+        mvc.perform(get("/auth/chatkitToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("token").exists());
     }
-
-//    @Test
-//    @DisplayName("visitor login")
-//    public void loginAsVisitor() throws Exception{
-//        mvc.perform(post("/auth/visitorLogin")
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest());
-//    }
-
-
-    /**
-     * User tries to create an item as a visitor
-     *
-     * @throws Exception - mvc.perform
-     */
-//    @Test
-//    @DisplayName("Visitor tries to create an item/auction")
-//    public void test() throws Exception {
-//
-//        mvc.perform(
-//                get("/bid/sex").secure(true)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .header("Authorization", user1))
-//                .andExpect(status().isOk());
-//    }
 }

@@ -20,7 +20,7 @@ import java.util.*;
 public class User extends AuditModel {
 
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_account")
     @JsonIgnore
     private Account account;
@@ -127,11 +127,4 @@ public class User extends AuditModel {
     public boolean isAdmin() {
         return this.account.isAdmin();
     }
-
-    public boolean isVisitor() {
-        return this.account.isVisitor();
-    }
-
-
-
 }

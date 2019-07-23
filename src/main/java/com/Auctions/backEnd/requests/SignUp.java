@@ -34,7 +34,4 @@ public class SignUp {
 
     @NotNull
     private String taxNumber;
-
-    @NotNull
-    private boolean visitor;
 }

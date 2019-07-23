@@ -24,9 +24,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false'")
     List<Item> getAllOpenAuctions();
 
-    @Query("SELECT i FROM Item i")
-    List<Item> getAllAuctions();
-
     @Query("SELECT i FROM Item i where i.currently >= :lowerPrice and i.buyPrice <= :higherPrice")
     List<Item> searchByPrice(Double lowerPrice, Double higherPrice);
 

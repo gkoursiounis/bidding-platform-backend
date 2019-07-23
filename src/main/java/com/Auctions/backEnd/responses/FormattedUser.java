@@ -17,7 +17,6 @@ public class FormattedUser {
     @Setter private String telNumber;
     @Setter private String taxNumber;
     @Setter private Boolean verified;
-    @Setter private Boolean visitor;
             private Date createdAt;
 
     public FormattedUser(User user) {
@@ -28,13 +27,11 @@ public class FormattedUser {
         this.telNumber = user.getTelNumber();
         this.taxNumber = user.getTaxNumber();
         this.verified = user.isVerified();
-        this.visitor = user.isVisitor();
         this.createdAt = user.getCreatedAt();
     }
 
     public FormattedUser(Long id, String userName, String firstName, String lastName,
-                         String telNumber, String taxNumber, Boolean verified, Boolean visitor,
-                         Date createdAt){
+                         String telNumber, String taxNumber, Boolean verified, Date createdAt){
         this.id = id;
         this.username = userName;
         this.firstName = firstName;
@@ -42,7 +39,6 @@ public class FormattedUser {
         this.telNumber = telNumber;
         this.taxNumber = taxNumber;
         this.verified = verified;
-        this.visitor = visitor;
         this.createdAt = (Date) createdAt.clone();
     }
 

@@ -42,18 +42,13 @@ public class Account extends AuditModel {
     @Column(name = "account_admin")
     private boolean admin = false;
 
-    @Column(name = "account_visitor")
-    private boolean visitor;                //TODO remove
-
-
     // Constructors
 
-    public Account(String username, String email, String password, Boolean verified, Boolean visitor) {
+    public Account(String username, String email, String password, Boolean verified) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.verified = verified;
-        this.visitor = visitor;
     }
 
 

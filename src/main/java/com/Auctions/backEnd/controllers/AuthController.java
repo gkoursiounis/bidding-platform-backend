@@ -131,7 +131,8 @@ public class AuthController {
 
 
     @PostMapping("/signup")
-    public ResponseEntity signup(@RequestBody SignUp signupAccount) throws NoSuchProviderException, NoSuchAlgorithmException{
+    public ResponseEntity signup(@RequestBody SignUp signupAccount)
+            throws NoSuchProviderException, NoSuchAlgorithmException{
 
         if (signupAccount.getUsername() == null || !checkUsername(signupAccount.getUsername()) ||
                 signupAccount.getUsername().length() < 5 || signupAccount.getUsername().length() > 15) {
@@ -177,7 +178,6 @@ public class AuthController {
         account.setUsername(signupAccount.getUsername());
         account.setPassword(pwd);
         account.setEmail(signupAccount.getEmail());
-        account.setVisitor(signupAccount.isVisitor());
 
         //TODO temporary
         account.setVerified(true);
@@ -200,20 +200,6 @@ public class AuthController {
                 )
         );
     }
-
-    //TODO do we finally need this?
-//    @PostMapping("/visitorLogin")
-//    public ResponseEntity loginAsVisitor(){
-//
-//        String visitorUsername = "skatanafateoloi";
-//
-//        if(visitorToken != null) {
-//            visitorToken = this.tokenProvider.createToken(visitorUsername);
-//        }
-//
-//        System.out.println(visitorToken);
-//        return ResponseEntity.ok(visitorToken);
-//    }
 
 
     @GetMapping(value = "/chatkitToken", produces = "application/json")

@@ -541,11 +541,88 @@ public class AdminControllerTest {
     @DisplayName("Create category - invalid token")
     public void createItemCategory6() throws Exception {
 
-        mvc.perform(patch("/admin/newCategory")
+        mvc.perform(post("/admin/newCategory")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("name", "clothes")
                 .header("Authorization", "invalidToken"))
                 .andExpect(status().isBadRequest());
     }
 
+
+    /**
+     * Admin another user using invalid token
+     * We should get back an <HTTP>BAD REQUEST</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Delete user - invalid token")
+    public void deleteUser1() throws Exception {
+
+        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+
+        mvc.perform(delete("/admin/deleteUser/" + user2_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "invalidToken"))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * A User deletes another user
+     * We should get back an <HTTP>UNAUTHORIZED</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Delete user - no admin")
+    public void deleteUser2() throws Exception {
+
+        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+
+        mvc.perform(delete("/admin/deleteUser/" + user2_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    /**
+     * Admin deletes another admin
+     * We should get back an <HTTP>BAD REQUEST</HTTP>
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Delete admin")
+    public void deleteUser3() throws Exception {
+
+        makeAdmin("user3");
+        makeAdmin("user2");
+        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+
+        mvc.perform(delete("/admin/deleteUser/" + user2_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user3))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * Admin deletes a user
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Delete successfully a user")
+    public void deleteUser4() throws Exception {
+
+        makeAdmin("user3");
+        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+
+        mvc.perform(delete("/admin/deleteUser/" + user2_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user3))
+                .andExpect(status().isOk());
+    }
 }

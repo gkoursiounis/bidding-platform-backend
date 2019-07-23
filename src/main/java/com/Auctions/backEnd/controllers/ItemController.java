@@ -95,7 +95,7 @@ public class ItemController {
     @GetMapping("/allAuctions")
     public ResponseEntity getAllItems(){
         baseController.auctionClosure();
-        return ResponseEntity.ok(itemRepository.getAllAuctions());
+        return ResponseEntity.ok(itemRepository.findAll());
     }
 
 
@@ -268,13 +268,6 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "You can not make an auction if you are not verified"
-            ));
-        }
-
-        if (requestUser.getAccount().isVisitor()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "You can not make an auction if you are a visitor"
             ));
         }
 
