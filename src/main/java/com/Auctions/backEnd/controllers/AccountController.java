@@ -13,18 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/account")
-public class AccountController {
+public class AccountController extends BaseController{
 
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
-    private final BaseController baseController;
 
     @Autowired
-    public AccountController(PasswordEncoder passwordEncoder, AccountRepository accountRepository,
-                             BaseController baseController) {
+    public AccountController(PasswordEncoder passwordEncoder, AccountRepository accountRepository) {
         this.passwordEncoder = passwordEncoder;
         this.accountRepository = accountRepository;
-        this.baseController = baseController;
     }
 
 
@@ -76,7 +73,7 @@ public class AccountController {
      */
     @GetMapping
     public ResponseEntity getAccount() {
-        Account account = baseController.requestUser().getAccount();
+        Account account = requestUser().getAccount();
         account.setPassword(null);
         return ResponseEntity.ok(account);
     }
@@ -91,7 +88,7 @@ public class AccountController {
     @PutMapping("/changePassword")
     public ResponseEntity changePassword(@RequestBody AccountRequest accountRequest){
 
-        Account account = baseController.requestUser().getAccount();
+        Account account = requestUser().getAccount();
 
         String oldPasswordFromAccount = account.getPassword();
         String oldPasswordFromRequest = accountRequest.getOldPassword();

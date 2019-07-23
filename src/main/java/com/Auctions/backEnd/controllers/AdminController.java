@@ -12,20 +12,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-public class AdminController {
+public class AdminController extends BaseController{
 
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final ItemCategoryRepository itemCategoryRepository;
-    private final BaseController baseController;
 
     @Autowired
     public AdminController(UserRepository userRepository, AccountRepository accountRepository,
-                          ItemCategoryRepository itemCategoryRepository, BaseController baseController){
+                          ItemCategoryRepository itemCategoryRepository){
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.itemCategoryRepository = itemCategoryRepository;
-        this.baseController = baseController;
     }
 
 
@@ -38,7 +36,7 @@ public class AdminController {
     @GetMapping("/pendingRegisters")
     public ResponseEntity getPendingRegisters(){
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -60,7 +58,7 @@ public class AdminController {
     @GetMapping("/allUsers")
     public ResponseEntity getAllUsers(){
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -81,7 +79,7 @@ public class AdminController {
     @PatchMapping("/verifyAll")
     public ResponseEntity verifyAllUsers(){
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -113,7 +111,7 @@ public class AdminController {
     @PatchMapping("/verifyUser/{userId}")
     public ResponseEntity verifyUser(@PathVariable (value = "userId") long userId){
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -158,7 +156,7 @@ public class AdminController {
     @PostMapping("/newCategory")
     public ResponseEntity createItemCategory(@RequestParam String name){
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
 
         if(!requester.isAdmin()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
@@ -200,7 +198,7 @@ public class AdminController {
     @DeleteMapping("/deleteUser/{userId}")
     public ResponseEntity deleteUser(@PathVariable (value = "userId") long userId){
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
         if(!requester.isAdmin()){
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/item")
-public class ItemController {
+public class ItemController extends BaseController{
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -26,20 +26,17 @@ public class ItemController {
     private final DBFileRepository dbFileRepository;
     private final DBFileStorageService dBFileStorageService;
     private final GeolocationRepository geolocationRepository;
-    private final BaseController baseController;
 
     @Autowired
     public ItemController(UserRepository userRepository,ItemRepository itemRepository,
                           ItemCategoryRepository itemCategoryRepository, DBFileRepository dbFileRepository,
-                          DBFileStorageService dBFileStorageService, GeolocationRepository geolocationRepository,
-                          BaseController baseController){
+                          DBFileStorageService dBFileStorageService, GeolocationRepository geolocationRepository){
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.itemCategoryRepository = itemCategoryRepository;
         this.dbFileRepository = dbFileRepository;
         this.dBFileStorageService = dBFileStorageService;
         this.geolocationRepository = geolocationRepository;
-        this.baseController = baseController;
     }
 
 
@@ -82,7 +79,7 @@ public class ItemController {
      */
     @GetMapping("/openAuctions")
     public ResponseEntity getAllOpenAuctions(){
-        baseController.auctionClosure();
+        auctionClosure();
         return ResponseEntity.ok(itemRepository.getAllOpenAuctions());
     }
 
@@ -94,7 +91,7 @@ public class ItemController {
      */
     @GetMapping("/allAuctions")
     public ResponseEntity getAllItems(){
-        baseController.auctionClosure();
+        auctionClosure();
         return ResponseEntity.ok(itemRepository.findAll());
     }
 
@@ -143,7 +140,7 @@ public class ItemController {
             ));
         }
 
-        baseController.auctionClosure();
+        auctionClosure();
 
         Set<Item> res = new HashSet<>();
 
@@ -262,7 +259,7 @@ public class ItemController {
                                      @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
-        User requestUser = baseController.requestUser();
+        User requestUser = requestUser();
 
         if (!requestUser.getAccount().isVerified()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
@@ -384,7 +381,7 @@ public class ItemController {
                                      @Nullable @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){
@@ -470,7 +467,7 @@ public class ItemController {
     @DeleteMapping("/{itemId}")
     public ResponseEntity deleteItem(@PathVariable (value = "itemId") long itemId){
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){

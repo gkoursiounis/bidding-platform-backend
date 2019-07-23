@@ -3,7 +3,6 @@ package com.Auctions.backEnd.controllers;
 import com.Auctions.backEnd.BackEndApplication;
 import com.Auctions.backEnd.TestUtils;
 import com.Auctions.backEnd.configs.TestConfig;
-import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -20,7 +19,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 

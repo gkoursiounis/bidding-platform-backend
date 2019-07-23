@@ -13,17 +13,14 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController{
 
     private final UserRepository userRepository;
-    private final BaseController baseController;
     private final ItemRepository itemRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository, BaseController baseController,
-                          ItemRepository itemRepository){
+    public UserController(UserRepository userRepository, ItemRepository itemRepository){
         this.userRepository = userRepository;
-        this.baseController = baseController;
         this.itemRepository = itemRepository;
     }
 
@@ -38,7 +35,7 @@ public class UserController {
     @GetMapping("/{username}")
     public ResponseEntity getUserDetails(@PathVariable String username) {
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
 
         User user = userRepository.findByAccount_Username(username);
 
@@ -66,7 +63,7 @@ public class UserController {
     @GetMapping("/myOpenAuctions")
     public ResponseEntity getMyOpenAuctions() {
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
         Set<Item> openAuctions = requester.getItems();
         openAuctions.removeIf(item -> item.isAuctionCompleted());
 
@@ -83,7 +80,7 @@ public class UserController {
     @GetMapping("/myCompletedAuctions")
     public ResponseEntity getMyCompletedAuctions(){
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
         Set<Item> completedAuctions = requester.getItems();
         completedAuctions.removeIf(item -> !item.isAuctionCompleted());
 
@@ -99,7 +96,7 @@ public class UserController {
     @GetMapping("/myBids")
     public ResponseEntity getMyBids() {
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
         return ResponseEntity.ok(requester.getBids());
     }
 

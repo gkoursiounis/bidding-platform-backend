@@ -18,20 +18,16 @@ import java.util.*;
 
 import static com.Auctions.backEnd.services.Security.JWTFilter.resolveToken;
 
-@RestController
-public class BaseController {
-
-    private final TokenProvider tokenProvider;
-    private final UserRepository userRepository;
-    private final ItemRepository itemRepository;
+public abstract class BaseController {
 
     @Autowired
-    public BaseController(TokenProvider tokenProvider, UserRepository userRepository,
-                          ItemRepository itemRepository) {
-        this.tokenProvider = tokenProvider;
-        this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
-    }
+    private TokenProvider tokenProvider;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
 
 
     /**
@@ -50,7 +46,7 @@ public class BaseController {
      *
      * @return a user
      */
-    public User requestUser(){
+     User requestUser(){
 
         final HttpServletRequest currentRequest =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -71,7 +67,7 @@ public class BaseController {
      * 'endsAt' time meaning that the auction must be completed
      *
      */
-    public void auctionClosure(){
+     void auctionClosure(){
 
         Date now = new Date();
 

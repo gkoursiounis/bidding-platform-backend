@@ -23,23 +23,21 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/media")
-public class FileController {
+public class FileController extends BaseController{
 
     private final DBFileStorageService dBFileStorageService;
     private final DBFileRepository dbFileRepository;
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private final BaseController baseController;
 
     @Autowired
     public FileController(DBFileStorageService dBFileStorageService,
                           DBFileRepository dbFileRepository, ItemRepository itemRepository,
-                          UserRepository userRepository, BaseController baseController) {
+                          UserRepository userRepository) {
         this.dBFileStorageService = dBFileStorageService;
         this.dbFileRepository = dbFileRepository;
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
-        this.baseController = baseController;
     }
 
     /**
@@ -55,7 +53,7 @@ public class FileController {
     public ResponseEntity uploadPicture(@PathVariable(value = "itemId") long itemId,
                                         @RequestParam(name = "media") MultipartFile media){
 
-        User requestUser = baseController.requestUser();
+        User requestUser = requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if(item == null){

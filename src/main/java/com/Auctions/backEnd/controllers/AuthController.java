@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController extends BaseController{
 
     private final TokenProvider tokenProvider;
     private final PasswordEncoder passwordEncoder;
@@ -40,7 +40,6 @@ public class AuthController {
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
-    private final BaseController baseController;
 
     @Value("${app.chatKit.instanceId}")
     private String instanceId;
@@ -59,15 +58,13 @@ public class AuthController {
                           AuthenticationManager authenticationManager,
                           UserRepository userRepository,
                           AccountRepository accountRepository,
-                          RequestMappingHandlerMapping requestMappingHandlerMapping,
-                          BaseController baseController) {
+                          RequestMappingHandlerMapping requestMappingHandlerMapping) {
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
-        this.baseController = baseController;
     }
 
 
@@ -204,7 +201,7 @@ public class AuthController {
 
     @GetMapping(value = "/chatkitToken", produces = "application/json")
     public ResponseEntity generateChatkitToken() {
-        User requester = baseController.requestUser();
+        User requester = requestUser();
 
         Calendar c = Calendar.getInstance();
         c.setTime(new Date());

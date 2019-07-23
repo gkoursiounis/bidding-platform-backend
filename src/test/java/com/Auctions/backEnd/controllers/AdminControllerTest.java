@@ -8,6 +8,7 @@ import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -52,13 +53,16 @@ public class AdminControllerTest {
     @BeforeEach
     private void before() throws Exception {
 
-        testUtils.clearDB();
-
         mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
         user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FistName2", "LastName2", "email2@di.uoa.gr");
         user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
+    }
+
+    @AfterEach
+    public void  after() {
+        this.testUtils.clearDB();
     }
 
     private void unverify(final String username) {

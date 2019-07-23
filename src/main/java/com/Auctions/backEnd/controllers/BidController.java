@@ -13,20 +13,18 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/bid")
-public class BidController {
+public class BidController extends BaseController{
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BidRepository bidRepository;
-    private final BaseController baseController;
 
     @Autowired
     public BidController(UserRepository userRepository, ItemRepository itemRepository,
-                          BidRepository bidRepository, BaseController baseController) {
+                          BidRepository bidRepository) {
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.bidRepository = bidRepository;
-        this.baseController = baseController;
     }
 
 
@@ -40,7 +38,7 @@ public class BidController {
     public ResponseEntity makeBid(@PathVariable (value = "itemId") long itemId,
                                   @RequestParam Double offer){
 
-        User requester = baseController.requestUser();
+        User requester = requestUser();
 
         Item item = itemRepository.findItemById(itemId);
         if (item == null) {
