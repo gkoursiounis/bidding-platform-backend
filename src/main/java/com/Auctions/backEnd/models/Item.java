@@ -59,7 +59,7 @@ public class Item extends AuditModel implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_picture")
     @JsonIgnore
-    private List<DBFile> media;         //TODO how to delete picture?
+    private List<DBFile> media = new ArrayList<>();         //TODO how to delete picture?
 
     @OneToOne
     private Geolocation location;
@@ -75,9 +75,7 @@ public class Item extends AuditModel implements Serializable {
 
     public boolean isAuctionCompleted() { return this.auctionCompleted; }
 
-    public Item(final Date createdAt) {
-        super(createdAt);
-    }
+    public Item(final Date createdAt) { super(createdAt); }
 }
 
 

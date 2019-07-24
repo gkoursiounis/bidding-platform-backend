@@ -246,6 +246,11 @@ public class ItemController extends BaseController{
      * A user can crate an item
      * By creating an item we consider an auction to have started
      *
+     * The parameters are non-nullable (except for media) so the application
+     * will automatically reject with an <HTTP>BAD REQUEST</HTTP> any request
+     * with missing parameters. So the checks below (== null and .isEmpty) are
+     * about available but empty(!) parameters
+     *
      * @param name - item's name
      * @param buyPrice - the price where a bidder can directly buy an item
      * @param media - optional picture
@@ -263,7 +268,7 @@ public class ItemController extends BaseController{
                                      @RequestParam Double buyPrice,
                                      @Nullable @RequestParam(name = "media") MultipartFile media,
                                      @RequestParam Double firstBid,
-                                     @RequestParam Integer[] categoriesId,    //TODO fix nullable
+                                     @RequestParam Integer[] categoriesId,
                                      @RequestParam Double longitude,
                                      @RequestParam Double latitude,
                                      @RequestParam String locationTitle,
@@ -276,6 +281,13 @@ public class ItemController extends BaseController{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "You can not make an auction if you are not verified"
+            ));
+        }
+
+        if(name.isEmpty() || description.isEmpty() || buyPrice == null || firstBid == null || endsAt == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Parameters cannot be empty"
             ));
         }
 
@@ -321,16 +333,14 @@ public class ItemController extends BaseController{
 
         if(media != null){
 
-            if (!BaseController.contentTypes.contains(media.getContentType())){
+            if (!BaseController.contentTypes.contains(media.getContentType())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                         "Error",
                         "Image type not supported"
                 ));
             }
 
-            if (media.getSize() > DBFile.MAXIMUM_IMAGE_SIZE && (
-                    "image/png".equals(media.getContentType())  || "image/jpeg".equals(media.getContentType()) ||
-                            "image/gif".equals(media.getContentType()))) {
+            if (media.getSize() > DBFile.MAXIMUM_IMAGE_SIZE) {
 
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                         "Error",
@@ -355,6 +365,12 @@ public class ItemController extends BaseController{
             item.setLocation(location);
             location.getItems().add(item);  //TODO DO WE NEED THIS?
             geolocationRepository.save(location);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Geospatial data cannot be empty"
+            ));
         }
 
         itemRepository.save(item);

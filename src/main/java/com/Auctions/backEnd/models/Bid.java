@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.Date;
 
 @Entity
@@ -22,6 +23,8 @@ public class Bid extends AuditModel {
 
     @Column(name = "offer_amount")
     private Double offer;
+
+    public static final Comparator<Bid> cmp = Comparator.comparingDouble(Bid::getOffer);
 
     public Bid(final Date createdAt) {
         super(createdAt);

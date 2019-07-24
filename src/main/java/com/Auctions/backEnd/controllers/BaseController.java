@@ -1,9 +1,11 @@
 package com.Auctions.backEnd.controllers;
 
+import com.Auctions.backEnd.models.Bid;
 import com.Auctions.backEnd.models.Item;
 import com.Auctions.backEnd.models.Notification;
 import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.ItemRepository;
+import com.Auctions.backEnd.repositories.NotificationRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import com.Auctions.backEnd.services.Security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public abstract class BaseController {
 
     @Autowired
     private ItemRepository itemRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
 
     /**
@@ -81,8 +86,18 @@ public abstract class BaseController {
                 item.getSeller().getItems().add(item);
                 userRepository.save(item.getSeller());
 
-                Notification notification = new Notification();
-               // notification.setRecipient(item.get);
+                Notification toSeller = new Notification();
+                toSeller.setRecipient(item.getSeller());
+                toSeller.setItemId(item.getId());
+                toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
+                notificationRepository.save(toSeller);
+
+                Notification toBuyer = new Notification();
+                Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
+                toBuyer.setRecipient(highestBid.getBidder());
+                toBuyer.setItemId(item.getId());
+                toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
+                notificationRepository.save(toBuyer);
             }
         });
     }

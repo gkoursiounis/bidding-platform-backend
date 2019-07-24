@@ -189,6 +189,30 @@ public class ItemControllerTest {
 
 
     /**
+     * User tries to create an item with missing parameters
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("BuyPrice missing")
+    public void createItem9() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
      * User tries to create an item without being verified
      *
      * @throws Exception - mvc.perform
@@ -243,41 +267,6 @@ public class ItemControllerTest {
 
 
     /**
-     * User tries to create an item with a picture
-     *
-     * @throws Exception - mvc.perform
-     */
-//    @Test
-//    @DisplayName("User tries to create an item with a picture")
-//    public void createItem7() throws Exception {
-//
-//        MockMultipartFile file = new MockMultipartFile(
-//                "media",
-//                "Bloodhound.jpg",
-//                "image/jpeg",
-//                new FileInputStream("media/Bloodhound.jpg"));
-//
-//        mvc.perform(
-//                multipart("/item/test")
-//                        .file(file)
-//                        .param("name", "item1")
-//                        .param("buyPrice", "10.4")
-//                        .param("firstBid", "5.3")
-//                        .param("categoriesId", categoryId)
-//                        .param("longitude", "23.76695")
-//                        .param("latitude", "37.968564")
-//                        .param("locationTitle", "Dit UoA")
-//                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
-//                        .param("description", "this is the description")
-//                        .header("Authorization", user1)
-//                        .contentType(MediaType.MULTIPART_FORM_DATA))
-//                .andExpect(status().isOk());
-//
-//
-//    }
-
-
-    /**
      * User tries to create an item with faulty coordinates
      *
      * @throws Exception - mvc.perform
@@ -308,38 +297,14 @@ public class ItemControllerTest {
      * @throws Exception - mvc.perform
      */
     @Test
-    @DisplayName("BuyPrice missing")
-    public void createItem9() throws Exception {
-        mvc.perform(
-                post("/item")
-                        .param("name", "item1")
-                        .param("firstBid", "5.3")
-                        .param("categoriesId", categoryId)
-                        .param("longitude", "23.76695")
-                        .param("latitude", "37.968564")
-                        .param("locationTitle", "Dit UoA")
-                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
-                        .param("description", "this is the description")
-                        .header("Authorization", user1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-    }
-
-
-    /**
-     * User tries to create an item with missing parameters
-     *
-     * @throws Exception - mvc.perform
-     */
-    @Test
-    @DisplayName("BuyPrice missing")
+    @DisplayName("Missing categoriesId")
     public void createItem10() throws Exception {
         mvc.perform(
                 post("/item")
                         .param("name", "item1")
                         .param("firstBid", "5.3")
                         .param("buyPrice", "10.4")
-                        .param("categoriesId", categoryId)
+                        .param("categoriesId", "")
                         .param("longitude", "23.76695")
                         .param("latitude", "37.968564")
                         .param("locationTitle", "Dit UoA")
@@ -416,7 +381,7 @@ public class ItemControllerTest {
      * @throws Exception - mvc.perform
      */
     @Test
-    @DisplayName("missing categoriesId")
+    @DisplayName("Missing categoriesId")
     public void createItem13() throws Exception {
         mvc.perform(
                 post("/item")
@@ -431,5 +396,188 @@ public class ItemControllerTest {
                         .header("Authorization", user1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item/auction with empty coordinates
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Empty coordinates")
+    public void createItem14() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "")
+                        .param("latitude", "")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item/auction with empty parameters
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Empty name")
+    public void createItem15() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item/auction with empty parameters
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Empty buyPrice")
+    public void createItem16() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item/auction with empty parameters
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Empty firstBid")
+    public void createItem17() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item/auction with empty parameters
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Empty description")
+    public void createItem18() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item/auction with empty parameters
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Empty endsAt")
+    public void createItem19() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User tries to create an item with a picture
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("User tries to create an item with a picture")
+    public void createItem20() throws Exception {
+
+        MockMultipartFile file = new MockMultipartFile(
+                "media",
+                "Bloodhound.jpg",
+                "image/jpeg",
+                new FileInputStream("media/Bloodhound.jpg"));
+
+        mvc.perform(
+                multipart("/item")
+                        .file(file)
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk());
     }
 }

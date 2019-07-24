@@ -20,9 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -101,30 +99,42 @@ public class BackEndApplication implements CommandLineRunner {
 			public void run() {
 				//System.err.println("Creating admin account...");
 
-			userRepository.deleteAll();
-			accountRepository.deleteAll();
-			Account admin = new Account();
-			admin.setUsername("tediadiktyoy");
-			admin.setPassword(passwordEncoder.encode("adminadmin"));
-			admin.setEmail("sdi1600077@di.uoa.gr");
-			admin.setAdmin(true);
-			admin.setVerified(true);
+				userRepository.deleteAll();
+				accountRepository.deleteAll();
+				Account admin = new Account();
+				admin.setUsername("tediadiktyoy");
+				admin.setPassword(passwordEncoder.encode("adminadmin"));
+				admin.setEmail("sdi1600077@di.uoa.gr");
+				admin.setAdmin(true);
+				admin.setVerified(true);
 //
 //			accountRepository.save(admin);
 
-			User user = new User();
-			user.setFirstName("TEDiadiktyoy");
-			user.setLastName("spring2019");
-			user.setTelNumber("1234567890");
-			user.setTaxNumber("1234");
-			user.setAccount(admin);
+				User user = new User();
+				user.setFirstName("TEDiadiktyoy");
+				user.setLastName("spring2019");
+				user.setTelNumber("1234567890");
+				user.setTaxNumber("1234");
+				user.setAccount(admin);
 
-			userRepository.save(user);
-			accountRepository.save(admin);
+				userRepository.save(user);
+				accountRepository.save(admin);
 
-		//	System.err.println("Creating admin account...");
+				System.err.println("Creating admin account...");
 
 			}
-		}, 0, 1, TimeUnit.HOURS);
+		}, 0, 1, TimeUnit.DAYS);
+
+
+//		exec.scheduleAtFixedRate(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				//System.err.println("Creating admin account...");
+//				System.err.println("hello...");
+//
+//			}
+//		}, 0, 2, TimeUnit.SECONDS);
+
 	}
 }

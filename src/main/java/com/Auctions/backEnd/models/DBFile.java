@@ -15,7 +15,6 @@ import java.io.Serializable;
 @Table(name = "file")
 public class DBFile implements Serializable {
 
-    public static final long MAXIMUM_VIDEO_SIZE = 100000000L;
     public static final long MAXIMUM_IMAGE_SIZE = 10000000L;
 
     @Id

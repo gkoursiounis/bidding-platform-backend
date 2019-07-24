@@ -19,6 +19,8 @@ public class Notification extends AuditModel {
 
     String message;
 
+    long itemId;
+
     public Notification(final Date createdAt) {
         super(createdAt);
     }
