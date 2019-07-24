@@ -74,31 +74,39 @@ public abstract class BaseController {
      */
      void auctionClosure(){
 
-        Date now = new Date();
-
         List<Item> auctions = itemRepository.getAllOpenAuctions();
-        auctions.forEach(item -> {
-            if(now.compareTo(item.getEndsAt()) >= 0){
+        auctions.forEach(item -> { checkAuction(item); });
+    }
 
-                item.setAuctionCompleted(true);
-                itemRepository.save(item);
 
-                item.getSeller().getItems().add(item);
-                userRepository.save(item.getSeller());
+    void checkAuction(Item item){
 
-                Notification toSeller = new Notification();
-                toSeller.setRecipient(item.getSeller());
-                toSeller.setItemId(item.getId());
-                toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
-                notificationRepository.save(toSeller);
+        if((new Date()).compareTo(item.getEndsAt()) >= 0){
 
-                Notification toBuyer = new Notification();
-                Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
-                toBuyer.setRecipient(highestBid.getBidder());
-                toBuyer.setItemId(item.getId());
-                toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
-                notificationRepository.save(toBuyer);
-            }
-        });
+            item.setAuctionCompleted(true);
+            itemRepository.save(item);
+
+            item.getSeller().getItems().add(item);
+            userRepository.save(item.getSeller());
+
+            createNotifications(item);
+        }
+    }
+
+
+    void createNotifications(Item item){
+
+        Notification toSeller = new Notification();
+        toSeller.setRecipient(item.getSeller());
+        toSeller.setItemId(item.getId());
+        toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
+        notificationRepository.save(toSeller);
+
+        Notification toBuyer = new Notification();
+        Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
+        toBuyer.setRecipient(highestBid.getBidder());
+        toBuyer.setItemId(item.getId());
+        toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
+        notificationRepository.save(toBuyer);
     }
 }

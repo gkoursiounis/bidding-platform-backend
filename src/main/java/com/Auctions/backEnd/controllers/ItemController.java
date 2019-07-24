@@ -251,6 +251,8 @@ public class ItemController extends BaseController{
      * with missing parameters. So the checks below (== null and .isEmpty) are
      * about available but empty(!) parameters
      *
+     * buyPrice cannot be less than firstBid
+     *
      * @param name - item's name
      * @param buyPrice - the price where a bidder can directly buy an item
      * @param media - optional picture
@@ -284,10 +286,11 @@ public class ItemController extends BaseController{
             ));
         }
 
-        if(name.isEmpty() || description.isEmpty() || buyPrice == null || firstBid == null || endsAt == null){
+        if(name.isEmpty() || description.isEmpty() || buyPrice == null ||
+                firstBid == null || endsAt == null || Double.compare(buyPrice, firstBid) < 0){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "Parameters cannot be empty"
+                    "Invalid parameters"
             ));
         }
 
@@ -507,10 +510,10 @@ public class ItemController extends BaseController{
             ));
         }
 
-        if(!item.getBids().isEmpty()){
+        if(!item.getBids().isEmpty() || item.isAuctionCompleted()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "You cannot delete the auction after the first bid"
+                    "You cannot delete the auction after the first bid or if it is completed"
             ));
         }
 

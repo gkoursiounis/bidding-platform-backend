@@ -39,6 +39,9 @@ public class TestUtils {
 	@Autowired
 	private ItemRepository itemRepository;
 
+	@Autowired
+	private NotificationRepository notificationRepository;
+
 	public void clearDB() {
 
 		userRepository.deleteAll();
@@ -58,6 +61,9 @@ public class TestUtils {
 
 		itemRepository.deleteAll();
 		itemRepository.flush();
+
+		notificationRepository.deleteAll();
+		notificationRepository.flush();
 	}
 
 	/**
@@ -224,23 +230,26 @@ public class TestUtils {
 	 * @param token - token of the user
 	 * @throws Exception - mvc.perform throws Exception
 	 */
-	public static ResultActions makePost(@NonNull final MockMvc mvc,
+	public static String makeItem(@NonNull final MockMvc mvc,
+										 @NonNull final String categoryId,
 										 @NonNull final String token) throws Exception{
-
-		MockMultipartFile file = new MockMultipartFile(
-				"media",
-				"Bloodhound.jpg",
-				"image/jpeg",
-				new FileInputStream("media/Bloodhound.jpg"));
-
-		return mvc.perform(
-				multipart("/post")
-						.file(file)
-						.param("title", "title")
-						.param("caption", "caption")
-						.header("Authorization", token)
-						.contentType(MediaType.MULTIPART_FORM_DATA));
-
+		return ((JSONObject) new JSONParser().parse(
+		mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+				.andReturn().getResponse().getContentAsString()))
+				.get("id").toString();
 	}
 
 
@@ -309,114 +318,6 @@ public class TestUtils {
 						.header("Authorization", token)
 						.contentType(MediaType.MULTIPART_FORM_DATA));
 	}
-
-	/**
-	 *  Make a post with caption
-	 * @param mvc - mvc
-	 * @param token	- token of the user doing the request
-	 * @param caption - caption of the post
-	 * @return - the id of the post in string format
-	 * @throws Exception - mvc.perform throws Exception
-	 */
-	public static String makePostWithCaption2(@NonNull final MockMvc mvc,
-											  @NonNull final String token,
-											  @NonNull final String caption) throws Exception {
-
-
-		return ((JSONObject) new JSONParser().parse(
-				makePostWithCaption(mvc, token, caption)
-						.andExpect(status().isOk())
-						.andReturn().getResponse().getContentAsString()
-		)).get("id").toString();
-	}
-
-
-	/**
-	 * Helper function
-	 * Given a user token, a whitelist and a blacklist
-	 * it creates a post of this users that addresses to
-	 * the user of the whitelist and excludes those of blacklist
-	 *
-	 * @param token - token of the user
-	 * @param whiteList - post's white list
-	 * @param blackList - post's black list
-	 * @throws Exception - mvc.perform throws Exception
-	 */
-	public static ResultActions makePost(@NonNull final MockMvc mvc,
-										 @NonNull final String token,
-										 final String whiteList,
-										 final String blackList) throws Exception{
-
-		MockMultipartFile file = new MockMultipartFile(
-				"media",
-				"Bloodhound.jpg",
-				"image/jpeg",
-				new FileInputStream("media/Bloodhound.jpg"));
-
-		return mvc.perform(
-				multipart("/post")
-						.file(file)
-						.param("title", "title")
-						.param("caption", "caption")
-						.param("whiteList", whiteList)
-						.param("blackList", blackList)
-						.header("Authorization", token)
-						.contentType(MediaType.MULTIPART_FORM_DATA));
-	}
-
-	/**
-	 * Helper function
-	 * Given a user token it creates a post of this user
-	 * using the media/Bloodhound.jpg
-	 *
-	 * @param userToken - token of the user
-	 * @throws Exception - mvc.perform throws Exception
-	 */
-	public static String makePost2(@NonNull final MockMvc mvc,
-								   @NonNull final String userToken) throws Exception{
-
-		return ((JSONObject) new JSONParser().parse(
-				makePost(mvc,userToken)
-						.andExpect(status().isOk())
-						.andReturn().getResponse().getContentAsString()
-		)).get("id").toString();
-	}
-
-	/**
-	 * Helper function
-	 * Given a user token it creates a post of this user
-	 * using the media/Bloodhound.jpg
-	 *
-	 * @param userToken - token of the user
-	 * @throws Exception - mvc.perform throws Exception
-	 */
-	public static String makePost2(@NonNull final MockMvc mvc,
-								   @NonNull final String userToken,
-								   final String whiteList,
-								   final String blackList) throws Exception{
-
-		return ((JSONObject) new JSONParser().parse(
-				makePost(mvc,userToken,whiteList,blackList)
-						.andExpect(status().isOk())
-						.andReturn().getResponse().getContentAsString()
-		)).get("id").toString();
-	}
-
-    /**
-     * Delete a post of the user with the specific postId
-     * @param mvc - mvc
-     * @param token - token of the user
-     * @param postId - id of the post to be deleted
-     * @return - the response of the server
-     * @throws Exception -mvc. perform throws Exception
-     */
-    public static ResultActions deletePost(@NonNull final MockMvc mvc,
-                                           @NonNull final String token,
-                                           @NonNull final String postId) throws Exception{
-
-        return mvc.perform(delete("/post/" + postId)
-                .header("Authorization", token));
-    }
 
 
 	/**

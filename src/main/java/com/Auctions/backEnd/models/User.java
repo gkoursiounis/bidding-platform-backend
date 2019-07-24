@@ -57,12 +57,12 @@ public class User extends AuditModel {
     private Set<Item> items = new TreeSet<>();
 
 
-    @OneToMany(mappedBy = "bidder")
+    @OneToMany(mappedBy = "bidder", cascade = CascadeType.REMOVE)
     @OrderBy(value = "createdAt DESC")
     @JsonIgnore
     private Set<Bid> bids = new TreeSet<>();
 
-    @OneToMany(mappedBy = "recipient")
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.REMOVE)
     @OrderBy(value = "createdAt DESC")
     @JsonIgnore
     private Set<Notification> notifications = new TreeSet<>();

@@ -580,4 +580,29 @@ public class ItemControllerTest {
                         .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk());
     }
+
+
+    /**
+     * User tries to create an item/auction with firstBid > buyPrice
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("firstBid > buyPrice")
+    public void createItem21() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "5.3")
+                        .param("firstBid", "10.4")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }

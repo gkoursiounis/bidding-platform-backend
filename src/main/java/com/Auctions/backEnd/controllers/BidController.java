@@ -27,14 +27,14 @@ public class BidController extends BaseController{
         this.bidRepository = bidRepository;
     }
 
-
+//TODO get bid
     /**
      * A user can participate in an auction by making a bid
      *
      * @param offer - the amount of the bid
      * @return the created bid
      */
-    @GetMapping("/makeBid/{itemId}")
+    @PostMapping("/makeBid/{itemId}")
     public ResponseEntity makeBid(@PathVariable (value = "itemId") long itemId,
                                   @RequestParam Double offer){
 
@@ -48,6 +48,7 @@ public class BidController extends BaseController{
             ));
         }
 
+        checkAuction(item);
         if(item.isAuctionCompleted()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
@@ -62,23 +63,18 @@ public class BidController extends BaseController{
             ));
         }
 
-        if((!item.getBids().isEmpty() && java.lang.Double.compare(offer, item.getCurrently()) <= 0) ||
-                (item.getBids().isEmpty() && java.lang.Double.compare(offer, item.getFirstBid()) < 0)){
+        if(java.lang.Double.compare(offer, item.getCurrently()) <= 0){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "Offer cannot be less than the current best offer or the initial price"
+                    "Offer cannot be equal or less than the current best offer or the initial price"
             ));
         }
 
         item.setCurrently(offer);
-        if(java.lang.Double.compare(item.getBuyPrice(), offer) >= 0){
+        if(java.lang.Double.compare(item.getBuyPrice(), offer) <= 0){
             item.setAuctionCompleted(true);
+            createNotifications(item);
         }
-        itemRepository.save(item);
-
-       //TODO check if ok
-        item.getSeller().getItems().add(item);
-        userRepository.save(item.getSeller());
 
         Bid bid = new Bid(new Date());
         bid.setBidder(requester);
@@ -88,6 +84,9 @@ public class BidController extends BaseController{
 
         requester.getBids().add(bid);
         userRepository.save(requester);
+
+        item.getBids().add(bid);
+        itemRepository.save(item);
 
         return ResponseEntity.ok(new BidRes(bid, item.isAuctionCompleted()));
     }
