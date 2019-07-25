@@ -141,7 +141,22 @@ public class UserController extends BaseController{
 
 //TODO continue
 
+    /**
+     * User can mark all of his unseen notifications as seen
+     *
+     * @return <HTTP>OK</HTTP>
+     */
+    @PatchMapping("/markNotification/{notId}")
+    public ResponseEntity markNotification(@PathVariable (value = "notId") long notId) {
 
+        User requester = requestUser();
+
+        Notification not = notificationRepository.findNotificationById(notId);
+        not.setSeen(true);
+        notificationRepository.save(not);
+
+        return ResponseEntity.ok(not);
+    }
 
     @PatchMapping("/test")
     public ResponseEntity test() {

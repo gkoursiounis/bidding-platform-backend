@@ -10,6 +10,8 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
+    Notification findNotificationById(Long id);
+
     @Query("SELECT n FROM Notification n where n.seen = 'false'")
     List<Notification> getAllUnseenNotifications();
 }
