@@ -56,5 +56,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .userDetailsService(userDetailsService()); //???
         // @formatter:on
     }
-
 }

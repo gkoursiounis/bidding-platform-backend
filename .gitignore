@@ -26,7 +26,7 @@ target/
 # .factorypath
 
 # media folder
-# media/*
+media/*
 
 # application properties
-# application.properties
+application.properties

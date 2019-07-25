@@ -30,8 +30,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import javax.crypto.spec.SecretKeySpec;
 import java.util.regex.Pattern;
 
-@CrossOrigin(origins = "https://localhost:3000")
 @RestController
+//@CrossOrigin(origins = "https://localhost:3000")
 @RequestMapping("/auth")
 public class AuthController extends BaseController{
 
@@ -80,6 +80,7 @@ public class AuthController extends BaseController{
     }
 
 
+    @CrossOrigin(origins = "https://localhost:3000")
     @PostMapping("/login")
     public ResponseEntity authorize(@RequestBody Account account) {
         Account requestAccount;
@@ -116,6 +117,8 @@ public class AuthController extends BaseController{
             this.authenticationManager.authenticate(authenticationToken);
             String token = this.tokenProvider.createToken(account.getUsername());
             User user = userRepository.findByAccount_Username(account.getUsername());
+
+            System.out.println("Granted");
             return ResponseEntity.ok(new LoginRes(token, new FormattedUser(user)));
 
         } catch (NullPointerException | AuthenticationException e) {

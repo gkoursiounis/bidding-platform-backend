@@ -156,9 +156,10 @@ public class UserController extends BaseController{
         notificationRepository.save(not);
 
         return ResponseEntity.ok(not);
+
     }
 
-    @PatchMapping("/test")
+    @GetMapping("/test")
     public ResponseEntity test() {
         return ResponseEntity.ok("hello");
     }
