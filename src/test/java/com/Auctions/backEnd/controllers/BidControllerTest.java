@@ -3,11 +3,10 @@ package com.Auctions.backEnd.controllers;
 import com.Auctions.backEnd.BackEndApplication;
 import com.Auctions.backEnd.TestUtils;
 import com.Auctions.backEnd.configs.TestConfig;
-import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.models.ItemCategory;
 import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.ItemCategoryRepository;
-import org.json.simple  .JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,15 +17,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @SpringBootTest(classes = {TestConfig.class, BackEndApplication.class})
@@ -56,8 +53,6 @@ public class BidControllerTest {
 
     @BeforeEach
     public void before() throws Exception {
-
-        this.testUtils.clearDB();
 
         mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -92,7 +87,14 @@ public class BidControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("offer", "6.0")
                 .header("Authorization", user2))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("auctionCompleted", is(false)));
+
+        mvc.perform(get("/user/myBids")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
     }
 
 
@@ -160,5 +162,49 @@ public class BidControllerTest {
                 .param("offer", "8.0")
                 .header("Authorization", user3))
                 .andExpect(status().isOk());
+    }
+
+
+    /**
+     * Offer > buyPrice
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Offer > buyPrice")
+    public void makeBid5() throws Exception {
+
+        String item_id = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(post("/bid/makeBid/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("offer", "15.0")
+                .header("Authorization", user2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("auctionCompleted", is(true)));
+
+        mvc.perform(get("/user/myNotifications")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+
+    }
+
+
+    /**
+     * User gets the details of a bid using invalid bid id
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get bid details - invalid id")
+    public void getBid1() throws Exception {
+
+        mvc.perform(get("/bid/12345")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user2))
+                .andExpect(status().isNotFound());
+
     }
 }

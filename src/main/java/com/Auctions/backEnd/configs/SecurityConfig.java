@@ -29,8 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off
         http
-                .csrf()
-                .disable()
+               // .csrf()
+                //.disable()
                 .cors()
                 .and()
                 .sessionManagement()
@@ -40,16 +40,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //  .and()     // the services from a browser
                 .authorizeRequests()
                 .antMatchers("/auth/signup").permitAll()
-                .antMatchers("/account/confirm").permitAll()
                 .antMatchers("/auth/login").permitAll()
-                .antMatchers("/auth/visitorLogin").permitAll()
-                .antMatchers("/account/get-reset-password").permitAll()
-                .antMatchers("/account/reset-password").permitAll()
                 .antMatchers("/file/upload").permitAll()
                 .antMatchers("/account/checkUsername").permitAll()
                 .antMatchers("/account/checkEmail").permitAll()
                 .antMatchers("/downloadFile/{fileId}").permitAll()
-                .antMatchers("/retry-reset-password").permitAll()
+                .antMatchers("/user/test").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JWTConfigurer(this.tokenProvider))

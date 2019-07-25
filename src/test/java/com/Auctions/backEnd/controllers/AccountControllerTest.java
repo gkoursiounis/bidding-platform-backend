@@ -49,8 +49,6 @@ public class AccountControllerTest {
     @BeforeEach
     private void before() throws Exception {
 
-        testUtils.clearDB();
-
         mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
         user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");

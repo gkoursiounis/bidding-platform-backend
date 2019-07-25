@@ -27,7 +27,29 @@ public class BidController extends BaseController{
         this.bidRepository = bidRepository;
     }
 
-//TODO get bid
+
+    /**
+     * A user can get the details of a bid using the bidId
+     *
+     * @param bidId - the id of the bid
+     * @return the bid
+     */
+    @GetMapping("/{bidId}")
+    public ResponseEntity getBid(@PathVariable (value = "bidId") long bidId){
+//TODO maybe only the user can see his bids
+        Bid bid = bidRepository.findBidById(bidId);
+        if(bid == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "Invalid id. Bid not found"
+            ));
+        }
+
+        return ResponseEntity.ok(bid);
+    }
+
+
+
     /**
      * A user can participate in an auction by making a bid
      *
@@ -73,7 +95,7 @@ public class BidController extends BaseController{
         item.setCurrently(offer);
         if(java.lang.Double.compare(item.getBuyPrice(), offer) <= 0){
             item.setAuctionCompleted(true);
-            createNotifications(item);
+            notifySeller(item);
         }
 
         Bid bid = new Bid(new Date());

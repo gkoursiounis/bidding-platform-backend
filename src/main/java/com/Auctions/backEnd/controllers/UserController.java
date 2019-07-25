@@ -17,11 +17,14 @@ public class UserController extends BaseController{
 
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final NotificationRepository notificationRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository, ItemRepository itemRepository){
+    public UserController(UserRepository userRepository, ItemRepository itemRepository,
+                          NotificationRepository notificationRepository){
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
+        this.notificationRepository = notificationRepository;
     }
 
 
@@ -100,6 +103,50 @@ public class UserController extends BaseController{
         return ResponseEntity.ok(requester.getBids());
     }
 
+
+    /**
+     * User can get a list of his notifications
+     *
+     * @return list of notifications
+     */
+    @GetMapping("/myNotifications")
+    public ResponseEntity getMyNotifications() {
+
+        User requester = requestUser();
+        return ResponseEntity.ok(requester.getNotifications());
+    }
+
+
+    /**
+     * User can mark all of his unseen notifications as seen
+     *
+     * @return <HTTP>OK</HTTP>
+     */
+    @PatchMapping("/allSeen")
+    public ResponseEntity markAllAsSeen() {
+
+        User requester = requestUser();
+
+        List<Notification> unseen = notificationRepository.getAllUnseenNotifications();
+        unseen.forEach(notification -> {
+            notification.setSeen(true);
+            notificationRepository.save(notification);
+        });
+
+        return ResponseEntity.ok(new Message(
+                "Ok",
+                "All notifications are now seen"
+        ));
+    }
+
+//TODO continue
+
+
+
+    @PatchMapping("/test")
+    public ResponseEntity test() {
+        return ResponseEntity.ok("hello");
+    }
 
 //    @GetMapping("/search")
 //    public ResponseEntity getPartialMatchedUsers(@RequestParam String name) {

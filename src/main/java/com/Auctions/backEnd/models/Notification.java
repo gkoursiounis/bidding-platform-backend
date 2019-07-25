@@ -21,6 +21,8 @@ public class Notification extends AuditModel {
 
     long itemId;
 
+    boolean seen = false;
+
     public Notification(final Date createdAt) {
         super(createdAt);
     }

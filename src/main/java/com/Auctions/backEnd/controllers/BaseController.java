@@ -89,24 +89,27 @@ public abstract class BaseController {
             item.getSeller().getItems().add(item);
             userRepository.save(item.getSeller());
 
-            createNotifications(item);
+            notifySeller(item);
+            notifiyBuyer(item);
         }
     }
 
 
-    void createNotifications(Item item){
+    void notifySeller(Item item){
 
         Notification toSeller = new Notification();
         toSeller.setRecipient(item.getSeller());
         toSeller.setItemId(item.getId());
         toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
         notificationRepository.save(toSeller);
+    }
 
-        Notification toBuyer = new Notification();
-        Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
-        toBuyer.setRecipient(highestBid.getBidder());
-        toBuyer.setItemId(item.getId());
-        toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
-        notificationRepository.save(toBuyer);
+    void notifiyBuyer(Item item){
+         Notification toBuyer = new Notification();
+         Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
+         toBuyer.setRecipient(highestBid.getBidder());
+         toBuyer.setItemId(item.getId());
+         toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
+         notificationRepository.save(toBuyer);
     }
 }

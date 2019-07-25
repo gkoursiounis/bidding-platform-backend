@@ -30,6 +30,8 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import javax.crypto.spec.SecretKeySpec;
 import java.util.regex.Pattern;
 
+@CrossOrigin(origins = "https://localhost:3000")
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController extends BaseController{
