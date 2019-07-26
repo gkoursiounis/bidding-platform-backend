@@ -1,5 +1,6 @@
 package com.Auctions.backEnd.responses;
 
+import com.Auctions.backEnd.models.Geolocation;
 import com.Auctions.backEnd.models.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class FormattedUser {
     @Setter private String telNumber;
     @Setter private String taxNumber;
     @Setter private Boolean verified;
+    @Setter private Geolocation location;
             private Date createdAt;
 
     public FormattedUser(User user) {
@@ -28,10 +30,12 @@ public class FormattedUser {
         this.taxNumber = user.getTaxNumber();
         this.verified = user.isVerified();
         this.createdAt = user.getCreatedAt();
+        this.location = user.getAddress();
     }
 
     public FormattedUser(Long id, String userName, String firstName, String lastName,
-                         String telNumber, String taxNumber, Boolean verified, Date createdAt){
+                         String telNumber, String taxNumber, Boolean verified, Date createdAt,
+                         Geolocation location){
         this.id = id;
         this.username = userName;
         this.firstName = firstName;
@@ -39,6 +43,7 @@ public class FormattedUser {
         this.telNumber = telNumber;
         this.taxNumber = taxNumber;
         this.verified = verified;
+        this.location = location;
         this.createdAt = (Date) createdAt.clone();
     }
 

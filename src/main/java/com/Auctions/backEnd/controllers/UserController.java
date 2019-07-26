@@ -2,6 +2,7 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
+import com.Auctions.backEnd.responses.FormattedUser;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,9 @@ public class UserController extends BaseController{
 
 
     /**
-     * A user can get the details
-     * of a user (himself or another user)
+     * A user can get the details of a user (himself or another user)
+     * If the user requests himself the we return a FormattedUser which
+     * contains more details than in the case the user requests another user
      *
      * @param username - username of the user
      * @return user details
@@ -51,10 +53,25 @@ public class UserController extends BaseController{
         }
 
         if (requester.getUsername().equals(username)) {
-            return ResponseEntity.ok(requester);
+            return ResponseEntity.ok(new FormattedUser(requester));
         }
 
         return ResponseEntity.ok(user);
+    }
+
+
+    /**
+     * A User can get a list of His auctions
+     *
+     * @return list of items
+     */
+    @GetMapping("/myAuctions")
+    public ResponseEntity getMyAuctions() {
+
+        User requester = requestUser();
+        Set<Item> allAuctions = requester.getItems();
+
+        return ResponseEntity.ok(allAuctions);
     }
 
 

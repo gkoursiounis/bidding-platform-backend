@@ -81,14 +81,17 @@ public class User extends AuditModel {
 
     @NotNull
     @Column(name = "telNumber")
+    @JsonIgnore
     @Size(min=10, max=12)
     private String telNumber;
 
     @NotNull
+    @JsonIgnore
     @Column(name = "taxNumber")
     private String taxNumber;
 
     @OneToOne
+    @JsonIgnore
     private Geolocation address;
 
     private Integer sellerRating;   //TODO implement
@@ -119,11 +122,13 @@ public class User extends AuditModel {
         return this.account.getUsername();
     }
 
-    @JsonGetter("verified")
+    //@JsonGetter("verified")
+    @JsonIgnore
     public boolean isVerified() {
         return this.account.isVerified() || this.account.isAdmin();
     }
 
+    @JsonIgnore
     public boolean isAdmin() {
         return this.account.isAdmin();
     }

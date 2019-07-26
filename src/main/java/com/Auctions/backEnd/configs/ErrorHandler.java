@@ -11,8 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 @ControllerAdvice
 public class ErrorHandler {
 
+    /**
+     * Exception handler
+     *
+     * For every exception we return an <HTTP>BAD REQUEST</HTTP>
+     * unless it is specified another HttpStatus in the function
+     * or route that caused the exception
+     *
+     * @param ex - exception
+     * @param request - request
+     * @param response - response
+     * @return an <HTTP>BAD REQUEST</HTTP>
+     */
     @ExceptionHandler(Exception.class)
-    //TODO : implement specific httpStatus depending on exception choices.
     public ResponseEntity<Object> handle(Exception ex,
                                          HttpServletRequest request,
                                          HttpServletResponse response) {

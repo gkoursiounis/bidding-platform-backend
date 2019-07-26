@@ -1,6 +1,7 @@
 package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.BackEndApplication;
+import com.Auctions.backEnd.TestUtils;
 import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.models.ItemCategory;
 import com.Auctions.backEnd.repositories.AccountRepository;
@@ -22,6 +23,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.io.FileInputStream;
 import static com.Auctions.backEnd.TestUtils.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -604,5 +607,29 @@ public class ItemControllerTest {
                         .header("Authorization", user1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User successfully deletes an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Successful item deletion")
+    public void deleteItem1() throws Exception {
+
+        String item_id = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(delete("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/user/myAuctions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(0)));
     }
 }

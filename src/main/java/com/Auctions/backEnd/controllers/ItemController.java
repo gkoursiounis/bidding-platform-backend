@@ -59,17 +59,11 @@ public class ItemController extends BaseController{
             ));
         }
 
-        Date now = new Date();
-        if (!item.isAuctionCompleted() && now.compareTo(item.getEndsAt()) >= 0){
-            item.setAuctionCompleted(true);
-            itemRepository.save(item);
-        }
-
+        checkAuction(item);
         return ResponseEntity.ok(item);
     }
 
     //TODO additional features --> modify user details
-    //TODO HUGE ---> filter time to close open auctions and modify search queries
 
 
     /**
@@ -367,7 +361,7 @@ public class ItemController extends BaseController{
 
             }
             item.setLocation(location);
-            location.getItems().add(item);  //TODO DO WE NEED THIS?
+            location.getItems().add(item);
             geolocationRepository.save(location);
         }
         else{
@@ -476,9 +470,8 @@ public class ItemController extends BaseController{
 
         itemRepository.save(item);
 
-        //TODO check if correct
-        requester.getItems().add(item);
-        userRepository.save(requester);
+//        requester.getItems().add(item);
+//        userRepository.save(requester);
 
         return ResponseEntity.ok(item);
     }

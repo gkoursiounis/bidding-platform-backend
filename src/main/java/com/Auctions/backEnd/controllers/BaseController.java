@@ -63,7 +63,6 @@ public abstract class BaseController {
     }
 
 
-    //TODO complete
     /**
      * Auction auto-closure function
      *
