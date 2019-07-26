@@ -632,4 +632,37 @@ public class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(0)));
     }
+
+
+    /**
+     * User successfully deletes an item with invalid item id
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Deletion - invalid id")
+    public void deleteItem2() throws Exception {
+
+        mvc.perform(delete("/item/142345")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isNotFound());
+    }
+
+    /**
+     * User deletes an item but he does not own it
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Deletion - unauthorized")
+    public void deleteItem3() throws Exception {
+
+        String item_id = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(delete("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user2))
+                .andExpect(status().isUnauthorized());
+    }
 }

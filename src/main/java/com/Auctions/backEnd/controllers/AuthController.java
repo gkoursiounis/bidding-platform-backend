@@ -127,7 +127,7 @@ public class AuthController extends BaseController{
             ));
         }
     }
-
+//TODO add location
 
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody SignUp signupAccount)
