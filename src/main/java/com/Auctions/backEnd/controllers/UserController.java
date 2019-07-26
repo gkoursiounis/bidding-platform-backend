@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
+@CrossOrigin(origins = "https://localhost:3000")
 @RequestMapping("/user")
 public class UserController extends BaseController{
 
@@ -139,7 +140,6 @@ public class UserController extends BaseController{
         ));
     }
 
-//TODO continue
 
     /**
      * User can mark all of his unseen notifications as seen
@@ -159,9 +159,10 @@ public class UserController extends BaseController{
 
     }
 
-    @GetMapping("/test")
+    @PostMapping("/test")
     public ResponseEntity test() {
-        return ResponseEntity.ok("hello");
+        System.err.println("THIS IS HERE");
+        return ResponseEntity.ok("hello  ");
     }
 
 //    @GetMapping("/search")

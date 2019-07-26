@@ -81,15 +81,14 @@ public class BackEndApplication implements CommandLineRunner {
 		return connector;
 	}
 
-//	@Bean
 //	public WebMvcConfigurer corsConfigurer() {
-//		return new WebMvcConfigurerAdapter() {
-//			@Override
-//			public void addCorsMappings(CorsRegistry registry) {
-//				registry.addMapping("/**").allowedOrigins("https://localhost:3000");
-//			}
-//		};
-//	}
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/auth/login").allowedOrigins("https://localhost:3000");
+//            }
+//        };
+//    }
 
 	@Autowired
 	private UserRepository userRepository;
