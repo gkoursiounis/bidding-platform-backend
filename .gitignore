@@ -4,9 +4,9 @@
 .settings/
 
 # Intellij
-.idea/
-*.iml
-*.iws
+#.idea/
+#*.iml
+#*.iws
 
 # Mac
 .DS_Store
@@ -29,4 +29,4 @@ target/
 media/*
 
 # application properties
-application.properties
+#application.properties

@@ -31,8 +31,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.regex.Pattern;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:3000")
-//@CrossOrigin(origins = "https://localhost:3000")
 @RequestMapping("/auth")
 public class AuthController extends BaseController{
 
@@ -85,50 +83,49 @@ public class AuthController extends BaseController{
     @PostMapping("/login")
     public ResponseEntity authorize(@RequestBody Account account) {
 
-        return ResponseEntity.ok("it works");
-//        Account requestAccount;
-//        try {
-//            if (account.getUsername() != null && account.getEmail()!= null){
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-//                        "Error",
-//                        "Username and email missing"
-//                ));
-//            }
-//            if (account.getEmail() != null) {
-//                requestAccount = accountRepository.findByEmail(account.getEmail());
-//                if (requestAccount != null){
-//                    account.setUsername(requestAccount.getUsername());
-//                }
-//
-//            } else {
-//                requestAccount = accountRepository.findByUsername(account.getUsername());
-//            }
-//
-//            if (requestAccount == null) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-//                        "Error",
-//                        "Account not found"
-//                ));
-//            }
-//
-//            UsernamePasswordAuthenticationToken authenticationToken =
-//                    new UsernamePasswordAuthenticationToken(
-//                            account.getUsername(),
-//                            account.getPassword()
-//                    );
-//
-//            this.authenticationManager.authenticate(authenticationToken);
-//            String token = this.tokenProvider.createToken(account.getUsername());
-//            User user = userRepository.findByAccount_Username(account.getUsername());
-//            return ResponseEntity.ok(new LoginRes(token, new FormattedUser(user)));
-//
-//        } catch (NullPointerException | AuthenticationException e) {
-//            System.err.println("Bad credentials");
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
-//                    "Error",
-//                    "Bad credentials"
-//            ));
-//        }
+        Account requestAccount;
+        try {
+            if (account.getUsername() != null && account.getEmail()!= null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                        "Error",
+                        "Username and email missing"
+                ));
+            }
+            if (account.getEmail() != null) {
+                requestAccount = accountRepository.findByEmail(account.getEmail());
+                if (requestAccount != null){
+                    account.setUsername(requestAccount.getUsername());
+                }
+
+            } else {
+                requestAccount = accountRepository.findByUsername(account.getUsername());
+            }
+
+            if (requestAccount == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                        "Error",
+                        "Account not found"
+                ));
+            }
+
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            account.getUsername(),
+                            account.getPassword()
+                    );
+
+            this.authenticationManager.authenticate(authenticationToken);
+            String token = this.tokenProvider.createToken(account.getUsername());
+            User user = userRepository.findByAccount_Username(account.getUsername());
+            return ResponseEntity.ok(new LoginRes(token, new FormattedUser(user)));
+
+        } catch (NullPointerException | AuthenticationException e) {
+            System.err.println("Bad credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "Bad credentials"
+            ));
+        }
     }
 
 
