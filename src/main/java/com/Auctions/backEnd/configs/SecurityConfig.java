@@ -50,32 +50,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/account/checkUsername").permitAll()
                 .antMatchers("/account/checkEmail").permitAll()
                 .antMatchers("/downloadFile/{fileId}").permitAll()
-                .antMatchers("/user/test").permitAll()
+                .antMatchers("/user/test/test").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JWTConfigurer(this.tokenProvider))
-                .and()//???
-                .requiresChannel()//??
+                .and()
+                .requiresChannel()
                 .anyRequest().requiresSecure()
                 .and()
                 .headers()
                 .httpStrictTransportSecurity()
                 .includeSubDomains(true)
                 .maxAgeInSeconds(31536000);
-//                .and()
-//                .userDetailsService(userDetailsService()); //???
         // @formatter:on
     }
-
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource()
-//    {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("https://localhost:3000"));
-//        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PATCH"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 }

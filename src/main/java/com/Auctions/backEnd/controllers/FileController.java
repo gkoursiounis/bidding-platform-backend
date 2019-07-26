@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestController
+@CrossOrigin(origins = "https://localhost:3000")
 @RequestMapping("/media")
 public class FileController extends BaseController{
 

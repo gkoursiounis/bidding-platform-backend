@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "https://localhost:3000")
 @RequestMapping("/item")
 public class ItemController extends BaseController{
 

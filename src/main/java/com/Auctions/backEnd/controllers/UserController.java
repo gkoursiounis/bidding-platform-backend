@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
+@CrossOrigin(origins = "https://localhost:3000")
 @RequestMapping("/user")
 public class UserController extends BaseController{
 
@@ -158,7 +159,9 @@ public class UserController extends BaseController{
 
     }
 
-    @PostMapping("/test")
+
+
+    @GetMapping("/test/test")
     public ResponseEntity test() {
         System.err.println("THIS IS HERE");
         return ResponseEntity.ok("hello  ");

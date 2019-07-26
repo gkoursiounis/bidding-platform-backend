@@ -31,6 +31,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.regex.Pattern;
 
 @RestController
+@CrossOrigin(origins = "https://localhost:3000")
 @RequestMapping("/auth")
 public class AuthController extends BaseController{
 
@@ -79,7 +80,6 @@ public class AuthController extends BaseController{
     }
 
 
-    //@CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
     public ResponseEntity authorize(@RequestBody Account account) {
 
