@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -51,7 +52,9 @@ public class AuthControllerTest{
     @BeforeEach
     public void before() throws Exception {
 
-        mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        mvc = MockMvcBuilders.webAppContextSetup(this.wac)
+                .alwaysDo(MockMvcResultHandlers.print())
+                .build();
 
         user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
         user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");

@@ -122,8 +122,7 @@ public class User extends AuditModel {
         return this.account.getUsername();
     }
 
-    //@JsonGetter("verified")
-    @JsonIgnore
+    @JsonGetter("verified")
     public boolean isVerified() {
         return this.account.isVerified() || this.account.isAdmin();
     }

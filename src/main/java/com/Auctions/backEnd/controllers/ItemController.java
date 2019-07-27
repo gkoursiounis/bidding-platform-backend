@@ -504,6 +504,7 @@ public class ItemController extends BaseController{
             ));
         }
 
+        checkAuction(item);
         if(!item.getBids().isEmpty() || item.isAuctionCompleted()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",

@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -59,7 +60,9 @@ public class ItemControllerTest {
     @BeforeEach
     private void before() throws Exception {
 
-        mvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        mvc = MockMvcBuilders.webAppContextSetup(this.wac)
+                .alwaysDo(MockMvcResultHandlers.print())
+                .build();
 
         user1 = createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
         user2 = createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
@@ -664,5 +667,99 @@ public class ItemControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user2))
                 .andExpect(status().isUnauthorized());
+    }
+
+    /**
+     * User deletes an item but the auction is already completed
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Deletion - completed auction")
+    public void deleteItem4() throws Exception {
+
+        String item_id = TestUtils.makeExpiredItem(mvc, categoryId, user1);
+
+        mvc.perform(delete("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User deletes an item but the auction has bids
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Deletion - bids")
+    public void deleteItem5() throws Exception {
+
+        String item_id = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(post("/bid/makeBid/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("offer", "6.0")
+                .header("Authorization", user2))
+                .andExpect(status().isOk());
+
+        mvc.perform(delete("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User gets item's details
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get details")
+    public void getItem1() throws Exception {
+
+        String item_id = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(get("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User gets item's details using invalid id
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get details with invalid id")
+    public void getItem2() throws Exception {
+
+        mvc.perform(get("/item/123654")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isNotFound());
+    }
+
+
+    /**
+     * User gets item's details of an expired item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get details of expired item")
+    public void getItem3() throws Exception {
+
+        String item_id = TestUtils.makeExpiredItem(mvc, categoryId, user1);
+
+        mvc.perform(get("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("auctionCompleted", is(true)));
     }
 }

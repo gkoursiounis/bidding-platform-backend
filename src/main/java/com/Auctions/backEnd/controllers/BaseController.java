@@ -104,11 +104,13 @@ public abstract class BaseController {
     }
 
     void notifiyBuyer(Item item){
-         Notification toBuyer = new Notification();
-         Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
-         toBuyer.setRecipient(highestBid.getBidder());
-         toBuyer.setItemId(item.getId());
-         toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
-         notificationRepository.save(toBuyer);
+         if(!item.getBids().isEmpty()) {
+             Notification toBuyer = new Notification();
+             Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
+             toBuyer.setRecipient(highestBid.getBidder());
+             toBuyer.setItemId(item.getId());
+             toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
+             notificationRepository.save(toBuyer);
+         }
     }
 }
