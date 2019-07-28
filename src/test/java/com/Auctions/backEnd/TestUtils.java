@@ -231,24 +231,24 @@ public class TestUtils {
 	 * @throws Exception - mvc.perform throws Exception
 	 */
 	public static String makeItem(@NonNull final MockMvc mvc,
-										 @NonNull final String categoryId,
-										 @NonNull final String token) throws Exception{
+								   @NonNull final String categoryId,
+								   @NonNull final String token) throws Exception{
 		return ((JSONObject) new JSONParser().parse(
-		mvc.perform(
-                post("/item")
-                        .param("name", "item1")
-                        .param("buyPrice", "10.4")
-                        .param("firstBid", "5.3")
-                        .param("categoriesId", categoryId)
-                        .param("longitude", "23.76695")
-                        .param("latitude", "37.968564")
-                        .param("locationTitle", "Dit UoA")
-                        .param("endsAt", "2025-09-26T01:30:00.000-04:00")
-                        .param("description", "this is the description")
-                        .header("Authorization", token)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-				.andReturn().getResponse().getContentAsString()))
+				mvc.perform(
+						post("/item")
+								.param("name", "item1")
+								.param("buyPrice", "10.4")
+								.param("firstBid", "5.3")
+								.param("categoriesId", categoryId)
+								.param("longitude", "23.76695")
+								.param("latitude", "37.968564")
+								.param("locationTitle", "Dit UoA")
+								.param("endsAt", "2025-09-26T01:30:00.000-04:00")
+								.param("description", "this is the description")
+								.header("Authorization", token)
+								.contentType(MediaType.APPLICATION_JSON))
+						.andExpect(status().isOk())
+						.andReturn().getResponse().getContentAsString()))
 				.get("id").toString();
 	}
 
@@ -277,37 +277,28 @@ public class TestUtils {
 	}
 
 
-	/**
-	 * Helper function
-	 * Given a user token it creates a post of this user
-	 * using the media/Bloodhound.jpg
-	 * Whitelist and blacklist are empty
-	 *
-	 * @param token - token of the user
-	 * @throws Exception - mvc.perform throws Exception
-	 */
-	public static ResultActions makePost(@NonNull final MockMvc mvc,
-										 @NonNull final String token,
-										 @NonNull final String locationTitle) throws Exception{
-
-		MockMultipartFile file = new MockMultipartFile(
-				"media",
-				"Bloodhound.jpg",
-				"image/jpeg",
-				new FileInputStream("media/Bloodhound.jpg"));
-
-		return mvc.perform(
-				multipart("/post")
-						.file(file)
-						.param("title", "title")
-						.param("caption", "caption")
-						.param("apiIdentifier", "0")
-						.param("longitude", "0")
-						.param("latitude", "0")
-						.param("locationType", "dunno")
-						.param("locationTitle", locationTitle)
-						.header("Authorization", token)
-						.contentType(MediaType.MULTIPART_FORM_DATA));
+	public static String makeDetailedItem(@NonNull final MockMvc mvc,
+										  @NonNull final String categoryId,
+										  @NonNull final String name,
+										  @NonNull final String description,
+										  @NonNull final String token) throws Exception{
+		return ((JSONObject) new JSONParser().parse(
+				mvc.perform(
+						post("/item")
+								.param("name", name)
+								.param("buyPrice", "10.4")
+								.param("firstBid", "5.3")
+								.param("categoriesId", categoryId)
+								.param("longitude", "23.76695")
+								.param("latitude", "37.968564")
+								.param("locationTitle", "Dit UoA")
+								.param("endsAt", "2025-09-26T01:30:00.000-04:00")
+								.param("description", description)
+								.header("Authorization", token)
+								.contentType(MediaType.APPLICATION_JSON))
+						.andExpect(status().isOk())
+						.andReturn().getResponse().getContentAsString()))
+				.get("id").toString();
 	}
 
 

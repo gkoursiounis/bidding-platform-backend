@@ -762,4 +762,109 @@ public class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("auctionCompleted", is(true)));
     }
+
+
+    /**
+     * User gets a list of all open auctions
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get all open auctions")
+    public void getAllOpenAuctions1() throws Exception {
+
+        String item1 = TestUtils.makeItem(mvc, categoryId, user1);
+        String item2 = TestUtils.makeItem(mvc, categoryId, user1);
+        String item3 = TestUtils.makeItem(mvc, categoryId, user1);
+
+        String item4 = TestUtils.makeExpiredItem(mvc, categoryId, user1);
+
+        mvc.perform(get("/item/openAuctions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+
+    /**
+     * User gets a list of all open auctions
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get all open auctions 2")
+    public void getAllOpenAuctions2() throws Exception {
+
+        String item4 = TestUtils.makeExpiredItem(mvc, categoryId, user1);
+
+        mvc.perform(get("/item/openAuctions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(0)));
+    }
+
+
+    /**
+     * User gets a list of all auctions
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get all auctions")
+    public void getAllAuctions1() throws Exception {
+
+        String item1 = TestUtils.makeItem(mvc, categoryId, user2);
+        String item2 = TestUtils.makeItem(mvc, categoryId, user3);
+        String item3 = TestUtils.makeItem(mvc, categoryId, user3);
+
+        String item4 = TestUtils.makeExpiredItem(mvc, categoryId, user1);
+
+        mvc.perform(get("/item/openAuctions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(4)));
+    }
+
+
+    /**
+     * User gets a list of all auctions
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get all auctions 2")
+    public void getAllAuctions2() throws Exception {
+
+        String item4 = TestUtils.makeExpiredItem(mvc, categoryId, user1);
+
+        mvc.perform(get("/item/openAuctions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+    }
+
+
+    /**
+     * User gets a list of all partially matched results
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get all auctions 2")
+    public void getPartialMatchedSearch1() throws Exception {
+
+        String item4 = TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
+
+        mvc.perform(get("/item/search/partialMatch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("keyword", "dress")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+    }
 }

@@ -92,7 +92,7 @@ public class ItemController extends BaseController{
 
 
     /**
-     * A User can get a list of All the items/auctions existing in the database
+     * A User can get a list of names of every existing category
      *
      * @return list of all items
      */
@@ -324,7 +324,7 @@ public class ItemController extends BaseController{
                     ));
                 }
                 category.getItems().add(item);
-//                item.getCategories().add(category);
+                item.getCategories().add(category);
                 itemCategoryRepository.save(category);
             }
         }

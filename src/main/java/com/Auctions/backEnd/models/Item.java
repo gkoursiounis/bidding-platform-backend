@@ -1,5 +1,6 @@
 package com.Auctions.backEnd.models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -75,6 +76,9 @@ public class Item extends AuditModel implements Serializable {
 //    private Set<User> blockedBy = new TreeSet<>();
 
     public boolean isAuctionCompleted() { return this.auctionCompleted; }
+
+   // @JsonGetter("categories")
+  //  public Set<ItemCategory> getCategories() { return this.categories; }
 
     public Item(final Date createdAt) { super(createdAt); }
 }

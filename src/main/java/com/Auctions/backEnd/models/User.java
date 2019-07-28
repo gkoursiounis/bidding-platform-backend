@@ -99,23 +99,10 @@ public class User extends AuditModel {
     private Integer bidderRating;
 
 
-
-
     @JsonIgnore
     public String getUsername() {
         return this.account.getUsername();
     }
-
-
-//    @JsonGetter("nFollowings")
-//    public Integer nFollowings() {
-//        return this.following.size();
-//    }
-
-//    @JsonGetter("nFollowers")
-//    public Integer nFollowers() {
-//        return this.followers.size();
-//    }
 
     @JsonGetter("username")
     public String username() {
