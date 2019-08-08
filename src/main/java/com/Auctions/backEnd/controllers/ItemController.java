@@ -59,11 +59,8 @@ public class ItemController extends BaseController{
             ));
         }
 
-        checkAuction(item);
         return ResponseEntity.ok(item);
     }
-
-    //TODO additional features --> modify user details
 
 
     /**
@@ -74,7 +71,6 @@ public class ItemController extends BaseController{
      */
     @GetMapping("/openAuctions")
     public ResponseEntity getAllOpenAuctions(){
-        auctionClosure();
         return ResponseEntity.ok(itemRepository.getAllOpenAuctions());
     }
 
@@ -86,7 +82,6 @@ public class ItemController extends BaseController{
      */
     @GetMapping("/allAuctions")
     public ResponseEntity getAllItems(){
-        auctionClosure();
         return ResponseEntity.ok(itemRepository.findAll());
     }
 
@@ -100,7 +95,6 @@ public class ItemController extends BaseController{
     public ResponseEntity getAllCategoriesNames(){
         return ResponseEntity.ok(itemCategoryRepository.findAll());
     }
-
 
 
     @GetMapping("/search/partialMatch")
@@ -120,7 +114,7 @@ public class ItemController extends BaseController{
         res = itemRepository.searchItems(keyword);
         Collections.sort(res);
 
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(res); //TODO return only strings
     }
 
 
@@ -133,6 +127,7 @@ public class ItemController extends BaseController{
      * called 'res'. Afterwards, we sort the results on a best fit basis
      * i.e. the items appearing more times in the set are moved first in
      * the set
+     * We return items of both open and completed auctions
      *
      * @return a list of items
      */
@@ -146,17 +141,15 @@ public class ItemController extends BaseController{
             ));
         }
 
-        auctionClosure();
-
-        Set<Item> res = new HashSet<>();
+        List<Item> res = new ArrayList<>();
 
         //split string to words
-        String[] values = text.split(" ");
+        String[] values = text.split(" "); //TODO maybe extend to recognize ,-..
         for (String element : values) {
             res.addAll(itemRepository.searchItems(element));
         }
 
-        //algorithm for sorting elements by frequency was taken from:
+        //algorithm for sorting elements by times of appearance was taken from:
         //https://www.geeksforgeeks.org/sort-elements-by-frequency-set-5-using-java-map/
 
         Map<Item, Integer> map = new HashMap<>();
@@ -177,9 +170,9 @@ public class ItemController extends BaseController{
 
         LinkedHashSet<Item> hashSet = new LinkedHashSet<>(outputArray);
 
-        ArrayList<Item> listWithoutDuplicates = new ArrayList<>(hashSet);
+       // ArrayList<Item> listWithoutDuplicates = new ArrayList<>(hashSet);
 
-        return ResponseEntity.ok(listWithoutDuplicates);
+        return ResponseEntity.ok(hashSet);
     }
 
 
@@ -415,47 +408,56 @@ public class ItemController extends BaseController{
         if(!requester.getItems().contains(item)){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
                     "Error",
-                    "You cannot modify an item that does not belong to you"
+                    "You cannot modify an auction that does not belong to you"
             ));
         }
 
-        if(!item.getBids().isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+        if(!item.getBids().isEmpty() || checkAuction(item)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(
                     "Error",
-                    "You cannot modify the item's details after the first bid"
-            ));
-        }
-
-        if(java.lang.Double.compare(buyPrice, firstBid) < 0){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "Buy price cannot be less than the first bid"
+                    "You cannot modify the auction after the first bid or if it is completed"
             ));
         }
 
         if(name != null){ item.setName(name); }
-        if(buyPrice != null){ item.setBuyPrice(buyPrice); }
-        if(firstBid != null){ item.setFirstBid(firstBid); }
         if(endsAt != null){ item.setEndsAt(endsAt); }
-        if(description != null) { item.setDescription(description); }
+        if(description != null){ item.setDescription(description); }
+
+        if(buyPrice != null){
+
+            if((firstBid != null && java.lang.Double.compare(buyPrice, firstBid) < 0) ||
+                    (firstBid == null && java.lang.Double.compare(buyPrice, item.getFirstBid()) < 0)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                        "Error",
+                        "Buy price cannot be less than the first bid"
+                ));
+            }
+            item.setBuyPrice(buyPrice);
+        }
+        if(firstBid != null){
+
+            if((buyPrice != null && java.lang.Double.compare(buyPrice, firstBid) < 0) ||
+                    (buyPrice == null && java.lang.Double.compare(item.getBuyPrice(), firstBid) < 0)){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                        "Error",
+                        "Buy price cannot be less than the first bid"
+                ));
+            }
+            item.setFirstBid(firstBid);
+        }
 
 
-        if (categoriesId.length > 5) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "You cannot set more than 5 categories for an item"
-            ));
-        }
-        else if(categoriesId.length == 0){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "You need to set at least one category for an item"
-            ));
-        }
-        else{
+        if(categoriesId != null){
+
+            if (categoriesId.length > 5) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                        "Error",
+                        "You cannot set more than 5 categories for an item"
+                ));
+            }
 
             item.getCategories().clear();
-            for(Integer id: categoriesId){
+            for(Integer id: categoriesId) {
                 ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
 
                 if(category == null) {
@@ -465,6 +467,8 @@ public class ItemController extends BaseController{
                     ));
                 }
                 item.getCategories().add(category);
+                category.getItems().add(item);
+                itemCategoryRepository.save(category);
             }
         }
 
@@ -504,9 +508,8 @@ public class ItemController extends BaseController{
             ));
         }
 
-        checkAuction(item);
-        if(!item.getBids().isEmpty() || item.isAuctionCompleted()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+        if(!item.getBids().isEmpty() || checkAuction(item)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(
                     "Error",
                     "You cannot delete the auction after the first bid or if it is completed"
             ));

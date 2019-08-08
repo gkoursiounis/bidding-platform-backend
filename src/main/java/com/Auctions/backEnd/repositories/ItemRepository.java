@@ -14,7 +14,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findByName(String name);
     Item findItemById(Long id);
 
-    //TODO DISPLAY COMPLETED AUCTION
     @Query("SELECT i FROM Item i WHERE :categories IN i.categories and i.auctionCompleted = 'false'")
     List<Item> findItemByCategory(@Param("categories") List<String> categories);
 
@@ -40,12 +39,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> searchByDescription(@Param("query") String keyword);
 
     @Query(
-            "select i from Item i, ItemCategory ic " +
+            "select i from Item i join i.categories ic " +
             "where (locate(:query, lower(i.name)) <> 0) or " +
             "(locate(:query, lower(i.description)) <> 0) or " +
-            "((locate(:query, lower(ic.name)) <> 0 and ic in i.categories))"
+            "locate(:query, lower(ic.name)) <> 0"
     )
     List<Item> searchItems(@Param("query") String query);
-
-
 }

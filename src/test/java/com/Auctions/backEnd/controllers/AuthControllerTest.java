@@ -128,7 +128,10 @@ public class AuthControllerTest{
                                 "\"firstName\" : \"FirstName1\", " +
                                 "\"lastName\" : \"LastName1\", " +
                                 "\"telNumber\" : \"1234567890\", " +
-                                "\"taxNumber\" : \"123345\" " +
+                                "\"taxNumber\" : \"123345\", " +
+                                "\"longitude\" : \"23.76695\", " +
+                                "\"latitude\" : \"37.968564\", " +
+                                "\"locationTitle\" : \"Dit Uoa\" " +
                                 "}";
 
         performSignup(content)
@@ -152,7 +155,10 @@ public class AuthControllerTest{
                                 "\"firstName\" : \"FirstName1\", " +
                                 "\"lastName\" : \"LastName1\", " +
                                 "\"telNumber\" : \"1234567890\", " +
-                                "\"taxNumber\" : \"123345\" " +
+                                "\"taxNumber\" : \"123345\", " +
+                                "\"longitude\" : \"23.76695\", " +
+                                "\"latitude\" : \"37.968564\", " +
+                                "\"locationTitle\" : \"Dit Uoa\" " +
                                 "}";
 
         performSignup(content)
@@ -177,7 +183,10 @@ public class AuthControllerTest{
                                 "\"firstName\" : \"FirstName0\", " +
                                 "\"lastName\" : \"LastName1\", " +
                                 "\"telNumber\" : \"1234567890\", " +
-                                "\"taxNumber\" : \"123345\" " +
+                                "\"taxNumber\" : \"123345\", " +
+                                "\"longitude\" : \"23.76695\", " +
+                                "\"latitude\" : \"37.968564\", " +
+                                "\"locationTitle\" : \"Dit Uoa\" " +
                                 "}";
 
         performSignup(content)
@@ -207,7 +216,10 @@ public class AuthControllerTest{
                 "\"firstName\" : \"FirstName11\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
@@ -235,7 +247,10 @@ public class AuthControllerTest{
                 "\"firstName\" : \"FirstName01\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
@@ -263,7 +278,10 @@ public class AuthControllerTest{
                 "\"password\" : \"myPwd123\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
@@ -291,7 +309,10 @@ public class AuthControllerTest{
                 "\"firstName\" : \"FirstName01\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"telNumber\" : \"1234567890\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
@@ -317,7 +338,10 @@ public class AuthControllerTest{
                                 "\"firstName\" : \"FirstName1\", " +
                                 "\"lastName\" : \"LastName1\", " +
                                 "\"telNumber\" : \"1234567890\", " +
-                                "\"taxNumber\" : \"123345\" " +
+                                "\"taxNumber\" : \"123345\", " +
+                                "\"longitude\" : \"23.76695\", " +
+                                "\"latitude\" : \"37.968564\", " +
+                                "\"locationTitle\" : \"Dit Uoa\" " +
                                 "}";
 
         performSignup(content)
@@ -341,7 +365,10 @@ public class AuthControllerTest{
                 "\"firstName\" : \"FirstName1\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
@@ -364,7 +391,10 @@ public class AuthControllerTest{
                 "\"firstName\" : \"FirstName1\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
@@ -393,7 +423,10 @@ public class AuthControllerTest{
                 "\"firstName\" : \"" + firstName + "\", " +
                 "\"lastName\" : \"" + lastName + "\", " +
                 "\"telNumber\" : \"" + telNumber + "\", " +
-                "\"taxNumber\" : \"" + taxNumber + "\" " +
+                "\"taxNumber\" : \"" + taxNumber + "\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
@@ -422,7 +455,10 @@ public class AuthControllerTest{
                 "\"firstName\" : \"FirstName1\", " +
                 "\"lastName\" : \"LastName1\", " +
                 "\"telNumber\" : \"1234567890\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
@@ -439,20 +475,19 @@ public class AuthControllerTest{
     @DisplayName("Signup without phone number")
     public void signup14() throws Exception {
 
-        final String username = "user0" ;
-
         final String content = "{" +
-                "\"username\" : \"" + username + "\", " +
+                "\"username\" : \"user0\", " +
                 "\"email\" : \"email0@di.uoa.gr\", " +
                 "\"firstName\" : \"FirstName01\", " +
+                "\"lastName\" : \"LastName1\", " +
                 "\"password\" : \"myPwd123\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
-                .andExpect(status().isBadRequest());
-
-        checkUsername(username)
                 .andExpect(status().isBadRequest());
     }
 
@@ -472,8 +507,12 @@ public class AuthControllerTest{
                 "\"username\" : \"" + username + "\", " +
                 "\"email\" : \"email0@di.uoa.gr\", " +
                 "\"firstName\" : \"FirstName01\", " +
+                "\"lastName\" : \"LastName1\", " +
                 "\"password\" : \"myPwd123\", " +
-                "\"telNumber\" : \"1234567890\" " +
+                "\"telNumber\" : \"1234567890\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
@@ -493,21 +532,20 @@ public class AuthControllerTest{
     @DisplayName("Signup with short phone number")
     public void signup16() throws Exception {
 
-        final String username = "user0" ;
-
         final String content = "{" +
-                "\"username\" : \"" + username + "\", " +
+                "\"username\" : \"user0\", " +
                 "\"email\" : \"email0@di.uoa.gr\", " +
                 "\"firstName\" : \"FirstName01\", " +
+                "\"lastName\" : \"LastName1\", " +
                 "\"password\" : \"myPwd123\", " +
                 "\"telNumber\" : \"11880\", " +
-                "\"taxNumber\" : \"123345\" " +
+                "\"taxNumber\" : \"123345\", " +
+                "\"longitude\" : \"23.76695\", " +
+                "\"latitude\" : \"37.968564\", " +
+                "\"locationTitle\" : \"Dit Uoa\" " +
                 "}";
 
         performSignup(content)
-                .andExpect(status().isBadRequest());
-
-        checkUsername(username)
                 .andExpect(status().isBadRequest());
     }
 

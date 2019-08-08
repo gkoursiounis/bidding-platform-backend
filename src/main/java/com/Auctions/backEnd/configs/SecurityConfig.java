@@ -24,7 +24,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    //TODO update
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // @formatter:off

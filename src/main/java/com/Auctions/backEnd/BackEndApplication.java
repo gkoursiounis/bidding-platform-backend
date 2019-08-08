@@ -1,8 +1,10 @@
 package com.Auctions.backEnd;
 
-import com.Auctions.backEnd.models.Account;
-import com.Auctions.backEnd.models.User;
+import com.Auctions.backEnd.controllers.BaseController;
+import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.AccountRepository;
+import com.Auctions.backEnd.repositories.ItemRepository;
+import com.Auctions.backEnd.repositories.NotificationRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
@@ -28,6 +30,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -94,6 +98,12 @@ public class BackEndApplication implements CommandLineRunner {
 	private AccountRepository accountRepository;
 
 	@Autowired
+	private ItemRepository itemRepository;
+
+	@Autowired
+	private NotificationRepository notificationRepository;
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 
@@ -132,18 +142,38 @@ public class BackEndApplication implements CommandLineRunner {
 				System.err.println("Creating admin account...");
 
 			}
-		}, 0, 1, TimeUnit.DAYS);
+		}, 0, 365, TimeUnit.DAYS);
 
 
-//		exec.scheduleAtFixedRate(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				//System.err.println("Creating admin account...");
-//				System.err.println("hello...");
-//
-//			}
-//		}, 0, 2, TimeUnit.SECONDS);
+		exec.scheduleAtFixedRate(new Runnable() {
 
+			@Override
+			public void run() {
+				System.out.println("Updating...");
+				List<Item> auctions = itemRepository.getAllOpenAuctions();
+				auctions.forEach(item -> {
+
+					if(item.getEndsAt().getTime() < System.currentTimeMillis()) {
+						item.setAuctionCompleted(true);
+						itemRepository.save(item);
+
+						Notification toSeller = new Notification();
+						toSeller.setRecipient(item.getSeller());
+						toSeller.setItemId(item.getId());
+						toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
+						notificationRepository.save(toSeller);
+
+						if(!item.getBids().isEmpty()) {
+							Notification toBuyer = new Notification();
+							Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
+							toBuyer.setRecipient(highestBid.getBidder());
+							toBuyer.setItemId(item.getId());
+							toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
+							notificationRepository.save(toBuyer);
+						}
+					}
+				});
+			}
+		}, 0, 5, TimeUnit.SECONDS);
 	}
 }

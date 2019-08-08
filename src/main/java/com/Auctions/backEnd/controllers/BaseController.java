@@ -71,26 +71,31 @@ public abstract class BaseController {
      * 'endsAt' time meaning that the auction must be completed
      *
      */
-     void auctionClosure(){
+//     void auctionClosure(){
+//
+//        List<Item> auctions = itemRepository.getAllOpenAuctions();
+//        auctions.forEach(item -> { checkAuction(item); });
+//    }
 
-        List<Item> auctions = itemRepository.getAllOpenAuctions();
-        auctions.forEach(item -> { checkAuction(item); });
-    }
+    boolean checkAuction(Item item){
 
-
-    void checkAuction(Item item){
-
-        if((new Date()).compareTo(item.getEndsAt()) >= 0){
-
-            item.setAuctionCompleted(true);
-            itemRepository.save(item);
-
-            item.getSeller().getItems().add(item);
-            userRepository.save(item.getSeller());
-
-            notifySeller(item);
-            notifiyBuyer(item);
+        if(item.getEndsAt().getTime() < System.currentTimeMillis()){
+            return true;
+        } else {
+            return false;
         }
+//         if(item.getEndsAt().getTime() < System.currentTimeMillis()){
+//      //  if((new Date()).compareTo(item.getEndsAt()) >= 0){
+//
+//            item.setAuctionCompleted(true);
+//            itemRepository.save(item);
+//
+////            item.getSeller().getItems().add(item);
+////            userRepository.save(item.getSeller());
+//
+//            notifySeller(item);
+//            notifiyBuyer(item);
+//        }
     }
 
 

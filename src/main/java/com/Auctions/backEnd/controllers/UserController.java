@@ -130,8 +130,21 @@ public class UserController extends BaseController{
     @GetMapping("/myNotifications")
     public ResponseEntity getMyNotifications() {
 
-        User requester = requestUser();
-        return ResponseEntity.ok(requester.getNotifications());
+        return ResponseEntity.ok(requestUser().getNotifications());
+    }
+
+
+    /**
+     * User can get a list of his unseen notifications
+     *
+     * @return list of notifications
+     */
+    @GetMapping("/unseenNotifications")
+    public ResponseEntity getUnseenNotifications() {
+
+        Set<Notification> notifications = requestUser().getNotifications();
+        notifications.removeIf(notification -> notification.isSeen());
+        return ResponseEntity.ok(notifications);
     }
 
 
@@ -157,7 +170,7 @@ public class UserController extends BaseController{
         ));
     }
 
-
+//TODO additional features --> modify user details
     /**
      * User can mark all of his unseen notifications as seen
      *
@@ -177,12 +190,6 @@ public class UserController extends BaseController{
     }
 
 
-
-    @GetMapping("/test/test")
-    public ResponseEntity test() {
-        System.err.println("THIS IS HERE");
-        return ResponseEntity.ok("hello  ");
-    }
 
 //    @GetMapping("/search")
 //    public ResponseEntity getPartialMatchedUsers(@RequestParam String name) {
@@ -262,6 +269,17 @@ public class UserController extends BaseController{
 //
 //
 //   
+
+
+    @GetMapping("/test/test/{notId}")
+    public ResponseEntity test(@PathVariable (value = "notId") long notId) {
+
+        Item item = itemRepository.findItemById(notId);
+        notifiyBuyer(item);
+
+        return ResponseEntity.ok(null);
+
+    }
 
 
 }

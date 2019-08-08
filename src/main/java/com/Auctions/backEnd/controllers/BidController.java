@@ -32,7 +32,7 @@ public class BidController extends BaseController{
     /**
      * A user can get the details of a bid using the bidId
      *
-     * For privacy reasons, only the bidder can view the details
+     * For privacy reasons, only the bidder can view the details//TODO delete
      * of his bid. The public description of the bid can be found
      * only in the relevant auction's page, where all the bids
      * about this auction are displayed
@@ -50,16 +50,8 @@ public class BidController extends BaseController{
             ));
         }
 
-        if(!requestUser().equals(bid.getBidder())){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(
-                    "Error",
-                    "This bid does not belong to you"
-            ));
-        }
-
         return ResponseEntity.ok(bid);
     }
-
 
 
     /**
@@ -82,8 +74,7 @@ public class BidController extends BaseController{
             ));
         }
 
-        checkAuction(item);
-        if(item.isAuctionCompleted()) {
+        if(checkAuction(item)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "Auction has been completed and no bids can be made"

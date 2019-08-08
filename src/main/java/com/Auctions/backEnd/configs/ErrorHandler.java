@@ -1,5 +1,6 @@
 package com.Auctions.backEnd.configs;
 
+import com.Auctions.backEnd.responses.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,6 +29,10 @@ public class ErrorHandler {
                                          HttpServletRequest request,
                                          HttpServletResponse response) {
         ex.printStackTrace();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new Message(
+                        "Error",
+                        "Oops..Something went wrong - invalid data or HTTP request"
+                ));
     }
 }

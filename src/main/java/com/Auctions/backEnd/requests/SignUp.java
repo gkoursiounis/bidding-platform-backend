@@ -34,4 +34,13 @@ public class SignUp {
 
     @NotNull
     private String taxNumber;
+
+    @NotNull
+    private Double latitude;
+
+    @NotNull
+    private Double longitude;
+
+    @NotNull
+    private String locationTitle;
 }

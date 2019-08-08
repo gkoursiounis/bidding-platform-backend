@@ -60,7 +60,4 @@ public class DBFileStorageService {
         return dbFileRepository.findById(fileId)
                 .orElseThrow(() -> new FileStorageException("File not found with id " + fileId));
     }
-
-    //TODO download file
-
 }

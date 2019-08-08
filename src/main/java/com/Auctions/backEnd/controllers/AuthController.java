@@ -1,8 +1,10 @@
 package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.Account;
+import com.Auctions.backEnd.models.Geolocation;
 import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.AccountRepository;
+import com.Auctions.backEnd.repositories.GeolocationRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import com.Auctions.backEnd.requests.SignUp;
 import com.Auctions.backEnd.responses.FormattedUser;
@@ -40,6 +42,7 @@ public class AuthController extends BaseController{
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
+    private final GeolocationRepository geolocationRepository;
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     @Value("${app.chatKit.instanceId}")
@@ -59,12 +62,14 @@ public class AuthController extends BaseController{
                           AuthenticationManager authenticationManager,
                           UserRepository userRepository,
                           AccountRepository accountRepository,
+                          GeolocationRepository geolocationRepository,
                           RequestMappingHandlerMapping requestMappingHandlerMapping) {
         this.tokenProvider = tokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
+        this.geolocationRepository = geolocationRepository;
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
     }
 
@@ -127,7 +132,7 @@ public class AuthController extends BaseController{
             ));
         }
     }
-//TODO add location
+
 
     @PostMapping("/signup")
     public ResponseEntity signup(@RequestBody SignUp signupAccount)
@@ -155,10 +160,11 @@ public class AuthController extends BaseController{
             ));
         }
 
-        if (signupAccount.getTelNumber() == null || signupAccount.getTaxNumber() == null) {
+        if (signupAccount.getTelNumber() == null || signupAccount.getTaxNumber() == null ||
+                signupAccount.getTelNumber().length() > 12 || signupAccount.getTelNumber().length() < 10){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "Telephone number or tax number missing"
+                    "Invalid telephone or tax number"
             ));
         }
 
@@ -189,6 +195,25 @@ public class AuthController extends BaseController{
         user.setTelNumber(signupAccount.getTelNumber());
         user.setTaxNumber(signupAccount.getTaxNumber());
         user.setAccount(account);
+
+        if(signupAccount.getLatitude() == null || signupAccount.getLongitude() == null ||
+                signupAccount.getLocationTitle() == null || signupAccount.getLocationTitle().isEmpty()){
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Geospatial data missing"
+            ));
+        }
+
+        Geolocation location = geolocationRepository.findLocationByLatitudeAndLongitude
+                (signupAccount.getLatitude(), signupAccount.getLongitude());
+        if (location == null){
+            location = new Geolocation(signupAccount.getLongitude(),
+                    signupAccount.getLatitude(), signupAccount.getLocationTitle());
+        }
+        user.setAddress(location);
+        location.getUsers().add(user);
+        geolocationRepository.save(location);
 
         userRepository.save(user);
 

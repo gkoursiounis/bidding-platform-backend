@@ -165,6 +165,11 @@ public class BidControllerTest {
                 .param("offer", "8.0")
                 .header("Authorization", user3))
                 .andExpect(status().isOk());
+
+        mvc.perform(get("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
     }
 
 

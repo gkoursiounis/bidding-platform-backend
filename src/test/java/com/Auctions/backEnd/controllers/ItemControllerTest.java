@@ -69,7 +69,7 @@ public class ItemControllerTest {
         user3 = createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
 
         ItemCategory category = new ItemCategory();
-        category.setName("cat1");
+        category.setName("cars");
         itemCategoryRepository.save(category);
         categoryId = category.getId().toString();
     }
@@ -683,7 +683,7 @@ public class ItemControllerTest {
         mvc.perform(delete("/item/" + item_id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isForbidden());
     }
 
 
@@ -707,7 +707,7 @@ public class ItemControllerTest {
         mvc.perform(delete("/item/" + item_id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isForbidden());
     }
 
 
@@ -744,7 +744,7 @@ public class ItemControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-
+//TODO remove
     /**
      * User gets item's details of an expired item
      *
@@ -756,6 +756,7 @@ public class ItemControllerTest {
 
         String item_id = TestUtils.makeExpiredItem(mvc, categoryId, user1);
 
+        Thread.sleep(8000);
         mvc.perform(get("/item/" + item_id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
@@ -779,6 +780,7 @@ public class ItemControllerTest {
 
         String item4 = TestUtils.makeExpiredItem(mvc, categoryId, user1);
 
+        Thread.sleep(6000);
         mvc.perform(get("/item/openAuctions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
@@ -786,7 +788,7 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.*", hasSize(3)));
     }
 
-
+//TODO remove
     /**
      * User gets a list of all open auctions
      *
@@ -798,6 +800,7 @@ public class ItemControllerTest {
 
         String item4 = TestUtils.makeExpiredItem(mvc, categoryId, user1);
 
+        Thread.sleep(8000);
         mvc.perform(get("/item/openAuctions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
@@ -821,7 +824,7 @@ public class ItemControllerTest {
 
         String item4 = TestUtils.makeExpiredItem(mvc, categoryId, user1);
 
-        mvc.perform(get("/item/openAuctions")
+        mvc.perform(get("/item/allAuctions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
@@ -840,7 +843,7 @@ public class ItemControllerTest {
 
         String item4 = TestUtils.makeExpiredItem(mvc, categoryId, user1);
 
-        mvc.perform(get("/item/openAuctions")
+        mvc.perform(get("/item/allAuctions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
@@ -854,17 +857,608 @@ public class ItemControllerTest {
      * @throws Exception - mvc.perform
      */
     @Test
-    @DisplayName("Get all auctions 2")
+    @DisplayName("Get partial match")
     public void getPartialMatchedSearch1() throws Exception {
 
-        String item4 = TestUtils.makeDetailedItem
-                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is the description", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no2", "this is a nice dresss!11!", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item dressy", "!dressara!", user1);
 
         mvc.perform(get("/item/search/partialMatch")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("keyword", "dress")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+
+    /**
+     * User gets a list of all partially matched results
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get partial match 2")
+    public void getPartialMatchedSearch2() throws Exception {
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is the description", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no2", "dream", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "drunk sinatra", "club", user1);
+
+        mvc.perform(get("/item/search/partialMatch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("keyword", "dre")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(2)));
+    }
+
+
+    /**
+     * User gets a list of all partially matched results
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get partial match 3")
+    public void getPartialMatchedSearch3() throws Exception {
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is the description", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no2", "Does this thing work", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "hello", "D", user1);
+
+        mvc.perform(get("/item/search/partialMatch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("keyword", "d")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+
+    /**
+     * User gets a list of all partially matched results
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get partial match 4")
+    public void getPartialMatchedSearch4() throws Exception {
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is the description", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no2", "hello", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item dressy", "!dressara!", user1);
+
+        mvc.perform(get("/item/search/partialMatch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("keyword", "DReS")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(2)));
+    }
+
+
+    /**
+     * User gets a list of all partially matched results
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get partial match 5")
+    public void getPartialMatchedSearch5() throws Exception {
+
+        mvc.perform(get("/item/search/partialMatch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("keyword", "")
+                .header("Authorization", user1))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User gets a list of all categories names
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get categories names")
+    public void getAllCategoriesNames1() throws Exception {
+
+        makeAdmin("user3");
+
+        mvc.perform(post("/admin/newCategory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "clothes")
+                .header("Authorization", user3))
+                .andExpect(status().isOk());
+
+        mvc.perform(post("/admin/newCategory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "boats")
+                .header("Authorization", user3))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/item/allCategories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+
+    /**
+     * User gets a list of all categories names
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Get categories names 2")
+    public void getAllCategoriesNames2() throws Exception {
+
+        mvc.perform(get("/item/allCategories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(1)));
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - name")
+    public void modifyItem1() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "modified")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("name", is("modified")));
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - invalid id")
+    public void modifyItem2() throws Exception {
+
+        mvc.perform(patch("/item/12345")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "modified")
+                .header("Authorization", user1))
+                .andExpect(status().isNotFound());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - unauthorized user")
+    public void modifyItem3() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "modified")
+                .header("Authorization", user2))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - after the first bid")
+    public void modifyItem4() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(post("/bid/makeBid/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("offer", "6.0")
+                .header("Authorization", user2))
+                .andExpect(status().isOk());
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "modified")
+                .header("Authorization", user1))
+                .andExpect(status().isForbidden());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - completed auction")
+    public void modifyItem5() throws Exception {
+
+        String item = TestUtils.makeExpiredItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("name", "modified")
+                .header("Authorization", user1))
+                .andExpect(status().isForbidden());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - description")
+    public void modifyItem6() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("description", "new description")
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - new buyPrice")
+    public void modifyItem7() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("buyPrice", "15.0")
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - buyPrice < item.firstBid")
+    public void modifyItem8() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("buyPrice", "3.0")
+                .header("Authorization", user1))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - new buyPrice < new firstBid")
+    public void modifyItem9() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("buyPrice", "14.0")
+                .param("firstBid", "16.2")
+                .header("Authorization", user1))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - new buyPrice < new firstBid - 2")
+    public void modifyItem10() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("buyPrice", "2.1")
+                .param("firstBid", "3.2")
+                .header("Authorization", user1))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - new firstBid")
+    public void modifyItem11() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("firstBid", "7.0")
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - firstBid > item.buyPrice")
+    public void modifyItem12() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("firstBid", "15.0")
+                .header("Authorization", user1))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - new buyPrice > new firstBid")
+    public void modifyItem13() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("buyPrice", "19.0")
+                .param("firstBid", "16.2")
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - new buyPrice > new firstBid - 2")
+    public void modifyItem14() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("buyPrice", "3.1")
+                .param("firstBid", "2.2")
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User modifies an item
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Modify item - new buyPrice > new firstBid - 2")
+    public void modifyItem15() throws Exception {
+
+        String item = TestUtils.makeItem(mvc, categoryId, user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("categoriesId", "000")
+                .header("Authorization", user1))
+                .andExpect(status().isNotFound());
+
+        mvc.perform(get("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("categories", hasSize(1)));
+
+    }
+
+
+    /**
+     * User gets a list of results using the search bar
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Search bar 1")
+    public void searchBar1() throws Exception {
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no2", "fancy item", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no3", "hello world!", user1);
+
+        mvc.perform(get("/item/search/searchBar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("text", "fancy dress")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(2)))
+                .andExpect(jsonPath("$[0].name", is("fancy dress")))
+                .andExpect(jsonPath("$[1].name", is("item no2")));
+    }
+
+
+    /**
+     * User gets a list of results using the search bar
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Search bar 2")
+    public void searchBar2() throws Exception {
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no2", "fancy item", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no3", "hello world!", user1);
+
+        mvc.perform(get("/item/search/searchBar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("text", "fancy dress")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(2)))
+                .andExpect(jsonPath("$[0].name", is("fancy dress")))
+                .andExpect(jsonPath("$[1].name", is("item no2")));
+    }
+
+
+    /**
+     * User gets a list of results using the search bar
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Search bar 3")
+    public void searchBar3() throws Exception {
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "dreams!", "fancy item", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no3", "hello world!", user1);
+
+        mvc.perform(get("/item/search/searchBar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("text", "dream")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+    }
+
+
+    /**
+     * User gets a list of results using the search bar
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Search bar 4")
+    public void searchBar4() throws Exception {
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "dress item", "fancy item", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "dress no3", "hello world!", user1);
+
+        mvc.perform(get("/item/search/searchBar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("text", "fancy dress")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+
+    /**
+     * User gets a list of results using the search bar
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Search bar 5")
+    public void searchBar5() throws Exception {
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "dress item", "fancy item", user1);
+
+        mvc.perform(get("/item/search/searchBar")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("text", "nice car")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(2)))
+                .andExpect(jsonPath("$[0].name", is("fancy dress")))
+                .andExpect(jsonPath("$[1].name", is("dress item")));
     }
 }

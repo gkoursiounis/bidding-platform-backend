@@ -44,8 +44,7 @@ public class Item extends AuditModel implements Serializable {
     private Set<ItemCategory> categories = new HashSet<>();
 
     @OneToMany(mappedBy = "item")
-    @OrderBy(value = "createdAt DESC")
-    @JsonIgnore
+    @OrderBy(value = "offer DESC")
     private Set<Bid> bids = new TreeSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)
