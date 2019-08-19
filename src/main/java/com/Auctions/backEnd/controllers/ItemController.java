@@ -6,6 +6,7 @@ import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.File.DBFileStorageService;
 import com.Auctions.backEnd.services.Search.SortComparator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -97,137 +98,90 @@ public class ItemController extends BaseController{
     }
 
 
-    @GetMapping("/search/partialMatch")
-    public ResponseEntity getPartialMatchedSearch(@RequestParam String keyword){
 
-        List<Item> res;
+    @GetMapping()
+    public ResponseEntity getFeed() {
+        PageRequest.of(0, 5);
 
-        if (keyword == null || keyword.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "Invalid keyword"
-            ));
-        }
+        List<Item> feed = itemRepository.findAll();
 
-        keyword = keyword.toLowerCase();
+        feed = feed.stream().distinct().collect(Collectors.toList());
+        Collections.sort(feed, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
 
-        res = itemRepository.searchItems(keyword);
-        Collections.sort(res);
+        List<Item> returnedFeed = new ArrayList<>();
 
-        return ResponseEntity.ok(res); //TODO return only strings
+        // Get the first five
+
+        return ResponseEntity.ok(feed);
     }
 
+//    @GetMapping("/older/{postID}")
+//    public ResponseEntity getOlderPosts(@PathVariable Long postID){
+//
+//        return postRepository.findById(postID).map((post) -> {
+//            Date date = post.getCreatedAt();
+//            // PageRequest req = PageRequest.of(0, 5);
+//
+//            List<Post> olderPosts =  new ArrayList<>();
+//
+//            if (!requestUser().getFollowing().isEmpty()){
+//                olderPosts = postRepository.getOlderPost(requestUser().getFollowing(), date);
+//            }
+//
+//            for (Post post0 : postRepository.getAllAdvertisement()) {
+//                if(post0.getCreatedAt().getTime() < post.getCreatedAt().getTime()){
+//                    olderPosts.add(post0);
+//                }
+//
+//            }
+//
+////            olderPosts.addAll(postRepository.getAllAdvertisement());
+//
+//            //<-- Hashtag following code -->
+//            for (HashTag tag : hashTagRepository.findAllByFollower(requestUser())) {
+//                for (Post post1 : postRepository.findPostsByTag(tag.getTag())) {
+//                    if(post1.getCreatedAt().getTime() < post.getCreatedAt().getTime()){
+//                        olderPosts.add(post1);
+//                    }
+//                }
+//            }
+//
+//            olderPosts = olderPosts.stream().distinct().collect(Collectors.toList());
+//            Collections.sort(olderPosts, (post1, post2) -> (int)(post2.getCreatedAt().getTime() - post1.getCreatedAt().getTime()));
+//
+//            // Return all the older post filtered
+//            List<Post> filteredFeed = postService.filteredPostResponse(olderPosts, requestUser());
+//
+//            filteredFeed.removeIf(post1 ->
+//                    post1.getPublicationDate().getTime() > System.currentTimeMillis()
+//            );
+//
+//            List<Post> returnedPost = new ArrayList<>();
+//
+//            // Get the first five
+//            if (filteredFeed.size() > 5){
+//                for (int i = 0; i < 5; ++i){
+//                    returnedPost.add(filteredFeed.get(i));
+//                }
+//            }else{
+//                returnedPost.addAll(filteredFeed);
+//            }
+//
+//
+//            return ResponseEntity.ok(returnedPost);
+//
+//        }).orElseGet(()-> {
+//            return new ResponseEntity(new Message(
+//                    "Error",
+//                    "Post not found"
+//            ), HttpStatus.NOT_FOUND);
+//
+//        });
+//    }
 
-    /**
-     * A User can use a search bar to find items/auctions based on:
-     * the category name, the item's name and the item's description
-     *
-     * For every word of the text given we search for partial matching
-     * in the above mentioned fields and we collect the results in a set
-     * called 'res'. Afterwards, we sort the results on a best fit basis
-     * i.e. the items appearing more times in the set are moved first in
-     * the set
-     * We return items of both open and completed auctions
-     *
-     * @return a list of items
-     */
-    @GetMapping("/search/searchBar")
-    public ResponseEntity searchBar(@RequestParam String text){
-
-        if(text == null || text.isEmpty()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "No keywords given"
-            ));
-        }
-
-        List<Item> res = new ArrayList<>();
-
-        //split string to words
-        String[] values = text.split(" "); //TODO maybe extend to recognize ,-..
-        for (String element : values) {
-            res.addAll(itemRepository.searchItems(element));
-        }
-
-        //algorithm for sorting elements by times of appearance was taken from:
-        //https://www.geeksforgeeks.org/sort-elements-by-frequency-set-5-using-java-map/
-
-        Map<Item, Integer> map = new HashMap<>();
-        List<Item> outputArray = new ArrayList<>();
-
-        //assign elements and their count in the list and map
-        for (Item current : res) {
-            int count = map.getOrDefault(current, 0);
-            map.put(current, count + 1);
-            outputArray.add(current);
-        }
-
-        //compare the map by value
-        SortComparator comp = new SortComparator(map);
-
-        //sort the map using Collections CLass
-        Collections.sort(outputArray, comp);
-
-        LinkedHashSet<Item> hashSet = new LinkedHashSet<>(outputArray);
-
-       // ArrayList<Item> listWithoutDuplicates = new ArrayList<>(hashSet);
-
-        return ResponseEntity.ok(hashSet);
-    }
 
 
-    @GetMapping("/search/filters")
-    public ResponseEntity filterSearch(@Nullable @RequestParam String category,
-                                       @Nullable @RequestParam Double lowerPrice,
-                                       @Nullable @RequestParam Double higherPrice,
-                                       @Nullable @RequestParam String locationTitle,
-                                       @Nullable @RequestParam String description){
 
-        Set<Item> byCategory = null;
-        List<Item> byPrice = new ArrayList<>();
-        List<Item> byHigherPrice = new ArrayList<>();
-        List<Item> byLowerPrice = new ArrayList<>();
-        List<Item> byLocationTitle = new ArrayList<>();
-        List<Item> byDescription = new ArrayList<>();
-
-        if(category != null){
-
-            ItemCategory cat = itemCategoryRepository.findItemCategoryByName(category);
-            if(cat != null) {
-                byCategory = cat.getItems();
-            }
-        }
-
-        if(lowerPrice != null && higherPrice != null){
-            byPrice = itemRepository.searchByPrice(lowerPrice, higherPrice);
-        }
-        else if(higherPrice != null){
-            byHigherPrice = itemRepository.searchByHigherPrice(higherPrice);
-        }
-        else if(lowerPrice != null){
-            byLowerPrice = itemRepository.searchByLowerPrice(lowerPrice);
-        }
-
-        if(locationTitle != null){
-            byLocationTitle = itemRepository.searchByLocation(locationTitle);
-        }
-
-        if(description != null){
-            byDescription = itemRepository.searchByDescription(description);
-        }
-
-        //https://www.baeldung.com/java-lists-intersection
-        Set<Item> result = byCategory.stream()
-                .distinct()
-                .filter( byPrice::contains)
-                .filter( byDescription::contains)
-                .filter( byLocationTitle::contains)
-                .filter( byHigherPrice::contains)
-                .filter( byLowerPrice::contains)
-                .collect(Collectors.toSet());
-
-        return ResponseEntity.ok(result);
-    }
 
 
     /**
@@ -368,7 +322,8 @@ public class ItemController extends BaseController{
 
         requestUser.getItems().add(item);
         userRepository.save(requestUser);
-
+System.out.println(endsAt);
+System.out.println(endsAt.getTime());
         return ResponseEntity.ok(item);
     }
 

@@ -18,6 +18,7 @@ public class FormattedUser {
     @Setter private String telNumber;
     @Setter private String taxNumber;
     @Setter private Boolean verified;
+    @Setter private Boolean admin;
     @Setter private Geolocation location;
             private Date createdAt;
 
@@ -31,11 +32,12 @@ public class FormattedUser {
         this.verified = user.isVerified();
         this.createdAt = user.getCreatedAt();
         this.location = user.getAddress();
+        this.admin = user.isAdmin();
     }
 
     public FormattedUser(Long id, String userName, String firstName, String lastName,
                          String telNumber, String taxNumber, Boolean verified, Date createdAt,
-                         Geolocation location){
+                         Geolocation location, Boolean admin){
         this.id = id;
         this.username = userName;
         this.firstName = firstName;
@@ -44,6 +46,7 @@ public class FormattedUser {
         this.taxNumber = taxNumber;
         this.verified = verified;
         this.location = location;
+        this.admin = admin;
         this.createdAt = (Date) createdAt.clone();
     }
 

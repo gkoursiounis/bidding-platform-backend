@@ -744,7 +744,8 @@ public class ItemControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-//TODO remove
+//
+// TODO remove
     /**
      * User gets item's details of an expired item
      *
