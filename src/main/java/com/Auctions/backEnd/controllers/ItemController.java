@@ -99,7 +99,7 @@ public class ItemController extends BaseController{
 
 
 
-    @GetMapping()
+    @GetMapping("/feed")
     public ResponseEntity getFeed() {
         PageRequest.of(0, 5);
 
@@ -108,76 +108,50 @@ public class ItemController extends BaseController{
         feed = feed.stream().distinct().collect(Collectors.toList());
         Collections.sort(feed, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
 
-        List<Item> returnedFeed = new ArrayList<>();
+        if(feed.size() > 5){
 
-        // Get the first five
+            List<Item> returnedFeed = new ArrayList<>();
+            for(int i = 0; i < 5; i++) {
+                returnedFeed.add(feed.get(i));
+            }
+
+            return ResponseEntity.ok(returnedFeed);
+        }
 
         return ResponseEntity.ok(feed);
     }
 
-//    @GetMapping("/older/{postID}")
-//    public ResponseEntity getOlderPosts(@PathVariable Long postID){
-//
-//        return postRepository.findById(postID).map((post) -> {
-//            Date date = post.getCreatedAt();
-//            // PageRequest req = PageRequest.of(0, 5);
-//
-//            List<Post> olderPosts =  new ArrayList<>();
-//
-//            if (!requestUser().getFollowing().isEmpty()){
-//                olderPosts = postRepository.getOlderPost(requestUser().getFollowing(), date);
-//            }
-//
-//            for (Post post0 : postRepository.getAllAdvertisement()) {
-//                if(post0.getCreatedAt().getTime() < post.getCreatedAt().getTime()){
-//                    olderPosts.add(post0);
-//                }
-//
-//            }
-//
-////            olderPosts.addAll(postRepository.getAllAdvertisement());
-//
-//            //<-- Hashtag following code -->
-//            for (HashTag tag : hashTagRepository.findAllByFollower(requestUser())) {
-//                for (Post post1 : postRepository.findPostsByTag(tag.getTag())) {
-//                    if(post1.getCreatedAt().getTime() < post.getCreatedAt().getTime()){
-//                        olderPosts.add(post1);
-//                    }
-//                }
-//            }
-//
-//            olderPosts = olderPosts.stream().distinct().collect(Collectors.toList());
-//            Collections.sort(olderPosts, (post1, post2) -> (int)(post2.getCreatedAt().getTime() - post1.getCreatedAt().getTime()));
-//
-//            // Return all the older post filtered
-//            List<Post> filteredFeed = postService.filteredPostResponse(olderPosts, requestUser());
-//
-//            filteredFeed.removeIf(post1 ->
-//                    post1.getPublicationDate().getTime() > System.currentTimeMillis()
-//            );
-//
-//            List<Post> returnedPost = new ArrayList<>();
-//
-//            // Get the first five
-//            if (filteredFeed.size() > 5){
-//                for (int i = 0; i < 5; ++i){
-//                    returnedPost.add(filteredFeed.get(i));
-//                }
-//            }else{
-//                returnedPost.addAll(filteredFeed);
-//            }
-//
-//
-//            return ResponseEntity.ok(returnedPost);
-//
-//        }).orElseGet(()-> {
-//            return new ResponseEntity(new Message(
-//                    "Error",
-//                    "Post not found"
-//            ), HttpStatus.NOT_FOUND);
-//
-//        });
-//    }
+    @GetMapping("/older/{itemId}")
+    public ResponseEntity getOlderAuctions(@PathVariable Long itemId){
+
+        return itemRepository.findById(itemId).map((item) -> {
+
+            List<Item> olderItems =  itemRepository.findAll();
+
+            olderItems = olderItems.stream().distinct().collect(Collectors.toList());
+            Collections.sort(olderItems, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
+
+
+            if(olderItems.size() > 5){
+
+                List<Item> returnedFeed = new ArrayList<>();
+                for(int i = 0; i < 5; i++) {
+                    returnedFeed.add(olderItems.get(i));
+                }
+
+                return ResponseEntity.ok(returnedFeed);
+            }
+
+            return ResponseEntity.ok(olderItems);
+
+        }).orElseGet(()-> {
+            return new ResponseEntity(new Message(
+                    "Error",
+                    "Item not found"
+            ), HttpStatus.NOT_FOUND);
+
+        });
+    }
 
 
 

@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import java.util.Date;
 
+//TODO add why FormattedUser exists and what is unique
+
 @Getter
 @NoArgsConstructor
 public class FormattedUser {

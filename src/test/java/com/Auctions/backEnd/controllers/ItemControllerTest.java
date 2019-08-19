@@ -1326,140 +1326,62 @@ public class ItemControllerTest {
     }
 
 
-    /**
-     * User gets a list of results using the search bar
-     *
-     * @throws Exception - mvc.perform
-     */
     @Test
-    @DisplayName("Search bar 1")
-    public void searchBar1() throws Exception {
+    @DisplayName("Get feed 1")
+    public void getFeed1() throws Exception {
 
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
+        for(int i = 0; i < 10; i++){
+            TestUtils.makeDetailedItem
+                    (mvc, categoryId, "item" + i, "fancy item", user1);
+            Thread.sleep(100);
+        }
 
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "item no2", "fancy item", user1);
-
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "item no3", "hello world!", user1);
-
-        mvc.perform(get("/item/search/searchBar")
+        mvc.perform(get("/item/feed")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("text", "fancy dress")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("fancy dress")))
-                .andExpect(jsonPath("$[1].name", is("item no2")));
+                .andExpect(jsonPath("$.*", hasSize(5)))
+                .andExpect(jsonPath("$[0].name", is("item9")))
+                .andExpect(jsonPath("$[1].name", is("item8")))
+                .andExpect(jsonPath("$[2].name", is("item7")))
+                .andExpect(jsonPath("$[3].name", is("item6")))
+                .andExpect(jsonPath("$[4].name", is("item5")));
+
+
     }
 
 
-    /**
-     * User gets a list of results using the search bar
-     *
-     * @throws Exception - mvc.perform
-     */
     @Test
-    @DisplayName("Search bar 2")
-    public void searchBar2() throws Exception {
+    @DisplayName("Get feed 2")
+    public void getFeed2() throws Exception {
 
         TestUtils.makeDetailedItem
-                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
-
+                (mvc, categoryId, "item1", "fancy item", user1);
         TestUtils.makeDetailedItem
-                (mvc, categoryId, "item no2", "fancy item", user1);
-
+                (mvc, categoryId, "item2", "fancy item", user1);
         TestUtils.makeDetailedItem
-                (mvc, categoryId, "item no3", "hello world!", user1);
+                (mvc, categoryId, "item3", "fancy item", user1);
 
-        mvc.perform(get("/item/search/searchBar")
+
+        mvc.perform(get("/item/feed")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("text", "fancy dress")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("fancy dress")))
-                .andExpect(jsonPath("$[1].name", is("item no2")));
+                .andExpect(jsonPath("$.*", hasSize(3)))
+                .andExpect(jsonPath("$[0].name", is("item3")))
+                .andExpect(jsonPath("$[1].name", is("item2")))
+                .andExpect(jsonPath("$[2].name", is("item1")));
     }
 
 
-    /**
-     * User gets a list of results using the search bar
-     *
-     * @throws Exception - mvc.perform
-     */
     @Test
-    @DisplayName("Search bar 3")
-    public void searchBar3() throws Exception {
+    @DisplayName("Get feed 3")
+    public void getFeed3() throws Exception {
 
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
-
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "dreams!", "fancy item", user1);
-
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "item no3", "hello world!", user1);
-
-        mvc.perform(get("/item/search/searchBar")
+        mvc.perform(get("/item/feed")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("text", "dream")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(1)));
-    }
-
-
-    /**
-     * User gets a list of results using the search bar
-     *
-     * @throws Exception - mvc.perform
-     */
-    @Test
-    @DisplayName("Search bar 4")
-    public void searchBar4() throws Exception {
-
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
-
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "dress item", "fancy item", user1);
-
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "dress no3", "hello world!", user1);
-
-        mvc.perform(get("/item/search/searchBar")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("text", "fancy dress")
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(3)));
-    }
-
-
-    /**
-     * User gets a list of results using the search bar
-     *
-     * @throws Exception - mvc.perform
-     */
-    @Test
-    @DisplayName("Search bar 5")
-    public void searchBar5() throws Exception {
-
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "fancy dress", "this is a nice dress", user1);
-
-        TestUtils.makeDetailedItem
-                (mvc, categoryId, "dress item", "fancy item", user1);
-
-        mvc.perform(get("/item/search/searchBar")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("text", "nice car")
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)))
-                .andExpect(jsonPath("$[0].name", is("fancy dress")))
-                .andExpect(jsonPath("$[1].name", is("dress item")));
+                .andExpect(jsonPath("$.*", hasSize(0)));
     }
 }

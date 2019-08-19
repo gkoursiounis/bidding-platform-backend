@@ -113,7 +113,7 @@ public class User extends AuditModel {
     public boolean isVerified() {
         return this.account.isVerified() || this.account.isAdmin();
     }
-
+    
     @JsonIgnore
     public boolean isAdmin() {
         return this.account.isAdmin();
