@@ -108,7 +108,7 @@ public class AuthControllerTest{
 
 	    return mvc.perform(get("/account/checkUsername")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content("\"username\" : \"" + username + "\""));
+                .param("username",username));
     }
 
 
@@ -194,8 +194,8 @@ public class AuthControllerTest{
 
         mvc.perform(get("/account/checkEmail")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content("\"email\" : \"" + email + "\""))
-                .andExpect(status().isBadRequest());
+                .param("email", email))
+                .andExpect(status().isOk());
     }
 
 
@@ -226,7 +226,7 @@ public class AuthControllerTest{
                 .andExpect(status().isBadRequest());
 
         checkUsername(username)
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
 
@@ -257,7 +257,7 @@ public class AuthControllerTest{
                 .andExpect(status().isBadRequest());
 
         checkUsername(username)
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
 
@@ -288,7 +288,7 @@ public class AuthControllerTest{
                 .andExpect(status().isBadRequest());
 
         checkUsername(username)
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
 
@@ -319,7 +319,7 @@ public class AuthControllerTest{
                 .andExpect(status().isBadRequest());
 
         checkUsername(username)
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
     /**
@@ -489,6 +489,8 @@ public class AuthControllerTest{
 
         performSignup(content)
                 .andExpect(status().isBadRequest());
+
+        checkUsername("user0").andExpect(status().isOk());
     }
 
 
@@ -519,7 +521,7 @@ public class AuthControllerTest{
                 .andExpect(status().isBadRequest());
 
         checkUsername(username)
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
 
@@ -547,6 +549,8 @@ public class AuthControllerTest{
 
         performSignup(content)
                 .andExpect(status().isBadRequest());
+
+        checkUsername("user0").andExpect(status().isOk());
     }
 
 

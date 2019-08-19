@@ -103,10 +103,10 @@ public class ItemController extends BaseController{
     public ResponseEntity getFeed() {
         PageRequest.of(0, 5);
 
-        List<Item> feed = itemRepository.findAll();
+        List<Item> feed = itemRepository.getAll();
 
-        feed = feed.stream().distinct().collect(Collectors.toList());
-        Collections.sort(feed, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
+//        feed = feed.stream().distinct().collect(Collectors.toList());
+//        Collections.sort(feed, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
 
         if(feed.size() > 5){
 
@@ -128,8 +128,8 @@ public class ItemController extends BaseController{
 
             List<Item> olderItems =  itemRepository.getOlderItems(item.getCreatedAt());
 
-            olderItems = olderItems.stream().distinct().collect(Collectors.toList());
-            Collections.sort(olderItems, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
+//            olderItems = olderItems.stream().distinct().collect(Collectors.toList());
+//            Collections.sort(olderItems, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
 
 
             if(olderItems.size() > 5){
