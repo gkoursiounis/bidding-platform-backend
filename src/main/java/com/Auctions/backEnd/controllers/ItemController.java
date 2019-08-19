@@ -126,7 +126,7 @@ public class ItemController extends BaseController{
 
         return itemRepository.findById(itemId).map((item) -> {
 
-            List<Item> olderItems =  itemRepository.findAll();
+            List<Item> olderItems =  itemRepository.getOlderItems(item.getCreatedAt());
 
             olderItems = olderItems.stream().distinct().collect(Collectors.toList());
             Collections.sort(olderItems, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));

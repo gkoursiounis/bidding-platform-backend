@@ -23,6 +23,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.Auctions.backEnd.TestUtils.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -1346,8 +1349,6 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$[2].name", is("item7")))
                 .andExpect(jsonPath("$[3].name", is("item6")))
                 .andExpect(jsonPath("$[4].name", is("item5")));
-
-
     }
 
 
@@ -1379,6 +1380,115 @@ public class ItemControllerTest {
     public void getFeed3() throws Exception {
 
         mvc.perform(get("/item/feed")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(0)));
+    }
+
+
+    @Test
+    @DisplayName("Get older auctions 1")
+    public void getOlderAuctions1() throws Exception {
+
+        mvc.perform(get("/item/older/12334556")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    @DisplayName("Get older auctions 2")
+    public void getOlderAuctions2() throws Exception {
+
+        List<String> ids = new ArrayList();
+        for(int i = 0; i < 10; i++){
+            ids.add(TestUtils.makeDetailedItem
+                    (mvc, categoryId, "item" + i, "fancy item", user1));
+            Thread.sleep(100);
+        }
+
+        mvc.perform(get("/item/feed")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(5)))
+                .andExpect(jsonPath("$[0].name", is("item9")))
+                .andExpect(jsonPath("$[1].name", is("item8")))
+                .andExpect(jsonPath("$[2].name", is("item7")))
+                .andExpect(jsonPath("$[3].name", is("item6")))
+                .andExpect(jsonPath("$[4].name", is("item5")));
+
+        mvc.perform(get("/item/older/" + ids.get(5))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(5)))
+                .andExpect(jsonPath("$[0].name", is("item4")))
+                .andExpect(jsonPath("$[1].name", is("item3")))
+                .andExpect(jsonPath("$[2].name", is("item2")))
+                .andExpect(jsonPath("$[3].name", is("item1")))
+                .andExpect(jsonPath("$[4].name", is("item0")));
+    }
+
+
+    @Test
+    @DisplayName("Get older auctions 3")
+    public void getOlderAuctions3() throws Exception {
+
+        List<String> ids = new ArrayList();
+        for(int i = 0; i < 8; i++){
+            ids.add(TestUtils.makeDetailedItem
+                    (mvc, categoryId, "item" + i, "fancy item", user1));
+            Thread.sleep(100);
+        }
+
+        mvc.perform(get("/item/feed")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(5)))
+                .andExpect(jsonPath("$[0].name", is("item7")))
+                .andExpect(jsonPath("$[1].name", is("item6")))
+                .andExpect(jsonPath("$[2].name", is("item5")))
+                .andExpect(jsonPath("$[3].name", is("item4")))
+                .andExpect(jsonPath("$[4].name", is("item3")));
+
+        mvc.perform(get("/item/older/" + ids.get(3))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)))
+                .andExpect(jsonPath("$[0].name", is("item2")))
+                .andExpect(jsonPath("$[1].name", is("item1")))
+                .andExpect(jsonPath("$[2].name", is("item0")));
+    }
+
+
+    @Test
+    @DisplayName("Get older auctions 4")
+    public void getOlderAuctions4() throws Exception {
+
+        List<String> ids = new ArrayList();
+        for(int i = 0; i < 5; i++){
+            ids.add(TestUtils.makeDetailedItem
+                    (mvc, categoryId, "item" + i, "fancy item", user1));
+            Thread.sleep(100);
+        }
+
+        mvc.perform(get("/item/feed")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(5)))
+                .andExpect(jsonPath("$[0].name", is("item4")))
+                .andExpect(jsonPath("$[1].name", is("item3")))
+                .andExpect(jsonPath("$[2].name", is("item2")))
+                .andExpect(jsonPath("$[3].name", is("item1")))
+                .andExpect(jsonPath("$[4].name", is("item0")));
+
+        mvc.perform(get("/item/older/" + ids.get(0))
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
                 .andExpect(status().isOk())

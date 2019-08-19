@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -22,6 +23,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false'")
     List<Item> getAllOpenAuctions();
+
+    @Query("SELECT i FROM Item i WHERE i.createdAt < :date ORDER BY i.createdAt DESC")
+    List<Item> getOlderItems(@Param("date") Date date);
 
     @Query("SELECT i FROM Item i where i.currently >= :lowerPrice and i.buyPrice <= :higherPrice")
     List<Item> searchByPrice(Double lowerPrice, Double higherPrice);
