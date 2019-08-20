@@ -5,7 +5,6 @@ import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.FormattedUser;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,28 +34,13 @@ public class UserController extends BaseController{
      * If the user requests himself the we return a FormattedUser which
      * contains more details than in the case the user requests another user
      *
-     * @param username - username of the user
      * @return user details
      */
-    @GetMapping("/{username}")
-    public ResponseEntity getUserDetails(@PathVariable String username) {
+    @GetMapping()
+    public ResponseEntity getUserDetails() {
 
         User requester = requestUser();
-
-        User user = userRepository.findByAccount_Username(username);
-
-        if (user == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-                    "Error",
-                    "User not found!"
-            ));
-        }
-
-        if (requester.getUsername().equals(username)) {
-            return ResponseEntity.ok(new FormattedUser(requester));
-        }
-
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(new FormattedUser(requester));
     }
 
 

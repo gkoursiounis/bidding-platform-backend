@@ -73,10 +73,12 @@ public class User extends AuditModel {
 
     @NotNull
     @Column(name = "firstName")
+    @JsonIgnore
     private String firstName;
 
     @NotNull
     @Column(name = "lastName")
+    @JsonIgnore
     private String lastName;
 
     @NotNull

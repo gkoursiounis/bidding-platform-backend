@@ -168,16 +168,13 @@ public class TestUtils {
 	 *
 	 * @param mvc - mvc
 	 * @param token - token of the user who did the request
-	 * @param username - username of the user that we want to get
 	 * @return ResultActions(response from the server)
 	 * @throws Exception - mvc.perform throws exception
 	 */
 	public static ResultActions getUser(@NonNull final MockMvc mvc,
-										@NonNull final String token,
-										@NonNull final String username) throws Exception {
+										@NonNull final String token) throws Exception {
 
-		final String url = "/user/" + username;
-		return mvc.perform(get(url)
+		return mvc.perform(get("/user")
 				.header("Authorization", token));
 	}
 
@@ -185,15 +182,13 @@ public class TestUtils {
      * Gets the id of the specified user
      * @param mvc - mvc
      * @param token - token of the user who did the request
-     * @param username - username of the user that we want to get
      * @return - the id of the user we want to get
      * @throws Exception - mvc.perform throws Exception
      */
 	public static String getUserToString(@NonNull final MockMvc mvc,
-										 @NonNull final String token,
-										 @NonNull final String username) throws Exception{
+										 @NonNull final String token) throws Exception{
 
-        return ((JSONObject) new JSONParser().parse(getUser(mvc, token, username)
+        return ((JSONObject) new JSONParser().parse(getUser(mvc, token)
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString()))
                 .get("id").toString();

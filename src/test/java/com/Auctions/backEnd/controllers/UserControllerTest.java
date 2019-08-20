@@ -24,13 +24,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.Auctions.backEnd.TestUtils.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -111,7 +108,7 @@ public class UserControllerTest {
     @Test
     @DisplayName("Successful get user")
     public void getUser1() throws Exception {
-        getUser(mvc, user1, "user2")
+        getUser(mvc, user1)
                 .andExpect(status().isOk());
 
     }
@@ -126,7 +123,7 @@ public class UserControllerTest {
     @Test
     @DisplayName("User doesn't exist")
     public void getUser2() throws Exception {
-        getUser(mvc, user1, "user0")
+        getUser(mvc, user1)
                 .andExpect(status().isNotFound());
 
     }
@@ -140,7 +137,7 @@ public class UserControllerTest {
     @Test
     @DisplayName("User is the requested User")
     public void getUser3() throws Exception {
-        getUser(mvc, user3, "user3")
+        getUser(mvc, user3)
                 .andExpect(status().isOk());
 
     }
@@ -185,7 +182,7 @@ public class UserControllerTest {
 
         TestUtils.makeExpiredItem(mvc, categoryId, user1);
 
-        Thread.sleep(6000);
+        Thread.sleep(8000);
         mvc.perform(get("/user/myOpenAuctions")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
@@ -250,7 +247,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.*", hasSize(0)));
     }
 
-
+//TODO fix or remove
     /**
      * User gets a list of his notifications
      *

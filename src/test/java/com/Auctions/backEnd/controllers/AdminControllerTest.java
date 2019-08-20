@@ -335,7 +335,7 @@ public class AdminControllerTest {
     @DisplayName("Verify user - no admin")
     public void verifyUser1() throws Exception {
 
-        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+        String user2_id = TestUtils.getUserToString(mvc, user2);
 
         mvc.perform(patch("/admin/verifyUser/" + user2_id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -354,7 +354,7 @@ public class AdminControllerTest {
     @DisplayName("Verify user - invalid token")
     public void verifyUser2() throws Exception {
 
-        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+        String user2_id = TestUtils.getUserToString(mvc, user2);
 
         mvc.perform(patch("/admin/verifyUser/" + user2_id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -394,7 +394,7 @@ public class AdminControllerTest {
 
         makeAdmin("user3");
         verify("user2");
-        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+        String user2_id = TestUtils.getUserToString(mvc, user2);
 
         mvc.perform(patch("/admin/verifyUser/" + user2_id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -416,9 +416,9 @@ public class AdminControllerTest {
         unverify("user2");
         verify("user1");
 
-        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+        String user2_id = TestUtils.getUserToString(mvc, user2);
 
-        String ver_before = ((JSONObject) new JSONParser().parse(TestUtils.getUser(mvc, user3, "user2")
+        String ver_before = ((JSONObject) new JSONParser().parse(TestUtils.getUser(mvc, user2)
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString()))
                 .get("verified").toString();
@@ -430,7 +430,7 @@ public class AdminControllerTest {
                 .header("Authorization", user3))
                 .andExpect(status().isOk());
 
-        String ver_after = ((JSONObject) new JSONParser().parse(TestUtils.getUser(mvc, user3, "user2")
+        String ver_after = ((JSONObject) new JSONParser().parse(TestUtils.getUser(mvc, user2)
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString()))
                 .get("verified").toString();
@@ -566,7 +566,7 @@ public class AdminControllerTest {
     @DisplayName("Delete user - invalid token")
     public void deleteUser1() throws Exception {
 
-        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+        String user2_id = TestUtils.getUserToString(mvc, user2);
 
         mvc.perform(delete("/admin/deleteUser/" + user2_id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -585,7 +585,7 @@ public class AdminControllerTest {
     @DisplayName("Delete user - no admin")
     public void deleteUser2() throws Exception {
 
-        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+        String user2_id = TestUtils.getUserToString(mvc, user2);
 
         mvc.perform(delete("/admin/deleteUser/" + user2_id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -606,7 +606,7 @@ public class AdminControllerTest {
 
         makeAdmin("user3");
         makeAdmin("user2");
-        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+        String user2_id = TestUtils.getUserToString(mvc, user2);
 
         mvc.perform(delete("/admin/deleteUser/" + user2_id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -625,7 +625,7 @@ public class AdminControllerTest {
     public void deleteUser4() throws Exception {
 
         makeAdmin("user3");
-        String user2_id = TestUtils.getUserToString(mvc, user1,"user2");
+        String user2_id = TestUtils.getUserToString(mvc, user2);
 
         mvc.perform(delete("/admin/deleteUser/" + user2_id)
                 .contentType(MediaType.APPLICATION_JSON)

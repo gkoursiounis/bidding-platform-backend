@@ -32,11 +32,6 @@ public class BidController extends BaseController{
     /**
      * A user can get the details of a bid using the bidId
      *
-     * For privacy reasons, only the bidder can view the details//TODO delete
-     * of his bid. The public description of the bid can be found
-     * only in the relevant auction's page, where all the bids
-     * about this auction are displayed
-     *
      * @param bidId - the id of the bid
      * @return the bid
      */

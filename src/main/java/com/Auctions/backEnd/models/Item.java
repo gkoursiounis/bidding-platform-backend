@@ -1,6 +1,5 @@
 package com.Auctions.backEnd.models;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +23,7 @@ public class Item extends AuditModel implements Serializable {
     private User seller;
 
     @NotNull
-    @Column(name = "item_name")
+    @Column(name = "item_name", length = 20)
     private String name;
 
     @Column(name = "current_price")
@@ -54,7 +53,7 @@ public class Item extends AuditModel implements Serializable {
     @Column(name = "auction_completed")
     private Boolean auctionCompleted = false;
 
-    @Column(name = "description", length = 250) //TODO o ihamod mas exei dosei kai description 2000 lekseis
+    @Column(name = "description")
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL)
