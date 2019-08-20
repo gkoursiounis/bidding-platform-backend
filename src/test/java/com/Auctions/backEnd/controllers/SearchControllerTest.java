@@ -227,7 +227,7 @@ public class SearchControllerTest {
                 (mvc, categoryId, "fancy dress", "this is the description", user1);
 
         TestUtils.makeDetailedItem
-                (mvc, categoryId, "item no2", "this is a nice dresss!11!", user1);
+                (mvc, categoryId, "item no2 dress!", "this is a nice dresss!11!", user1);
 
         TestUtils.makeDetailedItem
                 (mvc, categoryId, "item dressy", "!dressara!", user1);
@@ -254,7 +254,7 @@ public class SearchControllerTest {
                 (mvc, categoryId, "fancy dress", "this is the description", user1);
 
         TestUtils.makeDetailedItem
-                (mvc, categoryId, "item no2", "dream", user1);
+                (mvc, categoryId, "item no2dress", "dream", user1);
 
         TestUtils.makeDetailedItem
                 (mvc, categoryId, "drunk sinatra", "club", user1);
@@ -281,10 +281,10 @@ public class SearchControllerTest {
                 (mvc, categoryId, "fancy dress", "this is the description", user1);
 
         TestUtils.makeDetailedItem
-                (mvc, categoryId, "item no2", "Does this thing work", user1);
+                (mvc, categoryId, "item no2dress", "Does this thing work", user1);
 
         TestUtils.makeDetailedItem
-                (mvc, categoryId, "hello", "D", user1);
+                (mvc, categoryId, "hellod", "D", user1);
 
         mvc.perform(get("/search/partialMatch")
                 .contentType(MediaType.APPLICATION_JSON)

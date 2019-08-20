@@ -33,7 +33,7 @@ public class SearchController extends BaseController{
     @GetMapping("/partialMatch")
     public ResponseEntity getPartialMatchedSearch(@RequestParam String keyword){
 
-        List<Item> res;
+        List<String> res = new ArrayList();
 
         if (keyword == null || keyword.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
@@ -44,10 +44,10 @@ public class SearchController extends BaseController{
 
         keyword = keyword.toLowerCase();
 
-        res = itemRepository.searchItems(keyword);
-        Collections.sort(res);
+        res.addAll(itemRepository.searchByName(keyword));
+        res.addAll(itemRepository.searchByCategory(keyword));
 
-        return ResponseEntity.ok(res); //TODO return only strings
+        return ResponseEntity.ok(res);
     }
 
 

@@ -45,6 +45,14 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT i FROM Item i where (locate( lower(:query), lower(i.description)) <> 0)")
     List<Item> searchByDescription(@Param("query") String keyword);
 
+    @Query("SELECT i.name from Item i WHERE (locate(:query, lower(i.name)) <> 0)")
+    List<String> searchByName(@Param("query") String query);
+
+    @Query(
+            "select ic.name from Item i join i.categories ic " +
+            "where locate(:query, lower(ic.name)) <> 0")
+    List<String> searchByCategory(@Param("query") String query);
+
     @Query(
             "select i from Item i join i.categories ic " +
             "where (locate(:query, lower(i.name)) <> 0) or " +
