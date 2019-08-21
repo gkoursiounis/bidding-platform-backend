@@ -103,7 +103,7 @@ public class ItemController extends BaseController{
     public ResponseEntity getFeed() {
         PageRequest.of(0, 5);
 
-        List<Item> feed = itemRepository.getAll();
+        List<Item> feed = itemRepository.getAllOpenAuctions();
 
 //        feed = feed.stream().distinct().collect(Collectors.toList());
 //        Collections.sort(feed, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
@@ -183,7 +183,7 @@ public class ItemController extends BaseController{
      */
     @PostMapping
     public ResponseEntity createItem(@RequestParam String name,
-                                     @RequestParam Double buyPrice,
+                                     @Nullable @RequestParam Double buyPrice,
                                      @Nullable @RequestParam(name = "media") MultipartFile media,
                                      @RequestParam Double firstBid,
                                      @RequestParam Integer[] categoriesId,
@@ -296,8 +296,7 @@ public class ItemController extends BaseController{
 
         requestUser.getItems().add(item);
         userRepository.save(requestUser);
-System.out.println(endsAt);
-System.out.println(endsAt.getTime());
+
         return ResponseEntity.ok(item);
     }
 

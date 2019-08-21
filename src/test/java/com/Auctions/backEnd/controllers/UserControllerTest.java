@@ -24,7 +24,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static com.Auctions.backEnd.TestUtils.*;
 import static org.hamcrest.Matchers.*;
@@ -257,7 +260,10 @@ public class UserControllerTest {
     @DisplayName("User gets a list of his notifications 4")
     public void getMyNotifications4() throws Exception {
 
-        Date date = new Date(new Date().getTime() + 3000);
+        TimeZone tz = TimeZone.getTimeZone("EEST");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        df.setTimeZone(tz);
+        String nowAsISO = df.format(new Date(new Date().getTime() + 3000));
 
         String item_id = ((JSONObject) new JSONParser().parse(
                 mvc.perform(
@@ -269,7 +275,7 @@ public class UserControllerTest {
                                 .param("longitude", "23.76695")
                                 .param("latitude", "37.968564")
                                 .param("locationTitle", "Dit UoA")
-                                .param("endsAt", "2019-08-03T19:48:50.000-04:00")
+                                .param("endsAt", nowAsISO)
                                 .param("description", "this is the description")
                                 .header("Authorization", user1)
                                 .contentType(MediaType.APPLICATION_JSON))
@@ -284,7 +290,20 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("auctionCompleted", is(false)));
 
-        Thread.sleep(6000);
+       Thread.sleep(12000);
+
+        mvc.perform(get("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("auctionCompleted", is(true)));
+
+        mvc.perform(get("/user/myNotifications")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+
         mvc.perform(get("/user/myNotifications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user2))

@@ -156,20 +156,28 @@ public class BackEndApplication implements CommandLineRunner {
 					if(item.getEndsAt().getTime() < System.currentTimeMillis()) {
 						item.setAuctionCompleted(true);
 						itemRepository.save(item);
-
+						System.err.println("HERE");
 						Notification toSeller = new Notification();
 						toSeller.setRecipient(item.getSeller());
 						toSeller.setItemId(item.getId());
-						toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
+						toSeller.setMessage("Your auction with name " + item.getName() + " has been completed");
 						notificationRepository.save(toSeller);
+
+						item.getSeller().getNotifications().add(toSeller);
+						userRepository.save(item.getSeller());
+						System.err.println("Sending to seller");
 
 						if(!item.getBids().isEmpty()) {
 							Notification toBuyer = new Notification();
-							Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
-							toBuyer.setRecipient(highestBid.getBidder());
+							User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();
+							toBuyer.setRecipient(highestBidder);
 							toBuyer.setItemId(item.getId());
-							toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
+							toBuyer.setMessage("Congratulations! You won the auction for " + item.getName());
 							notificationRepository.save(toBuyer);
+
+							highestBidder.getNotifications().add(toBuyer);
+							userRepository.save(highestBidder);
+							System.err.println("Sending to buyer");
 						}
 					}
 				});

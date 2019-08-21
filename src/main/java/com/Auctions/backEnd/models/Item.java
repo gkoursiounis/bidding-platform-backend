@@ -23,7 +23,7 @@ public class Item extends AuditModel implements Serializable {
     private User seller;
 
     @NotNull
-    @Column(name = "item_name", length = 20)
+    @Column(name = "item_name", length = 50)
     private String name;
 
     @Column(name = "current_price")
@@ -63,6 +63,10 @@ public class Item extends AuditModel implements Serializable {
 
     @OneToOne
     private Geolocation location;
+
+    private int sellerRating;
+
+    private int bidderRating;
 
 
 //    @ManyToMany

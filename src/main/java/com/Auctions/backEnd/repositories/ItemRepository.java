@@ -21,13 +21,13 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'true' and i.seller = :requester")
     List<Item> getAllcompletedAuctions(User requester);
 
-    @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false'")
+    @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false' ORDER BY i.createdAt DESC")
     List<Item> getAllOpenAuctions();
 
     @Query("SELECT i FROM Item i ORDER BY i.createdAt DESC")
     List<Item> getAll();
 
-    @Query("SELECT i FROM Item i WHERE i.createdAt < :date ORDER BY i.createdAt DESC")
+    @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false' AND i.createdAt < :date ORDER BY i.createdAt DESC")
     List<Item> getOlderItems(@Param("date") Date date);
 
     @Query("SELECT i FROM Item i where i.currently >= :lowerPrice and i.buyPrice <= :higherPrice")

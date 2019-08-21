@@ -5,9 +5,11 @@ import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.FormattedUser;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -113,7 +115,7 @@ public class UserController extends BaseController{
      */
     @GetMapping("/myNotifications")
     public ResponseEntity getMyNotifications() {
-
+//test();
         return ResponseEntity.ok(requestUser().getNotifications());
     }
 
@@ -174,6 +176,94 @@ public class UserController extends BaseController{
     }
 
 
+    /**
+     * User can mark all of his unseen notifications as seen
+     *
+     * @return <HTTP>OK</HTTP>
+     */
+    @PatchMapping("/rating/{itemId}")
+    public ResponseEntity rateUser(@PathVariable (value = "itemId") long itemId,
+                                   @RequestParam Integer rating) {
+
+        User requester = requestUser();
+
+        Item item = itemRepository.findItemById(itemId);
+        if(item == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "Auction not found"
+            ));
+        }
+
+        if(!item.isAuctionCompleted()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "You can rate a user only after the end of an auction"
+            ));
+        }
+
+        User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();
+
+        if(requester.equals(item.getSeller())){
+            item.setBidderRating(rating);
+            itemRepository.save(item);
+
+            highestBidder.setBidderRating(highestBidder.getBidderRating() + rating);
+            userRepository.save(highestBidder);
+
+            return ResponseEntity.ok(item);
+        }
+        else if(requester.equals(highestBidder)){
+            item.setSellerRating(rating);
+            itemRepository.save(item);
+
+            int current = item.getSeller().getSellerRating();
+            item.getSeller().setSellerRating(current + rating);
+            userRepository.save(item.getSeller());
+
+            return ResponseEntity.ok(item);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                "Error",
+                "Only the seller and the highest bidder can rate the participants of this auction"
+        ));
+    }
+
+    public void test(){
+
+        List<Item> auctions = itemRepository.getAllOpenAuctions();
+        auctions.forEach(item -> {
+
+            if(item.getEndsAt().getTime() < System.currentTimeMillis()) {
+                item.setAuctionCompleted(true);
+                itemRepository.save(item);
+                System.err.println("HERE");
+                Notification toSeller = new Notification();
+                toSeller.setRecipient(item.getSeller());
+                toSeller.setItemId(item.getId());
+                toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
+                notificationRepository.save(toSeller);
+
+                item.getSeller().getNotifications().add(toSeller);
+                userRepository.save(item.getSeller());
+                System.err.println("Sending to seller");
+
+                if(!item.getBids().isEmpty()) {
+                    Notification toBuyer = new Notification();
+                    User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();
+                    toBuyer.setRecipient(highestBidder);
+                    toBuyer.setItemId(item.getId());
+                    toBuyer.setMessage("Congratulations! You won the auction for " + item.getName());
+                    notificationRepository.save(toBuyer);
+
+                    highestBidder.getNotifications().add(toBuyer);
+                    userRepository.save(highestBidder);
+                    System.err.println("Sending to buyer");
+                }
+            }
+        });
+    }
 
 //    @GetMapping("/search")
 //    public ResponseEntity getPartialMatchedUsers(@RequestParam String name) {

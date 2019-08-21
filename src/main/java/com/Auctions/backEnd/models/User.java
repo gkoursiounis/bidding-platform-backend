@@ -96,9 +96,9 @@ public class User extends AuditModel {
     @JsonIgnore
     private Geolocation address;
 
-    private Integer sellerRating;   //TODO implement
+    private int sellerRating;
 
-    private Integer bidderRating;
+    private int bidderRating;
 
 
     @JsonIgnore
