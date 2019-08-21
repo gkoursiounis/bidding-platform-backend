@@ -202,8 +202,8 @@ public class ItemController extends BaseController{
             ));
         }
 
-        if(name.isEmpty() || description.isEmpty() || buyPrice == null ||
-                firstBid == null || endsAt == null || Double.compare(buyPrice, firstBid) < 0){
+        if(name.isEmpty() || description.isEmpty() || firstBid == null || endsAt == null ||
+                (buyPrice != null && Double.compare(buyPrice, firstBid) < 0)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "Invalid parameters"
@@ -213,12 +213,15 @@ public class ItemController extends BaseController{
         Item item = new Item(new Date());
         item.setSeller(requestUser);
         item.setName(name);
-        item.setBuyPrice(buyPrice);
         item.setFirstBid(firstBid);
         item.setCurrently(firstBid);
         item.setAuctionCompleted(false);
         item.setEndsAt(endsAt);
         item.setDescription(description);
+
+        if(buyPrice != null){
+            item.setBuyPrice(buyPrice);
+        }
 
 
         if (categoriesId != null && categoriesId.length > 5) {

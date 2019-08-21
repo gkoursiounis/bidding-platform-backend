@@ -183,7 +183,7 @@ public class UserController extends BaseController{
      */
     @PatchMapping("/rating/{itemId}")
     public ResponseEntity rateUser(@PathVariable (value = "itemId") long itemId,
-                                   @RequestParam Integer rating) {
+                                   @RequestParam Integer score) {
 
         User requester = requestUser();
 
@@ -200,6 +200,31 @@ public class UserController extends BaseController{
                     "Error",
                     "You can rate a user only after the end of an auction"
             ));
+        }
+
+        //TODO test
+        int rating;
+        switch (score){
+            case 1:
+                rating = -2;
+                break;
+            case 2:
+                rating = -1;
+                break;
+            case 3:
+                rating = 0;
+                break;
+            case 4:
+                rating = 1;
+                break;
+            case 5:
+                rating = 2;
+                break;
+            default:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                        "Error",
+                        "Score is from 1 up to 5"
+                ));
         }
 
         User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();

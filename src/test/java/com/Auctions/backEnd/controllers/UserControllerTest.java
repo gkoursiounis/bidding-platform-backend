@@ -250,7 +250,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.*", hasSize(0)));
     }
 
-//TODO fix or remove
+
     /**
      * User gets a list of his notifications
      *

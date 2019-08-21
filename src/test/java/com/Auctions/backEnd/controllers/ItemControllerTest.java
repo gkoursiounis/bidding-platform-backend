@@ -8,6 +8,8 @@ import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.ItemCategoryRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -613,6 +615,28 @@ public class ItemControllerTest {
                         .header("Authorization", user1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+
+    /**
+     * User successfully tries to create an item/auction
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Successful item creation")
+    public void createItem22() throws Exception {
+        String id = TestUtils.makeDetailedItem
+                (mvc, categoryId, "item1", "this is\n the\ndescription", user1);
+
+        String description = ((JSONObject) new JSONParser().parse(mvc.perform(get("/item/" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString()))
+                .get("description").toString();
+
+        assertEquals(description, "this is\n the\ndescription");
     }
 
 
