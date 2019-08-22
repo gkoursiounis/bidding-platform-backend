@@ -619,15 +619,15 @@ public class ItemControllerTest {
 
 
     /**
-     * User successfully tries to create an item/auction
+     * User successfully tries to create an item/auction by description
      *
      * @throws Exception - mvc.perform
      */
     @Test
-    @DisplayName("Successful item creation")
+    @DisplayName("Successful item creation by description")
     public void createItem22() throws Exception {
         String id = TestUtils.makeDetailedItem
-                (mvc, categoryId, "item1", "this is\n the\ndescription", user1);
+                (mvc, categoryId, "item1", "this is\r\n the\r\ndescription", user1);
 
         String description = ((JSONObject) new JSONParser().parse(mvc.perform(get("/item/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -636,7 +636,7 @@ public class ItemControllerTest {
                 .andReturn().getResponse().getContentAsString()))
                 .get("description").toString();
 
-        assertEquals(description, "this is\n the\ndescription");
+        assertEquals(description, "this is\r\n the\r\ndescription");
     }
 
 

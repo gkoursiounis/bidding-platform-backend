@@ -4,7 +4,6 @@ import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.File.DBFileStorageService;
-import com.Auctions.backEnd.services.Search.SortComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "https://localhost:3000")
@@ -101,12 +99,9 @@ public class ItemController extends BaseController{
 
     @GetMapping("/feed")
     public ResponseEntity getFeed() {
+
         PageRequest.of(0, 5);
-
         List<Item> feed = itemRepository.getAllOpenAuctions();
-
-//        feed = feed.stream().distinct().collect(Collectors.toList());
-//        Collections.sort(feed, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
 
         if(feed.size() > 5){
 
@@ -128,10 +123,6 @@ public class ItemController extends BaseController{
 
             List<Item> olderItems =  itemRepository.getOlderItems(item.getCreatedAt());
 
-//            olderItems = olderItems.stream().distinct().collect(Collectors.toList());
-//            Collections.sort(olderItems, (item1, item2) -> (int)(item2.getCreatedAt().getTime() - item1.getCreatedAt().getTime()));
-
-
             if(olderItems.size() > 5){
 
                 List<Item> returnedFeed = new ArrayList<>();
@@ -144,13 +135,10 @@ public class ItemController extends BaseController{
 
             return ResponseEntity.ok(olderItems);
 
-        }).orElseGet(()-> {
-            return new ResponseEntity(new Message(
-                    "Error",
-                    "Item not found"
-            ), HttpStatus.NOT_FOUND);
-
-        });
+        }).orElseGet(()-> new ResponseEntity(new Message(
+                "Error",
+                "Item not found"
+        ), HttpStatus.NOT_FOUND));
     }
 
 

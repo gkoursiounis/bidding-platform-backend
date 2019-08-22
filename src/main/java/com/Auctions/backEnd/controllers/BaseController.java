@@ -1,6 +1,5 @@
 package com.Auctions.backEnd.controllers;
 
-import com.Auctions.backEnd.models.Bid;
 import com.Auctions.backEnd.models.Item;
 import com.Auctions.backEnd.models.Notification;
 import com.Auctions.backEnd.models.User;
@@ -10,8 +9,6 @@ import com.Auctions.backEnd.repositories.UserRepository;
 import com.Auctions.backEnd.services.Security.TokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -49,7 +46,7 @@ public abstract class BaseController {
      * Helper function that returns the User who makes a request
      * based on the token authentication
      *
-     * @return a user
+     * @return the user details
      */
      User requestUser(){
 
@@ -64,19 +61,19 @@ public abstract class BaseController {
 
 
     /**
-     * Auction auto-closure function
+     * Helper functions for early warning auction closure
      *
-     * Helper functions that retrieves the non-completed auctions set and
-     * for every item it checks if the current time is after the
-     * 'endsAt' time meaning that the auction must be completed
+     * A thread (see BackEndApplication.java) is created every
+     * 5 seconds in order to inspect and terminate the auctions
+     * whose 'endsAt' time has been reached.
+     * But since there is a gap of maximum 5 seconds from an
+     * 'endsAt' time to the check, we need to make sure that
+     * a user won't be able to make a bid or make any changes
+     * to the auction within this time.
      *
+     * @param item - the auction
+     * @return a bool {true if auction is over, false if auction is open}
      */
-//     void auctionClosure(){
-//
-//        List<Item> auctions = itemRepository.getAllOpenAuctions();
-//        auctions.forEach(item -> { checkAuction(item); });
-//    }
-
     boolean checkAuction(Item item){
 
         if(item.getEndsAt().getTime() < System.currentTimeMillis()){
@@ -84,38 +81,26 @@ public abstract class BaseController {
         } else {
             return false;
         }
-//         if(item.getEndsAt().getTime() < System.currentTimeMillis()){
-//      //  if((new Date()).compareTo(item.getEndsAt()) >= 0){
-//
-//            item.setAuctionCompleted(true);
-//            itemRepository.save(item);
-//
-////            item.getSeller().getItems().add(item);
-////            userRepository.save(item.getSeller());
-//
-//            notifySeller(item);
-//            notifiyBuyer(item);
-//        }
     }
 
 
+    /**
+     * Helper function to notify seller in case some user
+     * wins an auction using the 'buyPrice' option. In that
+     * case, the auction is terminated by the route not the
+     * auto-closure thread
+     *
+     * @param item - the auction
+     */
     void notifySeller(Item item){
 
         Notification toSeller = new Notification();
         toSeller.setRecipient(item.getSeller());
         toSeller.setItemId(item.getId());
-        toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
+        toSeller.setMessage("Your auction with name " + item.getName() + " has been completed");
         notificationRepository.save(toSeller);
-    }
 
-    void notifiyBuyer(Item item){
-         if(!item.getBids().isEmpty()) {
-             Notification toBuyer = new Notification();
-             Bid highestBid = Collections.max(item.getBids(), Bid.cmp);
-             toBuyer.setRecipient(highestBid.getBidder());
-             toBuyer.setItemId(item.getId());
-             toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
-             notificationRepository.save(toBuyer);
-         }
+        item.getSeller().getNotifications().add(toSeller);
+        userRepository.save(item.getSeller());
     }
 }

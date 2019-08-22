@@ -145,6 +145,14 @@ public class BackEndApplication implements CommandLineRunner {
 		}, 0, 365, TimeUnit.DAYS);
 
 
+		/**
+		 * Auction auto-closure utility
+		 *
+		 * Thread that retrieves every 5 seconds the non-completed auctions set
+		 * and for every item it checks if the current time is after the
+		 * 'endsAt' time meaning that the auction must be completed
+		 *
+		 */
 		exec.scheduleAtFixedRate(new Runnable() {
 
 			@Override
@@ -165,7 +173,6 @@ public class BackEndApplication implements CommandLineRunner {
 
 						item.getSeller().getNotifications().add(toSeller);
 						userRepository.save(item.getSeller());
-						System.err.println("Sending to seller");
 
 						if(!item.getBids().isEmpty()) {
 							Notification toBuyer = new Notification();
@@ -177,7 +184,6 @@ public class BackEndApplication implements CommandLineRunner {
 
 							highestBidder.getNotifications().add(toBuyer);
 							userRepository.save(highestBidder);
-							System.err.println("Sending to buyer");
 						}
 					}
 				});

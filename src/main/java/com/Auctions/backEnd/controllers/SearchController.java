@@ -149,6 +149,7 @@ public class SearchController extends BaseController{
             byDescription = itemRepository.searchByDescription(description);
         }
 
+        //TODO check
         //https://www.baeldung.com/java-lists-intersection
         Set<Item> result = byCategory.stream()
                 .distinct()
