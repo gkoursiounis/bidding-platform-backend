@@ -172,7 +172,7 @@ public class ItemController extends BaseController{
     @PostMapping
     public ResponseEntity createItem(@RequestParam String name,
                                      @Nullable @RequestParam Double buyPrice,
-                                     @Nullable @RequestParam(name = "media") MultipartFile media,
+                                     @Nullable @RequestParam(name = "media") List<MultipartFile> media,
                                      @RequestParam Double firstBid,
                                      @RequestParam Integer[] categoriesId,
                                      @RequestParam Double longitude,
@@ -250,25 +250,28 @@ public class ItemController extends BaseController{
 
         if(media != null){
 
-            if (!BaseController.contentTypes.contains(media.getContentType())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                        "Error",
-                        "Image type not supported"
-                ));
+            for(MultipartFile picture : media){
+
+                if (!BaseController.contentTypes.contains(picture.getContentType())) {
+                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                            "Error",
+                            "Image type not supported"
+                    ));
+                }
+
+                if (picture.getSize() > DBFile.MAXIMUM_IMAGE_SIZE) {
+
+                    ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                            "Error",
+                            "Image over limits"
+                    ));
+                }
+
+                DBFile dbFile = dBFileStorageService.storeFile(picture);
+                dbFile.setDownloadLink("/downloadFile/" + dbFile.getId() + "." + dbFile.getFileType().split("/")[1]);
+                dbFile = dbFileRepository.save(dbFile);
+                item.getMedia().add(dbFile);
             }
-
-            if (media.getSize() > DBFile.MAXIMUM_IMAGE_SIZE) {
-
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                        "Error",
-                        "Image over limits"
-                ));
-            }
-
-            DBFile dbFile = dBFileStorageService.storeFile(media);
-            dbFile.setDownloadLink("/downloadFile/" + dbFile.getId() + "." + dbFile.getFileType().split("/")[1]);
-            dbFile = dbFileRepository.save(dbFile);
-            item.getMedia().add(dbFile);
         }
 
 
@@ -327,7 +330,7 @@ public class ItemController extends BaseController{
         if(item == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
-                    "Item not found. Invalid item Id"
+                    "Item not found"
             ));
         }
 
@@ -423,7 +426,7 @@ public class ItemController extends BaseController{
         if(item == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
-                    "Item not found. Invalid item Id"
+                    "Item not found"
             ));
         }
 

@@ -137,7 +137,6 @@ public class ItemControllerTest {
     public void createItem2() throws Exception {
         mvc.perform(
                 post("/item")
-                        .param("name", "item1")
                         .param("firstBid", "5.3")
                         .param("categoriesId", categoryId)
                         .param("longitude", "23.76695")
@@ -219,7 +218,7 @@ public class ItemControllerTest {
                         .param("description", "this is the description")
                         .header("Authorization", user1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
 
@@ -481,7 +480,7 @@ public class ItemControllerTest {
                         .param("description", "this is the description")
                         .header("Authorization", user1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isOk());
     }
 
 
@@ -662,6 +661,133 @@ public class ItemControllerTest {
                         .header("Authorization", user1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User tries to create an item with a 2 pictures
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("User tries to create an item with 2 pictures")
+    public void createItem24() throws Exception {
+
+        MockMultipartFile file = new MockMultipartFile(
+                "media",
+                "Bloodhound.jpg",
+                "image/jpeg",
+                new FileInputStream("media/Bloodhound.jpg"));
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "media",
+                "Bloodhound.jpg",
+                "image/jpeg",
+                new FileInputStream("media/Bloodhound.jpg"));
+
+        mvc.perform(
+                multipart("/item")
+                        .file(file)
+                        .file(file1)
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User tries to create an item with a 4 pictures
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("User tries to create an item with 4 pictures")
+    public void createItem25() throws Exception {
+
+        MockMultipartFile file = new MockMultipartFile(
+                "media",
+                "Bloodhound.jpg",
+                "image/jpeg",
+                new FileInputStream("media/Bloodhound.jpg"));
+
+        MockMultipartFile file1 = new MockMultipartFile(
+                "media",
+                "Bloodhound.jpg",
+                "image/jpeg",
+                new FileInputStream("media/Bloodhound.jpg"));
+
+        MockMultipartFile file2 = new MockMultipartFile(
+                "media",
+                "Bloodhound.jpg",
+                "image/jpeg",
+                new FileInputStream("media/Bloodhound.jpg"));
+
+        MockMultipartFile file3 = new MockMultipartFile(
+                "media",
+                "Bloodhound.jpg",
+                "image/jpeg",
+                new FileInputStream("media/Bloodhound.jpg"));
+
+        mvc.perform(
+                multipart("/item")
+                        .file(file)
+                        .file(file1)
+                        .file(file2)
+                        .file(file3)
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
+     * User tries to create an item as application/pdf
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("User tries to create an item as application/pdf")
+    public void createItem26() throws Exception {
+
+        MockMultipartFile file = new MockMultipartFile(
+                "media",
+                "Bloodhound.pdf",
+                "application/pdf",
+                new FileInputStream("media/Bloodhound.jpg"));
+
+        mvc.perform(
+                multipart("/item")
+                        .file(file)
+                        .param("name", "item1")
+                        .param("buyPrice", "10.4")
+                        .param("firstBid", "5.3")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isBadRequest());
     }
 
 

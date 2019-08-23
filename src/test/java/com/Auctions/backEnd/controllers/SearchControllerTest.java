@@ -71,9 +71,7 @@ public class SearchControllerTest {
     }
 
     @AfterEach
-    private void after() {
-        testUtils.clearDB();
-    }
+    private void after() { testUtils.clearDB(); }
 
 
     /**

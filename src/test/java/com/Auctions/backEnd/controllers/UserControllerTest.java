@@ -378,10 +378,7 @@ public class UserControllerTest {
                 .header("Authorization", user3))
                 .andExpect(status().isOk());
 
-        mvc.perform(get("/user/test/test/" + item_id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk());
+
     }
 }
 
