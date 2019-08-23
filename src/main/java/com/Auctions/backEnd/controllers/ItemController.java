@@ -194,7 +194,14 @@ public class ItemController extends BaseController{
                 (buyPrice != null && Double.compare(buyPrice, firstBid) < 0)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "Invalid parameters"
+                    "Missing parameters or buy Price is smaller than first Bid"
+            ));
+        }
+
+        if(endsAt.compareTo(new Date()) < 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Auction ending time cannot be before the current time"
             ));
         }
 

@@ -641,6 +641,31 @@ public class ItemControllerTest {
 
 
     /**
+     * User successfully tries to create an item/auction with integer firstBid
+     *
+     * @throws Exception - mvc.perform
+     */
+    @Test
+    @DisplayName("Successful item creation with integer firstBid")
+    public void createItem23() throws Exception {
+        mvc.perform(
+                post("/item")
+                        .param("name", "item1")
+                        .param("buyPrice", "10.0")
+                        .param("firstBid", "5")
+                        .param("categoriesId", categoryId)
+                        .param("longitude", "23.76695")
+                        .param("latitude", "37.968564")
+                        .param("locationTitle", "Dit UoA")
+                        .param("endsAt", "2021-09-26T01:30:00.000-04:00")
+                        .param("description", "this is the description")
+                        .header("Authorization", user1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+
+    /**
      * User successfully deletes an item
      *
      * @throws Exception - mvc.perform
