@@ -93,7 +93,6 @@ public class User extends AuditModel {
     private String taxNumber;
 
     @OneToOne
-    @JsonIgnore
     private Geolocation address;
 
     private int sellerRating;
