@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 
 @RestController
-@CrossOrigin(origins = "https://*:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/bid")
 public class BidController extends BaseController{
 

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "https://*:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/location")
 public class LocationController {
 

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "https://*:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/admin")
 public class AdminController extends BaseController{
 
