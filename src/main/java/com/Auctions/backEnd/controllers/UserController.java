@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:3000")
+@CrossOrigin(origins = "https://*:3000")
 @RequestMapping("/user")
 public class UserController extends BaseController{
 

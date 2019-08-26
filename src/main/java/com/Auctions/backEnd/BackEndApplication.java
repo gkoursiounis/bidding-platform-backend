@@ -112,37 +112,37 @@ public class BackEndApplication implements CommandLineRunner {
 		System.out.println("App is running...");
 
 		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-		exec.scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-				//System.err.println("Creating admin account...");
-
-				userRepository.deleteAll();
-				accountRepository.deleteAll();
-				Account admin = new Account();
-				admin.setUsername("tediadiktyoy");
-				admin.setPassword(passwordEncoder.encode("adminadmin"));
-				admin.setEmail("sdi1600077@di.uoa.gr");
-				admin.setAdmin(true);
-				admin.setVerified(true);
+//		exec.scheduleAtFixedRate(new Runnable() {
 //
-//			accountRepository.save(admin);
-
-				User user = new User();
-				user.setFirstName("TEDiadiktyoy");
-				user.setLastName("spring2019");
-				user.setTelNumber("1234567890");
-				user.setTaxNumber("1234");
-				user.setAccount(admin);
-
-				userRepository.save(user);
-				accountRepository.save(admin);
-
-				System.err.println("Creating admin account...");
-
-			}
-		}, 0, 365, TimeUnit.DAYS);
+//			@Override
+//			public void run() {
+//				//System.err.println("Creating admin account...");
+//
+//				userRepository.deleteAll();
+//				accountRepository.deleteAll();
+//				Account admin = new Account();
+//				admin.setUsername("tediadiktyoy");
+//				admin.setPassword(passwordEncoder.encode("adminadmin"));
+//				admin.setEmail("sdi1600077@di.uoa.gr");
+//				admin.setAdmin(true);
+//				admin.setVerified(true);
+////
+////			accountRepository.save(admin);
+//
+//				User user = new User();
+//				user.setFirstName("TEDiadiktyoy");
+//				user.setLastName("spring2019");
+//				user.setTelNumber("1234567890");
+//				user.setTaxNumber("1234");
+//				user.setAccount(admin);
+//
+//				userRepository.save(user);
+//				accountRepository.save(admin);
+//
+//				System.err.println("Creating admin account...");
+//
+//			}
+//		}, 0, 365, TimeUnit.DAYS);
 
 
 		/**

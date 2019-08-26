@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.*;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:3000")
+@CrossOrigin(origins = "https://*:3000")
 @RequestMapping("/item")
 public class ItemController extends BaseController{
 

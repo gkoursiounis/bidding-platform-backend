@@ -33,7 +33,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.regex.Pattern;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:3000")
+@CrossOrigin(origins = "https://*:3000")
 @RequestMapping("/auth")
 public class AuthController extends BaseController{
 

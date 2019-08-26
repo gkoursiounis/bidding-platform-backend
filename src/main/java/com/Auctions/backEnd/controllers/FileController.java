@@ -22,7 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:3000")
+@CrossOrigin(origins = "https://*:3000")
 @RequestMapping("/media")
 public class FileController extends BaseController{
 
@@ -43,7 +43,7 @@ public class FileController extends BaseController{
 
     /**
      * A user can optionally upload more pictures for each item
-     * The basic picture can be uploaded during the item creation
+     * A basic picture set can be uploaded during the item creation
      * in ItemController
      *
      * @param itemId - the id of the item portrayed in the picture
@@ -60,7 +60,14 @@ public class FileController extends BaseController{
         if(item == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
-                    "Item not found. Invalid item Id"
+                    "Item not found"
+            ));
+        }
+
+        if(!item.getSeller().equals(requestUser)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "The auction does not belong to you"
             ));
         }
 

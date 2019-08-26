@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "https://localhost:3000")
+@CrossOrigin(origins = "https://*:3000")
 @RequestMapping("/search")
 public class SearchController extends BaseController{
 
