@@ -4,13 +4,11 @@ import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -35,10 +33,16 @@ public class AdminController extends BaseController{
      * The Administrator can get a list of all unverified users
      * whose approval request is pending
      *
+     * We use Database Pagination which means that the front-end
+     * part needs to send:
+     *  - a page number
+     *  - a page size
+     *  - any order/sorting preferences
+     *
      * @return a list of unverified users
      */
     @GetMapping("/pendingRegisters")
-    public ResponseEntity getPendingRegisters(){
+    public ResponseEntity getPendingRegisters(Pageable pageable){
 
         User requester = requestUser();
         if(!requester.isAdmin()){
@@ -49,48 +53,24 @@ public class AdminController extends BaseController{
             ));
         }
 
-        return ResponseEntity.ok(userRepository.getPendingUsers());
-    }
-
-
-//    @GetMapping("/allUsers")
-//    public ResponseEntity getAllUsers(){
-//
-//        User requester = requestUser();
-//        if(!requester.isAdmin()){
-//
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
-//                    "Error",
-//                    "You need to be an admin to perform this action"
-//            ));
-//        }
-//
-//        return ResponseEntity.ok(userRepository.getAllUsers());
-//    }
-
-
-    @GetMapping("/test")
-    public ResponseEntity test(@RequestParam int page,
-                               @RequestParam int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        List<User> allUsers = userRepository.getAllUsers(pageable);
-
-        return ResponseEntity.ok(allUsers);
+        return ResponseEntity.ok(userRepository.getPendingUsers(pageable));
     }
 
 
     /**
      * The Administrator can get a list of all the existing users
-     * including administrators and himself
+     * including other administrators and himself
      *
-     * The users are listed starting from the
-     * newest user to the oldest one.
+     * We use Database Pagination which means that the front-end
+     * part needs to send:
+     *  - a page number
+     *  - a page size
+     *  - any order/sorting preferences
      *
      * @return a list of users
      */
     @GetMapping("/allUsers")
-    public ResponseEntity getAllUsers() {
+    public ResponseEntity getAllUsers(Pageable pageable) {
 
         User requester = requestUser();
         if(!requester.isAdmin()){
@@ -101,55 +81,7 @@ public class AdminController extends BaseController{
             ));
         }
 
-        PageRequest.of(0, 10);
-        List<User> allUsers = userRepository.findAll();
-
-        if(allUsers.size() > 10){
-
-            List<User> returnedUsers = new ArrayList<>();
-            for(int i = 0; i < 10; i++) {
-                returnedUsers.add(allUsers.get(i));
-            }
-
-            return ResponseEntity.ok(returnedUsers);
-        }
-
-        return ResponseEntity.ok(allUsers);
-    }
-
-
-    @GetMapping("/allUsers/older/{userId}")
-    public ResponseEntity getOlderUsers(@PathVariable Long userId){
-
-        User requester = requestUser();
-        if(!requester.isAdmin()){
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
-                    "Error",
-                    "You need to be an admin to perform this action"
-            ));
-        }
-
-        return userRepository.findById(userId).map((user) -> {
-
-            List<User> olderUsers =  userRepository.getOlderUsers(user.getCreatedAt());
-
-            if(olderUsers.size() > 10){
-
-                List<User> returnedUsers = new ArrayList<>();
-                for(int i = 0; i < 10; i++) {
-                    returnedUsers.add(olderUsers.get(i));
-                }
-
-                return ResponseEntity.ok(returnedUsers);
-            }
-
-            return ResponseEntity.ok(olderUsers);
-
-        }).orElseGet(()-> new ResponseEntity(new Message(
-                "Error",
-                "User not found"
-        ), HttpStatus.NOT_FOUND));
+        return ResponseEntity.ok(userRepository.getAllUsers(pageable));
     }
 
 
@@ -174,7 +106,6 @@ public class AdminController extends BaseController{
         pending.forEach(user -> {
             user.getAccount().setVerified(true);
             accountRepository.save(user.getAccount());
-           // userRepository.save(user);
         });
 
         return ResponseEntity.ok(new Message(
@@ -219,7 +150,6 @@ public class AdminController extends BaseController{
 
         user.getAccount().setVerified(true);
         accountRepository.save(user.getAccount());
-      //  userRepository.save(user);
 
         return ResponseEntity.status(HttpStatus.OK).body(new Message(
                 "Ok",

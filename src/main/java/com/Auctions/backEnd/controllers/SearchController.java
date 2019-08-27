@@ -60,17 +60,25 @@ public class SearchController extends BaseController{
      * called 'res'. Afterwards, we sort the results on a best fit basis
      * i.e. the items appearing more times in the set are moved first in
      * the set
+     *
+     * The front-end part specifies a sublist range of the used as pagination
      * We return items of both open and completed auctions
      *
+     * Algorithm for sorting elements by times of appearance was taken from:
+     * https://www.geeksforgeeks.org/sort-elements-by-frequency-set-5-using-java-map/
+     *
+     * @param text - the keyword string
+     * @param lower - the lower bound of the results sublist
+     * @param upper - the lower bound of the results sublist
      * @return a list of items
      */
     @GetMapping("/searchBar")
-    public ResponseEntity searchBar(@RequestParam String text){
+    public ResponseEntity searchBar(@RequestParam String text, Integer lower, Integer upper){
 
-        if(text == null || text.isEmpty()){
+        if(text == null || text.isEmpty() || lower == null || upper == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "No keywords given"
+                    "No keywords or sublist range are given"
             ));
         }
 
@@ -81,9 +89,6 @@ public class SearchController extends BaseController{
         for (String element : values) {
             res.addAll(itemRepository.searchItems(element));
         }
-
-        //algorithm for sorting elements by times of appearance was taken from:
-        //https://www.geeksforgeeks.org/sort-elements-by-frequency-set-5-using-java-map/
 
         Map<Item, Integer> map = new HashMap<>();
         List<Item> outputArray = new ArrayList<>();
@@ -103,12 +108,23 @@ public class SearchController extends BaseController{
 
         LinkedHashSet<Item> hashSet = new LinkedHashSet<>(outputArray);
 
-        // ArrayList<Item> listWithoutDuplicates = new ArrayList<>(hashSet);
+        ArrayList<Item> listWithoutDuplicates = new ArrayList<>(hashSet);
 
-        return ResponseEntity.ok(hashSet);
+        return ResponseEntity.ok(listWithoutDuplicates.subList(lower, upper));
     }
 
 
+    /**
+     *
+     * https://www.baeldung.com/java-lists-intersection
+     *
+     * @param category
+     * @param lowerPrice
+     * @param higherPrice
+     * @param locationTitle
+     * @param description
+     * @return
+     */
     @GetMapping("/filters")
     public ResponseEntity filterSearch(@Nullable @RequestParam String category,
                                        @Nullable @RequestParam Double lowerPrice,
@@ -150,7 +166,6 @@ public class SearchController extends BaseController{
         }
 
         //TODO check
-        //https://www.baeldung.com/java-lists-intersection
         Set<Item> result = byCategory.stream()
                 .distinct()
                 .filter( byPrice::contains)

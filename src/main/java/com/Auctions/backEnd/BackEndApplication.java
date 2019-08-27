@@ -116,7 +116,6 @@ public class BackEndApplication implements CommandLineRunner {
 
 			@Override
 			public void run() {
-				//System.err.println("Creating admin account...");
 
 				userRepository.deleteAll();
 				accountRepository.deleteAll();
@@ -135,12 +134,12 @@ public class BackEndApplication implements CommandLineRunner {
 				user.setTelNumber("1234567890");
 				user.setTaxNumber("1234");
 				user.setAccount(admin);
-
-				Geolocation address = new Geolocation();
-				address.setLatitude(37.968564);
-				address.setLongitude(23.76695);
-				address.setLocationTitle("Dept. Informatics and Telecomms");
-				user.setAddress(address);
+//
+//				Geolocation address = new Geolocation();
+//				address.setLatitude(37.968564);
+//				address.setLongitude(23.76695);
+//				address.setLocationTitle("Dept. Informatics and Telecomms");
+//				user.setAddress(address);
 
 				userRepository.save(user);
 				accountRepository.save(admin);

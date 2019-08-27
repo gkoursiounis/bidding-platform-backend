@@ -109,6 +109,8 @@ public class AdminControllerTest {
         verify("user2");
 
         mvc.perform(get("/admin/pendingRegisters")
+                .param("page", "0")
+                .param("size", "10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
@@ -130,6 +132,8 @@ public class AdminControllerTest {
         verify("user2");
 
         mvc.perform(get("/admin/pendingRegisters")
+                .param("page", "0")
+                .param("size", "10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
@@ -151,6 +155,8 @@ public class AdminControllerTest {
         unverify("user2");
 
         mvc.perform(get("/admin/pendingRegisters")
+                .param("page", "0")
+                .param("size", "10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
@@ -169,6 +175,8 @@ public class AdminControllerTest {
     public void getPendingRegisters4() throws Exception {
 
         mvc.perform(get("/admin/pendingRegisters")
+                .param("page", "0")
+                .param("size", "10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
                 .andExpect(status().isUnauthorized());
@@ -186,6 +194,8 @@ public class AdminControllerTest {
     public void getPendingRegisters5() throws Exception {
 
         mvc.perform(get("/admin/pendingRegisters")
+                .param("page", "0")
+                .param("size", "10")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "invalidToken"))
                 .andExpect(status().isBadRequest());
@@ -205,14 +215,16 @@ public class AdminControllerTest {
 
         mvc.perform(get("/admin/allUsers")
                 .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "0")
+                .param("size", "10")
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(3)));
+                .andExpect(jsonPath("$.*", hasSize(4)));
     }
 
 
     /**
-     * Admin gets the list of all users except himself
+     * Admin gets the list of all users amd admins
      *
      * @throws Exception - mvc.perform throws exception
      */
@@ -225,9 +237,11 @@ public class AdminControllerTest {
 
         mvc.perform(get("/admin/allUsers")
                 .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "0")
+                .param("size", "10")
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(3)));
+                .andExpect(jsonPath("$.*", hasSize(4)));
     }
 
 
@@ -250,13 +264,83 @@ public class AdminControllerTest {
 
     /**
      * A User gets the list of all users
-     * We should get back an <HTTP>UNAUTHORIZED</HTTP>
      *
      * @throws Exception - mvc.perform throws exception
      */
     @Test
-    @DisplayName("Get all users - no admin")
+    @DisplayName("Get all users 1")
     public void getAllUsers4() throws Exception {
+
+        for(int i=4; i<15; i++){
+            TestUtils.createAccount(mvc, "user" + i, "myPwd123", "FirstName1",
+                    "LastName1", "email" + i + "@di.uoa.gr");
+
+        }
+        makeAdmin("user3");
+
+        mvc.perform(get("/admin/allUsers")
+                .param("page", "0")
+                .param("size", "10")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user3))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(10)));
+
+        mvc.perform(get("/admin/allUsers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "1")
+                .param("size", "10")
+                .header("Authorization", user3))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(5)));
+    }
+
+
+    /**
+     * A User gets the list of all users
+     *
+     * @throws Exception - mvc.perform throws exception
+     */
+    @Test
+    @DisplayName("Get all users 2")
+    public void getAllUsers6() throws Exception {
+
+        for(int i=4; i<15; i++){
+            TestUtils.createAccount(mvc, "user" + i, "myPwd123", "FirstName1",
+                    "LastName1", "email" + i + "@di.uoa.gr");
+
+        }
+        makeAdmin("user3");
+
+        mvc.perform(get("/admin/allUsers")
+                .param("page", "0")
+                .param("size", "5")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user3))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(5)));
+
+        mvc.perform(get("/admin/allUsers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "1")
+                .param("size", "5")
+                .header("Authorization", user3))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(5)));
+
+        mvc.perform(get("/admin/allUsers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "1")
+                .param("size", "5")
+                .header("Authorization", user3))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(5)));
+    }
+
+
+    @Test
+    @DisplayName("Get all users - no admin")
+    public void getAllUsers5() throws Exception {
 
         mvc.perform(get("/admin/allUsers")
                 .contentType(MediaType.APPLICATION_JSON)
