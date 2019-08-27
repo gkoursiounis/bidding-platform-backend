@@ -68,17 +68,17 @@ public class SearchController extends BaseController{
      * https://www.geeksforgeeks.org/sort-elements-by-frequency-set-5-using-java-map/
      *
      * @param text - the keyword string
-     * @param lower - the lower bound of the results sublist
-     * @param upper - the lower bound of the results sublist
+     * @param lower - the lower bound of the results sublist (inclusive)
+     * @param upper - the lower bound of the results sublist (exclusive)
      * @return a list of items
      */
     @GetMapping("/searchBar")
     public ResponseEntity searchBar(@RequestParam String text, Integer lower, Integer upper){
 
-        if(text == null || text.isEmpty() || lower == null || upper == null){
+        if(text == null || text.isEmpty() || lower == null || upper == null || lower < 0 || upper < lower){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "No keywords or sublist range are given"
+                    "No keywords given or sublist range out of range"
             ));
         }
 
@@ -108,9 +108,12 @@ public class SearchController extends BaseController{
 
         LinkedHashSet<Item> hashSet = new LinkedHashSet<>(outputArray);
 
-        ArrayList<Item> listWithoutDuplicates = new ArrayList<>(hashSet);
+        ArrayList<Item> result = new ArrayList<>(hashSet);
+        if(upper > result.size() - 1){
+            return ResponseEntity.ok(result.subList(lower, result.size()));
+        }
 
-        return ResponseEntity.ok(listWithoutDuplicates.subList(lower, upper));
+        return ResponseEntity.ok(result.subList(lower, upper));
     }
 
 
@@ -118,7 +121,7 @@ public class SearchController extends BaseController{
      *
      * https://www.baeldung.com/java-lists-intersection
      *
-     * @param category
+     * @param categories
      * @param lowerPrice
      * @param higherPrice
      * @param locationTitle
@@ -126,55 +129,101 @@ public class SearchController extends BaseController{
      * @return
      */
     @GetMapping("/filters")
-    public ResponseEntity filterSearch(@Nullable @RequestParam String category,
+    public ResponseEntity filterSearch(@Nullable @RequestParam List<String> categories,
                                        @Nullable @RequestParam Double lowerPrice,
                                        @Nullable @RequestParam Double higherPrice,
                                        @Nullable @RequestParam String locationTitle,
                                        @Nullable @RequestParam String description){
 
-        Set<Item> byCategory = null;
-        List<Item> byPrice = new ArrayList<>();
-        List<Item> byHigherPrice = new ArrayList<>();
-        List<Item> byLowerPrice = new ArrayList<>();
-        List<Item> byLocationTitle = new ArrayList<>();
-        List<Item> byDescription = new ArrayList<>();
+        List<Item> results = new ArrayList<>();
 
-        if(category != null){
+        //search according to categories parameters
+        if(categories != null){
 
-            ItemCategory cat = itemCategoryRepository.findItemCategoryByName(category);
-            if(cat != null) {
-                byCategory = cat.getItems();
+            List<Item> byCategory = itemRepository.findItemByCategory(categories);
+            if(byCategory == null) {
+                return ResponseEntity.ok(null);
+            }
+            if(results.isEmpty()){
+                results.addAll(byCategory);
+            }
+            else{
+                results.retainAll(byCategory);
             }
         }
 
+        //search according to price parameters
         if(lowerPrice != null && higherPrice != null){
-            byPrice = itemRepository.searchByPrice(lowerPrice, higherPrice);
+
+            List<Item> byPrice = itemRepository.searchByPrice(lowerPrice, higherPrice);
+            if(byPrice == null){
+                return ResponseEntity.ok(null);
+            }
+            if(results.isEmpty()){
+                results.addAll(byPrice);
+            }
+            else{
+                results.retainAll(byPrice);
+            }
         }
         else if(higherPrice != null){
-            byHigherPrice = itemRepository.searchByHigherPrice(higherPrice);
+
+            List<Item> byHigherPrice = itemRepository.searchByHigherPrice(higherPrice);
+            if(byHigherPrice == null){
+                return ResponseEntity.ok(null);
+            }
+            if(results.isEmpty()){
+                results.addAll(byHigherPrice);
+            }
+            else{
+                results.retainAll(byHigherPrice);
+            }
         }
         else if(lowerPrice != null){
-            byLowerPrice = itemRepository.searchByLowerPrice(lowerPrice);
+
+            List<Item> byLowerPrice = itemRepository.searchByLowerPrice(lowerPrice);
+            if(byLowerPrice == null){
+                return ResponseEntity.ok(null);
+            }
+            if(results.isEmpty()){
+                results.addAll(byLowerPrice);
+            }
+            else{
+                results.retainAll(byLowerPrice);
+            }
         }
 
+        //search according to location parameter
         if(locationTitle != null){
-            byLocationTitle = itemRepository.searchByLocation(locationTitle);
+
+            List<Item> byLocationTitle = itemRepository.searchByLocation(locationTitle);
+            if(byLocationTitle == null){
+                return ResponseEntity.ok(null);
+            }
+            if(results.isEmpty()){
+                results.addAll(byLocationTitle);
+            }
+            else{
+                results.retainAll(byLocationTitle);
+            }
         }
 
+
+        //search according to description parameter
         if(description != null){
-            byDescription = itemRepository.searchByDescription(description);
+
+            List<Item> byDescription = itemRepository.searchByDescription(description);
+            if(byDescription == null){
+                return ResponseEntity.ok(null);
+            }
+            if(results.isEmpty()){
+                results.addAll(byDescription);
+            }
+            else{
+                results.retainAll(byDescription);
+            }
         }
 
-        //TODO check
-        Set<Item> result = byCategory.stream()
-                .distinct()
-                .filter( byPrice::contains)
-                .filter( byDescription::contains)
-                .filter( byLocationTitle::contains)
-                .filter( byHigherPrice::contains)
-                .filter( byLowerPrice::contains)
-                .collect(Collectors.toSet());
-
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(results);
     }
 }

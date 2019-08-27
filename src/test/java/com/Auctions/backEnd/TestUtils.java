@@ -297,4 +297,31 @@ public class TestUtils {
 						.andReturn().getResponse().getContentAsString()))
 				.get("id").toString();
 	}
+
+	public static String makeFullItem(@NonNull final MockMvc mvc,
+									  @NonNull final String categoryId,
+									  @NonNull final String name,
+									  @NonNull final String description,
+									  @NonNull final String buyPrice,
+									  @NonNull final String firstBid,
+									  @NonNull final String locationTitle,
+									  @NonNull final String token) throws Exception{
+		return ((JSONObject) new JSONParser().parse(
+				mvc.perform(
+						post("/item")
+								.param("name", name)
+								.param("buyPrice", buyPrice)
+								.param("firstBid", firstBid)
+								.param("categoriesId", categoryId)
+								.param("longitude", "23.76695")
+								.param("latitude", "37.968564")
+								.param("locationTitle", locationTitle)
+								.param("endsAt", "2025-09-26T01:30:00.000-04:00")
+								.param("description", description)
+								.header("Authorization", token)
+								.contentType(MediaType.APPLICATION_JSON))
+						.andExpect(status().isOk())
+						.andReturn().getResponse().getContentAsString()))
+				.get("id").toString();
+	}
 }

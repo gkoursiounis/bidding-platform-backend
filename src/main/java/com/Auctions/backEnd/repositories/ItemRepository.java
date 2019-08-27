@@ -30,13 +30,13 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false' AND i.createdAt < :date ORDER BY i.createdAt DESC")
     List<Item> getOlderItems(@Param("date") Date date);
 
-    @Query("SELECT i FROM Item i where i.currently >= :lowerPrice and i.buyPrice <= :higherPrice")
+    @Query("SELECT i FROM Item i where i.currently >= :lowerPrice and i.currently <= :higherPrice")
     List<Item> searchByPrice(Double lowerPrice, Double higherPrice);
 
     @Query("SELECT i FROM Item i where i.currently >= :lowerPrice")
     List<Item> searchByLowerPrice(Double lowerPrice);
 
-    @Query("SELECT i FROM Item i where i.buyPrice <= :higherPrice")
+    @Query("SELECT i FROM Item i where i.currently <= :higherPrice")
     List<Item> searchByHigherPrice(Double higherPrice);
 
     @Query("SELECT i FROM Item i where (locate( lower(:query), lower(i.location.locationTitle)) <> 0)")

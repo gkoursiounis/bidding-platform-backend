@@ -95,6 +95,8 @@ public class SearchControllerTest {
         mvc.perform(get("/search/searchBar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("text", "fancy dress")
+                .param("lower", "0")
+                .param("upper", "10")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(2)))
@@ -122,8 +124,10 @@ public class SearchControllerTest {
                 (mvc, categoryId, "item no3", "hello world!", user1);
 
         mvc.perform(get("/search/searchBar")
-                .contentType(MediaType.APPLICATION_JSON)
+                .param("lower", "0")
+                .param("upper", "2")
                 .param("text", "fancy dress")
+                .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(2)))
@@ -152,6 +156,8 @@ public class SearchControllerTest {
 
         mvc.perform(get("/search/searchBar")
                 .contentType(MediaType.APPLICATION_JSON)
+                .param("lower", "0")
+                .param("upper", "20")
                 .param("text", "dream")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
@@ -179,10 +185,12 @@ public class SearchControllerTest {
 
         mvc.perform(get("/search/searchBar")
                 .contentType(MediaType.APPLICATION_JSON)
+                .param("lower", "0")
+                .param("upper", "2")
                 .param("text", "fancy dress")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(3)));
+                .andExpect(jsonPath("$.*", hasSize(2)));
     }
 
 
@@ -204,6 +212,8 @@ public class SearchControllerTest {
         mvc.perform(get("/search/searchBar")
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("text", "nice car")
+                .param("lower", "0")
+                .param("upper", "2")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(2)))
@@ -336,4 +346,264 @@ public class SearchControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+
+    @Test
+    @DisplayName("Filter search 1")
+    public void filterSearch1() throws Exception {
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "fancy dress", "this is the description", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item no2", "hello", user1);
+
+        TestUtils.makeDetailedItem
+                (mvc, categoryId, "item dressy", "!dressara!", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("categories", "cars")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+
+    @Test
+    @DisplayName("Filter search 2")
+    public void filterSearch2() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("lowerPrice", "8.0")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(2)));
+
+    }
+
+
+    @Test
+    @DisplayName("Filter search 3")
+    public void filterSearch3() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("lowerPrice", "10.1")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+
+    }
+
+
+    @Test
+    @DisplayName("Filter search 4")
+    public void filterSearch4() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("lowerPrice", "11.0")
+                .param("higherPrice", "21.0")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+
+    }
+
+
+    @Test
+    @DisplayName("Filter search 5")
+    public void filterSearch5() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("lowerPrice", "5.0")
+                .param("higherPrice", "15.0")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+
+    @Test
+    @DisplayName("Filter search 6")
+    public void filterSearch6() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("higherPrice", "20.0")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+
+    @Test
+    @DisplayName("Filter search 7")
+    public void filterSearch7() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("higherPrice", "14.0")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(2)));
+    }
+
+
+    @Test
+    @DisplayName("Filter search 8")
+    public void filterSearch8() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("locationTitle", "Dit Uoa")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(3)));
+    }
+
+
+    @Test
+    @DisplayName("Filter search 9")
+    public void filterSearch9() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("lowerPrice", "11.0")
+                .param("locationTitle", "Dit Uoa")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+    }
+
+
+    @Test
+    @DisplayName("Filter search 10")
+    public void filterSearch10() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "desc","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("lowerPrice", "9.0")
+                .param("higherPrice", "12.0")
+                .param("locationTitle", "Dit Uoa")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+    }
+
+
+    @Test
+    @DisplayName("Filter search 10")
+    public void filterSearch11() throws Exception {
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "skata","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "sta moutra mas","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "skara","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("lowerPrice", "9.0")
+                .param("higherPrice", "12.0")
+                .param("description", "ska")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(1)));
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("lowerPrice", "14.0")
+                .param("higherPrice", "50.0")
+                .param("description", "ska")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(0)));
+    }
 }
