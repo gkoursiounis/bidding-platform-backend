@@ -4,10 +4,12 @@ import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -50,14 +52,33 @@ public class AdminController extends BaseController{
     }
 
 
+//    @GetMapping("/allUsers")
+//    public ResponseEntity getAllUsers(){
+//
+//        User requester = requestUser();
+//        if(!requester.isAdmin()){
+//
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+//                    "Error",
+//                    "You need to be an admin to perform this action"
+//            ));
+//        }
+//
+//        return ResponseEntity.ok(userRepository.getAllUsers());
+//    }
+
+
     /**
      * The Administrator can get a list of all the existing users
      * including administrators and himself
      *
+     * The users are listed starting from the
+     * newest user to the oldest one.
+     *
      * @return a list of users
      */
     @GetMapping("/allUsers")
-    public ResponseEntity getAllUsers(){
+    public ResponseEntity getAllUsers() {
 
         User requester = requestUser();
         if(!requester.isAdmin()){
@@ -68,7 +89,55 @@ public class AdminController extends BaseController{
             ));
         }
 
-        return ResponseEntity.ok(userRepository.getAllUsers());
+        PageRequest.of(0, 10);
+        List<User> allUsers = userRepository.getAllUsers();
+
+        if(allUsers.size() > 10){
+
+            List<User> returnedUsers = new ArrayList<>();
+            for(int i = 0; i < 10; i++) {
+                returnedUsers.add(allUsers.get(i));
+            }
+
+            return ResponseEntity.ok(returnedUsers);
+        }
+
+        return ResponseEntity.ok(allUsers);
+    }
+
+
+    @GetMapping("/allUsers/older/{userId}")
+    public ResponseEntity getOlderUsers(@PathVariable Long userId){
+
+        User requester = requestUser();
+        if(!requester.isAdmin()){
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You need to be an admin to perform this action"
+            ));
+        }
+
+        return userRepository.findById(userId).map((user) -> {
+
+            List<User> olderUsers =  userRepository.getOlderUsers(user.getCreatedAt());
+
+            if(olderUsers.size() > 10){
+
+                List<User> returnedUsers = new ArrayList<>();
+                for(int i = 0; i < 10; i++) {
+                    returnedUsers.add(olderUsers.get(i));
+                }
+
+                return ResponseEntity.ok(returnedUsers);
+            }
+
+            return ResponseEntity.ok(olderUsers);
+
+        }).orElseGet(()-> new ResponseEntity(new Message(
+                "Error",
+                "User not found"
+        ), HttpStatus.NOT_FOUND));
     }
 
 

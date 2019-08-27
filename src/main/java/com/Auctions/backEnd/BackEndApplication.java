@@ -136,6 +136,12 @@ public class BackEndApplication implements CommandLineRunner {
 //				user.setTaxNumber("1234");
 //				user.setAccount(admin);
 //
+//				Geolocation address = new Geolocation();
+//				address.setLatitude(37.968564);
+//				address.setLongitude(23.76695);
+//				address.setLocationTitle("Dept. Informatics and Telecomms");
+//				user.setAddress(address);
+//
 //				userRepository.save(user);
 //				accountRepository.save(admin);
 //
