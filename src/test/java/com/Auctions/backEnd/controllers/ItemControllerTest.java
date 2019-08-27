@@ -79,23 +79,23 @@ public class ItemControllerTest {
         categoryId = category.getId().toString();
     }
 
-//    @AfterEach
-//    private void after() {
-//        testUtils.clearDB();
-//    }
-
-    @Test
-    @DisplayName("Successful item creation")
-    public void createItem211() throws Exception {
-        for(int i=0;i<10;i++)
-        {
-            TestUtils.makeDetailedItem(mvc, categoryId, "item"+i, "description", user1);
-        }
-        for(int i=0;i<10;i++)
-        {
-            TestUtils.makeDetailedItem(mvc, categoryId, "item"+i, "description", user1);
-        }
+    @AfterEach
+    private void after() {
+        testUtils.clearDB();
     }
+
+//    @Test
+//    @DisplayName("Successful item creation")
+//    public void createItem211() throws Exception {
+//        for(int i=0;i<10;i++)
+//        {
+//            TestUtils.makeDetailedItem(mvc, categoryId, "item"+i, "description", user1);
+//        }
+//        for(int i=0;i<10;i++)
+//        {
+//            TestUtils.makeDetailedItem(mvc, categoryId, "item"+i, "description", user1);
+//        }
+//    }
 
     private void unverify(final String username) {
 

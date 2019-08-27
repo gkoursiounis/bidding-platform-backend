@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.domain.Pageable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -29,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query( "SELECT u "+
             "FROM User u")
-    List<User> getAllUsers();
+    List<User> getAllUsers(Pageable pageable);
 
 
     @Query("SELECT u FROM User u WHERE u.createdAt < :date ORDER BY u.createdAt DESC")

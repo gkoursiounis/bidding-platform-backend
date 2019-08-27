@@ -5,6 +5,7 @@ import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -68,6 +69,17 @@ public class AdminController extends BaseController{
 //    }
 
 
+    @GetMapping("/test")
+    public ResponseEntity test(@RequestParam int page,
+                               @RequestParam int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        List<User> allUsers = userRepository.getAllUsers(pageable);
+
+        return ResponseEntity.ok(allUsers);
+    }
+
+
     /**
      * The Administrator can get a list of all the existing users
      * including administrators and himself
@@ -90,7 +102,7 @@ public class AdminController extends BaseController{
         }
 
         PageRequest.of(0, 10);
-        List<User> allUsers = userRepository.getAllUsers();
+        List<User> allUsers = userRepository.findAll();
 
         if(allUsers.size() > 10){
 
