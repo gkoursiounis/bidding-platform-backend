@@ -32,9 +32,7 @@ public class UserController extends BaseController{
 
 
     /**
-     * A user can get the details of a user (himself or another user)
-     * If the user requests himself the we return a FormattedUser which
-     * contains more details than in the case the user requests another user
+     * A user can get the details of his profile
      *
      * @return user details
      */
@@ -115,7 +113,7 @@ public class UserController extends BaseController{
      */
     @GetMapping("/myNotifications")
     public ResponseEntity getMyNotifications() {
-//test();
+
         return ResponseEntity.ok(requestUser().getNotifications());
     }
 
@@ -177,7 +175,15 @@ public class UserController extends BaseController{
 
 
     /**
-     * User can mark all of his unseen notifications as seen
+     * A seller can rate the highest bidder of his auction
+     * A highest bidder of an auction can rate its seller
+     *
+     * The rating scores are added in the users' existing score
+     * and then they are stored in the item class
+     *
+     * Since we consider a rating scale from 1 to 5 then:
+     *  - if a user receives 1 or 2 this is a low/bad rating
+     *  so we deduct 2 and 1 points respectively.
      *
      * @return <HTTP>OK</HTTP>
      */
@@ -202,7 +208,6 @@ public class UserController extends BaseController{
             ));
         }
 
-        //TODO test
         int rating;
         switch (score){
             case 1:

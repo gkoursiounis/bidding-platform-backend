@@ -121,7 +121,7 @@ public class SearchController extends BaseController{
      *
      * https://www.baeldung.com/java-lists-intersection
      *
-     * @param categories
+     * @param categoriesId
      * @param lowerPrice
      * @param higherPrice
      * @param locationTitle
@@ -129,7 +129,7 @@ public class SearchController extends BaseController{
      * @return
      */
     @GetMapping("/filters")
-    public ResponseEntity filterSearch(@Nullable @RequestParam List<String> categories,
+    public ResponseEntity filterSearch(@Nullable @RequestParam List<String> categoriesId,
                                        @Nullable @RequestParam Double lowerPrice,
                                        @Nullable @RequestParam Double higherPrice,
                                        @Nullable @RequestParam String locationTitle,
@@ -138,9 +138,9 @@ public class SearchController extends BaseController{
         List<Item> results = new ArrayList<>();
 
         //search according to categories parameters
-        if(categories != null){
+        if(categoriesId != null){
 
-            List<Item> byCategory = itemRepository.findItemByCategory(categories);
+            List<Item> byCategory = itemRepository.findItemByCategory(categoriesId);
             if(byCategory == null) {
                 return ResponseEntity.ok(null);
             }

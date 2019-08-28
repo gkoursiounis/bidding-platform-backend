@@ -362,7 +362,7 @@ public class SearchControllerTest {
 
         mvc.perform(get("/search/filters")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("categories", "cars")
+                .param("categoriesId", "cars")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(3)));

@@ -15,7 +15,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Item findByName(String name);
     Item findItemById(Long id);
 
-    @Query("SELECT i FROM Item i WHERE :categories IN i.categories and i.auctionCompleted = 'false'")
+    @Query("SELECT i FROM Item i JOIN i.categories ic WHERE :categories IN i.categories.name and i.auctionCompleted = 'false'")
     List<Item> findItemByCategory(@Param("categories") List<String> categories);
 
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'true' and i.seller = :requester")
