@@ -174,7 +174,7 @@ public class ItemController extends BaseController{
                                      @Nullable @RequestParam Double buyPrice,
                                      @Nullable @RequestParam(name = "media") List<MultipartFile> media,
                                      @RequestParam Double firstBid,
-                                     @RequestParam Integer[] categoriesId,
+                                     @RequestParam Long[] categoriesId,
                                      @RequestParam Double longitude,
                                      @RequestParam Double latitude,
                                      @RequestParam String locationTitle,
@@ -198,12 +198,12 @@ public class ItemController extends BaseController{
             ));
         }
 
-        if(endsAt.compareTo(new Date()) < 0){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "Auction ending time cannot be before the current time"
-            ));
-        }
+//        if(endsAt.compareTo(new Date()) < 0){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+//                    "Error",
+//                    "Auction ending time cannot be before the current time"
+//            ));
+//        }
 
         Item item = new Item(new Date());
         item.setSeller(requestUser);
@@ -233,7 +233,7 @@ public class ItemController extends BaseController{
         }
         else{
 
-            for(Integer id: categoriesId){
+            for(Long id: categoriesId){
                 ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
 
                 if(category == null) {
@@ -320,7 +320,7 @@ public class ItemController extends BaseController{
                                      @Nullable @RequestParam String name,
                                      @Nullable @RequestParam Double buyPrice,
                                      @Nullable @RequestParam Double firstBid,
-                                     @Nullable @RequestParam Integer[] categoriesId,
+                                     @Nullable @RequestParam Long[] categoriesId,
                                      @Nullable @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
@@ -386,7 +386,7 @@ public class ItemController extends BaseController{
             }
 
             item.getCategories().clear();
-            for(Integer id: categoriesId) {
+            for(Long id: categoriesId) {
                 ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
 
                 if(category == null) {

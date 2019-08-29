@@ -129,27 +129,30 @@ public class SearchController extends BaseController{
      * @return
      */
     @GetMapping("/filters")
-    public ResponseEntity filterSearch(@Nullable @RequestParam List<String> categoriesId,
+    public ResponseEntity filterSearch(@Nullable @RequestParam List<Long> categoriesId,
                                        @Nullable @RequestParam Double lowerPrice,
                                        @Nullable @RequestParam Double higherPrice,
                                        @Nullable @RequestParam String locationTitle,
                                        @Nullable @RequestParam String description){
 
         List<Item> results = new ArrayList<>();
-
+//TODO continue
         //search according to categories parameters
-//        if(categoriesId != null){
+//        if(categoriesId != null) {
 //
-//            List<Item> byCategory = itemRepository.findItemByCategory(categoriesId);
-//            if(byCategory == null) {
-//                return ResponseEntity.ok(null);
+//            Set<Item> res = new TreeSet<>();
+//            for (Long id : categoriesId) {
+//                ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
+//
+//                if (category == null) {
+//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+//                            "Error",
+//                            "Category not found. Invalid category Id"
+//                    ));
+//                }
+//                res.addAll(category.getItems());
 //            }
-//            if(results.isEmpty()){
-//                results.addAll(byCategory);
-//            }
-//            else{
-//                results.retainAll(byCategory);
-//            }
+//            results.addAll(res);
 //        }
 
         //search according to price parameters
