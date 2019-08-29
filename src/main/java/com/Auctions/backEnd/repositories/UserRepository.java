@@ -1,6 +1,7 @@
 package com.Auctions.backEnd.repositories;
 
 import com.Auctions.backEnd.models.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,13 +28,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query( "SELECT u "+
             "FROM User u")
-    List<User> getAllUsers(Pageable pageable);
+    Page<User> getAllUsers(Pageable pageable);
 
 
     @Query( "SELECT u "+
             "FROM User u, Account a "+
             "WHERE u.account = a and a.verified = 'false'")
-    List<User> getPendingUsers(Pageable pageable);
+    Page<User> getPendingUsers(Pageable pageable);
 
 
     @Query( "SELECT u "+

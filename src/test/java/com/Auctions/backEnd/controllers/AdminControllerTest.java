@@ -114,7 +114,7 @@ public class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(1)));
+                .andExpect(jsonPath("content.*", hasSize(1)));
     }
 
 
@@ -137,7 +137,7 @@ public class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(0)));
+                .andExpect(jsonPath("content.*", hasSize(0)));
     }
 
 
@@ -160,7 +160,7 @@ public class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(2)));
+                .andExpect(jsonPath("content.*", hasSize(2)));
     }
 
 
@@ -219,7 +219,7 @@ public class AdminControllerTest {
                 .param("size", "10")
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(4)));
+                .andExpect(jsonPath("content.*", hasSize(4)));
     }
 
 
@@ -241,7 +241,7 @@ public class AdminControllerTest {
                 .param("size", "10")
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(4)));
+                .andExpect(jsonPath("content.*", hasSize(4)));
     }
 
 
@@ -284,7 +284,7 @@ public class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(10)));
+                .andExpect(jsonPath("content.*", hasSize(10)));
 
         mvc.perform(get("/admin/allUsers")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -292,7 +292,7 @@ public class AdminControllerTest {
                 .param("size", "10")
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(5)));
+                .andExpect(jsonPath("content.*", hasSize(5)));
     }
 
 
@@ -318,7 +318,7 @@ public class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(5)));
+                .andExpect(jsonPath("content.*", hasSize(5)));
 
         mvc.perform(get("/admin/allUsers")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -326,7 +326,7 @@ public class AdminControllerTest {
                 .param("size", "5")
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(5)));
+                .andExpect(jsonPath("content.*", hasSize(5)));
 
         mvc.perform(get("/admin/allUsers")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -334,7 +334,7 @@ public class AdminControllerTest {
                 .param("size", "5")
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(5)));
+                .andExpect(jsonPath("content.*", hasSize(5)));
     }
 
 
@@ -371,7 +371,7 @@ public class AdminControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user3))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(0)));
+                .andExpect(jsonPath("content.*", hasSize(0)));
     }
 
 

@@ -1,5 +1,6 @@
 package com.Auctions.backEnd.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,6 +45,7 @@ public class Item extends AuditModel implements Serializable {
 
     @OneToMany(mappedBy = "item")
     @OrderBy(value = "offer DESC")
+    @JsonBackReference
     private Set<Bid> bids = new TreeSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)

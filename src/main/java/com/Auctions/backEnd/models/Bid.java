@@ -1,6 +1,7 @@
 package com.Auctions.backEnd.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,7 @@ import java.util.Date;
 public class Bid extends AuditModel {
 
     @ManyToOne
-    @JsonIgnore
+    @JsonManagedReference
     private Item item;
 
     @ManyToOne

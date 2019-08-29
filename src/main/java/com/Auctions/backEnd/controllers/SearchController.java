@@ -138,19 +138,19 @@ public class SearchController extends BaseController{
         List<Item> results = new ArrayList<>();
 
         //search according to categories parameters
-        if(categoriesId != null){
-
-            List<Item> byCategory = itemRepository.findItemByCategory(categoriesId);
-            if(byCategory == null) {
-                return ResponseEntity.ok(null);
-            }
-            if(results.isEmpty()){
-                results.addAll(byCategory);
-            }
-            else{
-                results.retainAll(byCategory);
-            }
-        }
+//        if(categoriesId != null){
+//
+//            List<Item> byCategory = itemRepository.findItemByCategory(categoriesId);
+//            if(byCategory == null) {
+//                return ResponseEntity.ok(null);
+//            }
+//            if(results.isEmpty()){
+//                results.addAll(byCategory);
+//            }
+//            else{
+//                results.retainAll(byCategory);
+//            }
+//        }
 
         //search according to price parameters
         if(lowerPrice != null && higherPrice != null){
