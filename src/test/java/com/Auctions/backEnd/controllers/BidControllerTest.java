@@ -98,6 +98,11 @@ public class BidControllerTest {
                 .header("Authorization", user2))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(1)));
+
+        mvc.perform(get("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
     }
 
 
