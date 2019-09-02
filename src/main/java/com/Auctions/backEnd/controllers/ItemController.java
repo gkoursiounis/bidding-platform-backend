@@ -443,7 +443,7 @@ public class ItemController extends BaseController{
 
         item.getSeller().getItems().remove(item);
         userRepository.save(item.getSeller());
-        itemRepository.delete(item);
+        itemRepository.deleteById(item.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(new Message(
                 "Ok",

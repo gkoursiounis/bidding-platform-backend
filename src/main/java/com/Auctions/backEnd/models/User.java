@@ -20,7 +20,7 @@ import java.util.*;
 public class User extends AuditModel {
 
 
-    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "fk_account")
     @JsonIgnore
     private Account account;

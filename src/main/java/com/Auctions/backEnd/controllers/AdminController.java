@@ -248,8 +248,9 @@ public class AdminController extends BaseController{
             ));
         }
 
-        accountRepository.delete(user.getAccount());
-        userRepository.delete(user);
+
+        accountRepository.deleteById(user.getAccount().getId());
+        userRepository.deleteById(user.getId());
 
 
         return ResponseEntity.ok(new Message(

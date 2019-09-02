@@ -43,18 +43,18 @@ public class AccountController extends BaseController{
      */
     @GetMapping("/checkUsername")
     public ResponseEntity checkUsername(@RequestParam(value="username") String username) {
-//        Account account = accountRepository.findByUsername(username);
-//        if (account != null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Valid(false));
-//        } else {
-//            return ResponseEntity.ok(new Valid(true));
-//        }
-        User  user = userRepository.findByAccount_Username(username);
-        if (user != null) {
+        Account account = accountRepository.findByUsername(username);
+        if (account != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Valid(false));
         } else {
             return ResponseEntity.ok(new Valid(true));
         }
+//        User  user = userRepository.findByAccount_Username(username);
+//        if (user != null) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Valid(false));
+//        } else {
+//            return ResponseEntity.ok(new Valid(true));
+//        }
     }
 
 
