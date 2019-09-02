@@ -161,7 +161,7 @@ public class ItemController extends BaseController{
      * @param buyPrice - the price where a bidder can directly buy an item
      * @param media - optional picture
      * @param firstBid - the first bid
-     * @param categoriesId - list of Integers as the Id's of the item's categories
+     * @param categoryId - id of the bottom-most category
      * @param longitude - location
      * @param latitude - location
      * @param locationTitle - location
@@ -174,7 +174,7 @@ public class ItemController extends BaseController{
                                      @Nullable @RequestParam Double buyPrice,
                                      @Nullable @RequestParam(name = "media") List<MultipartFile> media,
                                      @RequestParam Double firstBid,
-                                     @RequestParam Long[] categoriesId,
+                                     @RequestParam Long categoryId,
                                      @RequestParam Double longitude,
                                      @RequestParam Double latitude,
                                      @RequestParam String locationTitle,
@@ -219,33 +219,29 @@ public class ItemController extends BaseController{
         }
 
 
-        if (categoriesId != null && categoriesId.length > 5) {
+        if (categoryId != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "You cannot set more than 5 categories for an item"
-            ));
-        }
-        else if(categoriesId != null && categoriesId.length == 0){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                    "Error",
-                    "You need to set at least one category for an item"
+                    "You have to set a category"
             ));
         }
         else{
 
-            for(Long id: categoriesId){
-                ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
-
-                if(category == null) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-                            "Error",
-                            "Category not found. Invalid category Id"
-                    ));
-                }
-                category.getItems().add(item);
-                item.getCategories().add(category);
-                itemCategoryRepository.save(category);
+            ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(categoryId));
+            if(category == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                        "Error",
+                        "Category not found"
+                ));
             }
+
+            ItemCategory cat = category;
+            do{
+                item.getCategories().add(cat);
+                cat.getItems().add(item);
+                itemCategoryRepository.save(cat);
+                cat = cat.getParent();
+            }while(cat != null);
         }
 
         if(media != null){
@@ -310,7 +306,7 @@ public class ItemController extends BaseController{
      * @param name - optionally new name
      * @param buyPrice - optionally new buy price
      * @param firstBid - optionally new first bid
-     * @param categoriesId - optionally new categories
+     * @param categoryId - optionally new categories
      * @param endsAt - optionally new auction ending date
      * @param description - optionally new description
      * @return the modified item
@@ -320,7 +316,7 @@ public class ItemController extends BaseController{
                                      @Nullable @RequestParam String name,
                                      @Nullable @RequestParam Double buyPrice,
                                      @Nullable @RequestParam Double firstBid,
-                                     @Nullable @RequestParam Long[] categoriesId,
+                                     @Nullable @RequestParam Long categoryId,
                                      @Nullable @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date endsAt,
                                      @Nullable @RequestParam String description) {
 
@@ -376,29 +372,23 @@ public class ItemController extends BaseController{
         }
 
 
-        if(categoriesId != null){
+        if(categoryId != null){
 
-            if (categoriesId.length > 5) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+            ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(categoryId));
+            if(category == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                         "Error",
-                        "You cannot set more than 5 categories for an item"
+                        "Category not found"
                 ));
             }
 
-            item.getCategories().clear();
-            for(Long id: categoriesId) {
-                ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
-
-                if(category == null) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-                            "Error",
-                            "Category not found. Invalid category Id"
-                    ));
-                }
-                item.getCategories().add(category);
-                category.getItems().add(item);
-                itemCategoryRepository.save(category);
-            }
+            ItemCategory cat = category;
+            do{
+                item.getCategories().add(cat);
+                cat.getItems().add(item);
+                itemCategoryRepository.save(cat);
+                cat = cat.getParent();
+            }while(cat != null);
         }
 
         itemRepository.save(item);

@@ -7,7 +7,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,7 +23,12 @@ public class ItemCategory extends AuditModel {
     @Column(name = "category_name")
     private String name;
 
+    private ItemCategory parent = null;
+
+    @OneToMany
+    private List<ItemCategory> subcategories = new ArrayList<>();
+
     @ManyToMany(mappedBy = "categories")
     @JsonIgnore
-    private Set<Item> items = new HashSet<>();
+    private List<Item> items = new ArrayList<>();
 }

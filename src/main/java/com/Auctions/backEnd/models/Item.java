@@ -36,11 +36,7 @@ public class Item extends AuditModel implements Serializable {
     private Double firstBid;
 
     @ManyToMany
-//    @JoinTable(
-//            name = "item_category",
-//            joinColumns = @JoinColumn(name = "item_id"),
-//            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<ItemCategory> categories = new HashSet<>();
+    private List<ItemCategory> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "item")
     @OrderBy(value = "offer DESC")

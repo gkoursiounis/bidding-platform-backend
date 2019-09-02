@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -166,7 +167,8 @@ public class AdminController extends BaseController{
      * @return a new item category
      */
     @PostMapping("/newCategory")
-    public ResponseEntity createItemCategory(@RequestParam String name){
+    public ResponseEntity createItemCategory(@RequestParam String name,
+                                             @Nullable @RequestParam long categoryId){
 
         User requester = requestUser();
 
@@ -194,6 +196,20 @@ public class AdminController extends BaseController{
 
         ItemCategory category = new ItemCategory();
         category.setName(name);
+
+        if(category != null){
+            ItemCategory parent = itemCategoryRepository.findItemCategoryById(categoryId);
+            if(parent != null){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                        "Error",
+                        "Parent category does not exist"
+                ));
+            }
+
+            parent.getSubcategories().add(category);
+            category.setParent(parent);
+            itemCategoryRepository.save(parent);
+        }
         itemCategoryRepository.save(category);
 
         return ResponseEntity.ok(category);
