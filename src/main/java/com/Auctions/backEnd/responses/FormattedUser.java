@@ -15,6 +15,7 @@ import java.util.Date;
 public class FormattedUser {
             private Long id;
     @Setter private String username;
+    @Setter private String email;
     @Setter private String firstName;
     @Setter private String lastName;
     @Setter private String telNumber;
@@ -27,6 +28,7 @@ public class FormattedUser {
     public FormattedUser(User user) {
         this.id= user.getId();
         this.username = user.getUsername();
+        this.email = user.getAccount().getEmail();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.telNumber = user.getTelNumber();
@@ -37,11 +39,12 @@ public class FormattedUser {
         this.admin = user.isAdmin();
     }
 
-    public FormattedUser(Long id, String userName, String firstName, String lastName,
+    public FormattedUser(Long id, String username, String firstName, String lastName,
                          String telNumber, String taxNumber, Boolean verified, Date createdAt,
-                         Geolocation location, Boolean admin){
+                         Geolocation location, Boolean admin, String email){
         this.id = id;
-        this.username = userName;
+        this.username = username;
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.telNumber = telNumber;

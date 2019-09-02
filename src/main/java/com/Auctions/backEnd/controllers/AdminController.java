@@ -166,9 +166,9 @@ public class AdminController extends BaseController{
      * @param name - the name of the new category
      * @return a new item category
      */
-    @PostMapping("/newCategory")
-    public ResponseEntity createItemCategory(@RequestParam String name,
-                                             @Nullable @RequestParam long categoryId){
+    @PostMapping("/newCategory/{categoryId}")
+    public ResponseEntity createItemCategory(@PathVariable (value = "categoryId") long categoryId,
+                                             @RequestParam String name){
 
         User requester = requestUser();
 
@@ -197,19 +197,17 @@ public class AdminController extends BaseController{
         ItemCategory category = new ItemCategory();
         category.setName(name);
 
-        if(category != null){
-            ItemCategory parent = itemCategoryRepository.findItemCategoryById(categoryId);
-            if(parent != null){
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                        "Error",
-                        "Parent category does not exist"
-                ));
-            }
-
-            parent.getSubcategories().add(category);
-            category.setParent(parent);
-            itemCategoryRepository.save(parent);
+        ItemCategory parent = itemCategoryRepository.findItemCategoryById(categoryId);
+        if(parent != null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "Parent category does not exist"
+            ));
         }
+
+        parent.getSubcategories().add(category);
+        category.setParent(parent);
+        itemCategoryRepository.save(parent);
         itemCategoryRepository.save(category);
 
         return ResponseEntity.ok(category);

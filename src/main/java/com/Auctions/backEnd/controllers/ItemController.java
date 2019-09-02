@@ -92,6 +92,8 @@ public class ItemController extends BaseController{
      */
     @GetMapping("/allCategories")
     public ResponseEntity getAllCategoriesNames(){
+
+        ItemCategory root = itemCategoryRepository.findItemCategoryByName("All Categories");
         return ResponseEntity.ok(itemCategoryRepository.findAll());
     }
 
@@ -241,7 +243,7 @@ public class ItemController extends BaseController{
                 cat.getItems().add(item);
                 itemCategoryRepository.save(cat);
                 cat = cat.getParent();
-            }while(cat != null);
+            }while(!cat.getName().equals("All categories"));
         }
 
         if(media != null){
