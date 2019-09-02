@@ -36,12 +36,36 @@ public class UserController extends BaseController{
      *
      * @return user details
      */
-    @GetMapping()
+    @GetMapping("/{usernae}")
     public ResponseEntity getUserDetails() {
 
         User requester = requestUser();
         return ResponseEntity.ok(new FormattedUser(requester));
     }
+
+    @GetMapping("/{username}")
+    public ResponseEntity getUserDetails(@PathVariable String username) {
+
+        User requester = requestUser();
+        User user = userRepository.findByAccount_Username(username);
+
+        if (user == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "User not found!"
+            ));
+        }
+
+        if (requester.getUsername().equals(username) || requester.isAdmin()) {
+            return ResponseEntity.ok(new FormattedUser(requester));
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                "Error",
+                "You cannot see the details of this profile"
+        ));
+    }
+
 
 
     /**

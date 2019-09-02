@@ -2,10 +2,7 @@ package com.Auctions.backEnd;
 
 import com.Auctions.backEnd.controllers.BaseController;
 import com.Auctions.backEnd.models.*;
-import com.Auctions.backEnd.repositories.AccountRepository;
-import com.Auctions.backEnd.repositories.ItemRepository;
-import com.Auctions.backEnd.repositories.NotificationRepository;
-import com.Auctions.backEnd.repositories.UserRepository;
+import com.Auctions.backEnd.repositories.*;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -104,6 +101,9 @@ public class BackEndApplication implements CommandLineRunner {
 	private NotificationRepository notificationRepository;
 
 	@Autowired
+	private ItemCategoryRepository itemCategoryRepository;
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 
@@ -143,6 +143,10 @@ public class BackEndApplication implements CommandLineRunner {
 
 				userRepository.save(user);
 				accountRepository.save(admin);
+
+				ItemCategory root = new ItemCategory();
+				root.setName("All categories");
+				itemCategoryRepository.save(root);
 
 				System.err.println("Creating admin account...");
 
