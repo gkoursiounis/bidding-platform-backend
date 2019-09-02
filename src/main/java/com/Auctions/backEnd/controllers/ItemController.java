@@ -86,7 +86,11 @@ public class ItemController extends BaseController{
 
 
     /**
-     * A User can get a list of names of every existing category
+     * A User can get a list of all the categories
+     * We have a predefined category call 'All Categories'
+     * which acts like a root at the category tree. Every new
+     * category is included in the subcategories list of
+     * 'All Categories' or one of its children
      *
      * @return list of all items
      */
@@ -94,7 +98,7 @@ public class ItemController extends BaseController{
     public ResponseEntity getAllCategoriesNames(){
 
         ItemCategory root = itemCategoryRepository.findItemCategoryByName("All Categories");
-        return ResponseEntity.ok(itemCategoryRepository.findAll());
+        return ResponseEntity.ok(root);
     }
 
 
