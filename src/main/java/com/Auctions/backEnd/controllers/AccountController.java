@@ -1,7 +1,9 @@
 package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.Account;
+import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.AccountRepository;
+import com.Auctions.backEnd.repositories.UserRepository;
 import com.Auctions.backEnd.requests.AccountRequest;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.responses.Valid;
@@ -18,11 +20,14 @@ public class AccountController extends BaseController{
 
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public AccountController(PasswordEncoder passwordEncoder, AccountRepository accountRepository) {
+    public AccountController(PasswordEncoder passwordEncoder, AccountRepository accountRepository,
+                             UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
     }
 
 
@@ -38,7 +43,14 @@ public class AccountController extends BaseController{
      */
     @GetMapping("/checkUsername")
     public ResponseEntity checkUsername(@RequestParam(value="username") String username) {
-        if (accountRepository.findByUsername(username) != null) {
+//        Account account = accountRepository.findByUsername(username);
+//        if (account != null) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Valid(false));
+//        } else {
+//            return ResponseEntity.ok(new Valid(true));
+//        }
+        User  user = userRepository.findByAccount_Username(username);
+        if (user != null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Valid(false));
         } else {
             return ResponseEntity.ok(new Valid(true));

@@ -251,6 +251,7 @@ public class AdminController extends BaseController{
         accountRepository.delete(user.getAccount());
         userRepository.delete(user);
 
+
         return ResponseEntity.ok(new Message(
                 "Ok",
                 "User has been deleted"

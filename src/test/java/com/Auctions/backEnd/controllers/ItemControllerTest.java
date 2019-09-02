@@ -1557,4 +1557,14 @@ public class ItemControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(0)));
     }
+
+    @Test
+    @DisplayName("Get older auctions 1")
+    public void category() throws Exception {
+
+        mvc.perform(get("/item/allCategories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+    }
 }

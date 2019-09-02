@@ -172,9 +172,10 @@ public class TestUtils {
 	 * @throws Exception - mvc.perform throws exception
 	 */
 	public static ResultActions getUser(@NonNull final MockMvc mvc,
-										@NonNull final String token) throws Exception {
+										@NonNull final String token,
+										@NonNull final String username) throws Exception {
 
-		return mvc.perform(get("/user")
+		return mvc.perform(get("/user/" + username)
 				.header("Authorization", token));
 	}
 
@@ -186,9 +187,10 @@ public class TestUtils {
      * @throws Exception - mvc.perform throws Exception
      */
 	public static String getUserToString(@NonNull final MockMvc mvc,
-										 @NonNull final String token) throws Exception{
+										 @NonNull final String token,
+										 @NonNull final String username) throws Exception{
 
-        return ((JSONObject) new JSONParser().parse(getUser(mvc, token)
+        return ((JSONObject) new JSONParser().parse(getUser(mvc, token, username)
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString()))
                 .get("id").toString();

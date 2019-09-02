@@ -2,6 +2,8 @@ package com.Auctions.backEnd.repositories;
 
 import  com.Auctions.backEnd.models.Item;
 import com.Auctions.backEnd.models.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +22,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'true' and i.seller = :requester")
     List<Item> getAllcompletedAuctions(User requester);
+
+    @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false' ORDER BY i.createdAt DESC")
+    Page<Item> getAllOpenAuctions(Pageable pageable);
 
     @Query("SELECT i FROM Item i WHERE i.auctionCompleted = 'false' ORDER BY i.createdAt DESC")
     List<Item> getAllOpenAuctions();

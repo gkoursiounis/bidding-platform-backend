@@ -6,6 +6,7 @@ import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.File.DBFileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,8 +70,8 @@ public class ItemController extends BaseController{
      * @return list of items
      */
     @GetMapping("/openAuctions")
-    public ResponseEntity getAllOpenAuctions(){
-        return ResponseEntity.ok(itemRepository.getAllOpenAuctions());
+    public ResponseEntity getAllOpenAuctions(Pageable pageable){
+        return ResponseEntity.ok(itemRepository.getAllOpenAuctions(pageable));
     }
 
 
@@ -87,17 +88,17 @@ public class ItemController extends BaseController{
 
     /**
      * A User can get a list of all the categories
-     * We have a predefined category call 'All Categories'
+     * We have a predefined category call 'All categories'
      * which acts like a root at the category tree. Every new
      * category is included in the subcategories list of
-     * 'All Categories' or one of its children
+     * 'All categories' or one of its children
      *
      * @return list of all items
      */
     @GetMapping("/allCategories")
     public ResponseEntity getAllCategoriesNames(){
 
-        ItemCategory root = itemCategoryRepository.findItemCategoryByName("All Categories");
+        ItemCategory root = itemCategoryRepository.findItemCategoryByName("All categories");
         return ResponseEntity.ok(root);
     }
 
@@ -107,7 +108,7 @@ public class ItemController extends BaseController{
     public ResponseEntity getFeed() {
 
         PageRequest.of(0, 5);
-        List<Item> feed = itemRepository.getAllOpenAuctions();
+        List<Item> feed = itemRepository.getAll();
 
         if(feed.size() > 5){
 

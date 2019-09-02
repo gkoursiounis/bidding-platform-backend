@@ -111,7 +111,7 @@ public class UserControllerTest {
     @Test
     @DisplayName("Successful get user")
     public void getUser1() throws Exception {
-        getUser(mvc, user1)
+        getUser(mvc, user1,"user1")
                 .andExpect(status().isOk());
 
     }
@@ -126,7 +126,7 @@ public class UserControllerTest {
     @Test
     @DisplayName("User doesn't exist")
     public void getUser2() throws Exception {
-        getUser(mvc, user1)
+        getUser(mvc, user1,"user1")
                 .andExpect(status().isNotFound());
 
     }
@@ -140,7 +140,7 @@ public class UserControllerTest {
     @Test
     @DisplayName("User is the requested User")
     public void getUser3() throws Exception {
-        getUser(mvc, user3)
+        getUser(mvc, user3,"user3")
                 .andExpect(status().isOk());
 
     }
