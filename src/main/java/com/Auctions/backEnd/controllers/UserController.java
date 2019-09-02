@@ -36,13 +36,6 @@ public class UserController extends BaseController{
      *
      * @return user details
      */
-    @GetMapping("/{usernae}")
-    public ResponseEntity getUserDetails() {
-
-        User requester = requestUser();
-        return ResponseEntity.ok(new FormattedUser(requester));
-    }
-
     @GetMapping("/{username}")
     public ResponseEntity getUserDetails(@PathVariable String username) {
 
