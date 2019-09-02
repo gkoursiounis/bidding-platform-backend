@@ -50,7 +50,7 @@ public class UserController extends BaseController{
         }
 
         if (requester.getUsername().equals(username) || requester.isAdmin()) {
-            return ResponseEntity.ok(new FormattedUser(requester));
+            return ResponseEntity.ok(new FormattedUser(user));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
