@@ -194,8 +194,6 @@ public class AdminController extends BaseController{
             ));
         }
 
-        ItemCategory category = new ItemCategory();
-
         ItemCategory parent = itemCategoryRepository.findItemCategoryById(categoryId);
         if(parent == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
@@ -204,6 +202,7 @@ public class AdminController extends BaseController{
             ));
         }
 
+        ItemCategory category = new ItemCategory();
         category.setName(name);
         category.setParent(parent);
         itemCategoryRepository.save(category);

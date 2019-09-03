@@ -23,16 +23,17 @@ import java.util.TreeSet;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "geolocation")
-//@XmlAccessorType(XmlAccessType.FIELD)
-//@XmlRootElement(name = "Location")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "Location")
 public class Geolocation extends AuditModel {
 
-   // @XmlAttribute(name = "Longitude")
+    @XmlAttribute(name = "Longitude")
     private double longitude;
 
-    //@XmlAttribute(name = "Latitude")
+    @XmlAttribute(name = "Latitude")
     private double latitude;
 
+    @XmlAttribute(name = "Location")
     private String locationTitle;
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "location", orphanRemoval = true)

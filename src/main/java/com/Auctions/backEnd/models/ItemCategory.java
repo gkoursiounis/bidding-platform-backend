@@ -2,6 +2,7 @@ package com.Auctions.backEnd.models;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,11 +27,10 @@ public class ItemCategory extends AuditModel  {
     private String name;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JsonIgnore
+    @JsonIgnoreProperties("subcategories")
     private ItemCategory parent = null;
 
     @OneToMany(cascade = CascadeType.PERSIST)
-    @JsonIgnore
     private List<ItemCategory> subcategories = new ArrayList<>();
 
     @ManyToMany(mappedBy = "categories")

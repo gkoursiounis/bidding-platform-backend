@@ -18,8 +18,8 @@ import java.util.*;
 @Setter
 @Getter
 @Table(name = "item")
-//@XmlAccessorType(XmlAccessType.FIELD)
-//@XmlRootElement(name = "Item")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "Item")
 @NoArgsConstructor
 public class Item extends AuditModel implements Serializable {
 

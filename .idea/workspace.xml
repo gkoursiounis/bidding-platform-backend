@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7fd5b0c1-8e05-4e06-9316-1ef9af2c730c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/testdb.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/db/testdb.mv.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/testdb.trace.db" beforeDir="false" afterPath="$PROJECT_DIR$/db/testdb.trace.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Geolocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Geolocation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Item.java" afterDir="false" />
@@ -25,28 +23,34 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/ItemCategory.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/BidController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="31" column="44" selection-start-line="31" selection-start-column="44" selection-end-line="31" selection-end-column="44" />
+            <state relative-caret-position="145">
+              <caret line="121" column="3" lean-forward="true" selection-start-line="121" selection-start-column="3" selection-end-line="121" selection-end-column="3" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application.properties">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="5" column="69" selection-start-line="5" selection-start-column="64" selection-end-line="5" selection-end-column="69" />
+            <state relative-caret-position="-2069">
+              <caret line="88" lean-forward="true" selection-start-line="88" selection-end-line="88" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Item.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="206" column="7" lean-forward="true" selection-start-line="206" selection-start-column="7" selection-end-line="208" selection-end-column="46" />
+            <state relative-caret-position="189">
+              <caret line="52" column="4" lean-forward="true" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="33" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -57,10 +61,52 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/AdminControllerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="547" column="15" lean-forward="true" selection-start-line="541" selection-start-column="6" selection-end-line="547" selection-end-column="15" />
+            <state relative-caret-position="261">
+              <caret line="551" column="48" lean-forward="true" selection-start-line="551" selection-start-column="48" selection-end-line="551" selection-end-column="48" />
               <folding>
                 <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="159">
+              <caret line="204" column="51" selection-start-line="204" selection-start-column="51" selection-end-line="204" selection-end-column="51" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/ItemCategory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="29" column="40" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Geolocation.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="261">
+              <caret line="35" column="34" selection-start-line="35" selection-start-column="34" selection-end-line="35" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/media/book.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="18" column="14" lean-forward="true" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
+              <folding>
+                <element signature="e#148#153#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -164,12 +210,12 @@
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/BidController.java" />
         <option value="$PROJECT_DIR$/media/book.xml" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Item.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Geolocation.java" />
         <option value="$PROJECT_DIR$/application.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/ItemCategory.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Geolocation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Item.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/AdminControllerTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/ItemCategory.java" />
       </list>
     </option>
   </component>
@@ -415,9 +461,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.AdminControllerTest.createItemCategory1" />
+        <item itemvalue="JUnit.BidControllerTest.test" />
         <item itemvalue="JUnit.ItemControllerTest.category" />
         <item itemvalue="Application.BackEndApplication" />
-        <item itemvalue="JUnit.BidControllerTest.test" />
         <item itemvalue="JUnit.BidControllerTest.makeBid1" />
       </list>
     </recent_temporary>
@@ -436,21 +482,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 16h 37m 42s.xml">
-      <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 16h 38m 35s.xml">
-      <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 16h 39m 17s.xml">
-      <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 16h 39m 43s.xml">
-      <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 16h 40m 38s.xml">
-      <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 16h 41m 23s.xml">
       <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
     </history-entry>
@@ -464,6 +495,21 @@
       <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
     </history-entry>
     <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 16h 47m 13s.xml">
+      <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 16h 48m 13s.xml">
+      <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BidControllerTest_test - 2019.09.03 at 17h 01m 04s.xml">
+      <configuration name="BidControllerTest.test" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 17h 02m 21s.xml">
+      <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 17h 03m 28s.xml">
+      <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="AdminControllerTest_createItemCategory1 - 2019.09.03 at 17h 05m 20s.xml">
       <configuration name="AdminControllerTest.createItemCategory1" configurationId="JUnit" />
     </history-entry>
   </component>
@@ -496,7 +542,7 @@
       <window_info anchor="bottom" id="Version Control" order="6" weight="0.3289689" />
       <window_info anchor="bottom" id="ConsoleMavenPlugin" order="7" weight="0.32779455" />
       <window_info anchor="bottom" id="TODO" order="8" weight="0.36824876" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.5981873" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.336858" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5015129" side_tool="true" weight="0.36006546" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.29305136" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -664,16 +710,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AuthController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1819">
-          <caret line="35" column="27" selection-start-line="35" selection-start-column="27" selection-end-line="35" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_151/src.zip!/java/util/function/Predicate.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
@@ -828,18 +864,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/BidController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="109">
-          <caret line="126" column="55" selection-start-line="126" selection-start-column="55" selection-end-line="126" selection-end-column="55" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4165#4166#0" expanded="true" />
-            <element signature="e#4230#4231#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Bid.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -887,30 +911,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/media/book.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="18" column="14" lean-forward="true" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
-          <folding>
-            <element signature="e#148#153#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/ItemControllerTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="472">
           <caret line="1564" column="12" selection-start-line="1564" selection-start-column="12" selection-end-line="1564" selection-end-column="12" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="86" column="90" selection-start-line="86" selection-start-column="8" selection-end-line="86" selection-end-column="90" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -927,44 +931,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Geolocation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="32" column="6" selection-start-line="32" selection-start-column="6" selection-end-line="32" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/spring-web/5.1.5.RELEASE/spring-web-5.1.5.RELEASE.jar!/org/springframework/web/method/support/InvocableHandlerMethod.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="96">
           <caret line="107" selection-start-line="107" selection-end-line="107" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/AdminControllerTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="547" column="15" lean-forward="true" selection-start-line="541" selection-start-column="6" selection-end-line="547" selection-end-column="15" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Item.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="25" column="3" lean-forward="true" selection-start-line="25" selection-start-column="3" selection-end-line="25" selection-end-column="52" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/ItemCategory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="31" column="44" selection-start-line="31" selection-start-column="44" selection-end-line="31" selection-end-column="44" />
         </state>
       </provider>
     </entry>
@@ -975,13 +945,87 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java">
+    <entry file="file://$PROJECT_DIR$/media/book.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="206" column="7" lean-forward="true" selection-start-line="206" selection-start-column="7" selection-end-line="208" selection-end-column="46" />
+        <state relative-caret-position="255">
+          <caret line="18" column="14" lean-forward="true" selection-start-line="18" selection-start-column="14" selection-end-line="18" selection-end-column="14" />
+          <folding>
+            <element signature="e#148#153#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Geolocation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="35" column="34" selection-start-line="35" selection-start-column="34" selection-end-line="35" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/BidController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="121" column="3" lean-forward="true" selection-start-line="121" selection-start-column="3" selection-end-line="121" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2069">
+          <caret line="88" lean-forward="true" selection-start-line="88" selection-end-line="88" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AuthController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2890">
+          <caret line="35" column="27" selection-start-line="35" selection-start-column="27" selection-end-line="35" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/AdminControllerTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="551" column="48" lean-forward="true" selection-start-line="551" selection-start-column="48" selection-end-line="551" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Item.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="52" column="4" lean-forward="true" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="33" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="204" column="51" selection-start-line="204" selection-start-column="51" selection-end-line="204" selection-end-column="51" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/ItemCategory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="29" column="40" selection-start-line="29" selection-start-column="40" selection-end-line="29" selection-end-column="40" />
         </state>
       </provider>
     </entry>

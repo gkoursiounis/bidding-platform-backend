@@ -546,6 +546,11 @@ public class AdminControllerTest {
                 .param("name", "clothes")
                 .header("Authorization", user3))
                 .andExpect(status().isOk());
+
+        mvc.perform(get("/item/allCategories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
     }
 
 
