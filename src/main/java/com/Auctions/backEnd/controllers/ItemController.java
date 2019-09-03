@@ -226,7 +226,7 @@ public class ItemController extends BaseController{
         }
 
 
-        if (categoryId != null) {
+        if (categoryId == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "You have to set a category"
@@ -248,7 +248,7 @@ public class ItemController extends BaseController{
                 cat.getItems().add(item);
                 itemCategoryRepository.save(cat);
                 cat = cat.getParent();
-            }while(!cat.getName().equals("All categories"));
+            }while(cat != null && !cat.getName().equals("All categories"));
         }
 
         if(media != null){
@@ -395,7 +395,7 @@ public class ItemController extends BaseController{
                 cat.getItems().add(item);
                 itemCategoryRepository.save(cat);
                 cat = cat.getParent();
-            }while(cat != null);
+            }while(cat != null && !cat.getName().equals("All categories"));
         }
 
         itemRepository.save(item);

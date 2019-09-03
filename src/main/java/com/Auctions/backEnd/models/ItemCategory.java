@@ -25,7 +25,7 @@ public class ItemCategory extends AuditModel {
 
     private ItemCategory parent = null;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<ItemCategory> subcategories = new ArrayList<>();
 
     @ManyToMany(mappedBy = "categories")

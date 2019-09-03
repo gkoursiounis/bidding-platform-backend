@@ -7,6 +7,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.*;
 
@@ -14,6 +18,8 @@ import java.util.*;
 @Setter
 @Getter
 @Table(name = "item")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "Item")
 @NoArgsConstructor
 public class Item extends AuditModel implements Serializable {
 
@@ -24,15 +30,18 @@ public class Item extends AuditModel implements Serializable {
 
     @NotNull
     @Column(name = "item_name", length = 50)
+    @XmlElement(name = "Name")
     private String name;
 
     @Column(name = "current_price")
+    @XmlElement(name = "Currently")
     private Double currently;
 
     @Column(name = "buy_price")
     private Double buyPrice;
 
     @Column(name = "first_bid")
+    @XmlElement(name = "First_Bid")
     private Double firstBid;
 
     @ManyToMany
@@ -41,6 +50,7 @@ public class Item extends AuditModel implements Serializable {
     @OneToMany(mappedBy = "item")
     @OrderBy(value = "offer DESC")
     @JsonIgnoreProperties("item")
+    @XmlElement(name = "Bids")
     private Set<Bid> bids = new TreeSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -51,6 +61,7 @@ public class Item extends AuditModel implements Serializable {
     private Boolean auctionCompleted = false;
 
     @Column(name = "description")
+    @XmlElement(name = "Description")
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -59,6 +70,7 @@ public class Item extends AuditModel implements Serializable {
     private List<DBFile> media = new ArrayList<>();         //TODO how to delete picture?
 
     @OneToOne
+    @XmlElement(name = "Location")
     private Geolocation location;
 
     private int sellerRating;

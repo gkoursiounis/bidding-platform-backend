@@ -198,7 +198,7 @@ public class AdminController extends BaseController{
         category.setName(name);
 
         ItemCategory parent = itemCategoryRepository.findItemCategoryById(categoryId);
-        if(parent != null){
+        if(parent == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
                     "Parent category does not exist"

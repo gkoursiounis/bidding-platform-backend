@@ -84,7 +84,8 @@ public class BidControllerTest {
     @DisplayName("Successful item creation")
     public void makeBid1() throws Exception {
 
-        String item_id = TestUtils.makeItem(mvc, categoryId, user1);
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item_id = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
 
         mvc.perform(post("/bid/makeBid/" + item_id)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -218,6 +219,22 @@ public class BidControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user2))
                 .andExpect(status().isNotFound());
+
+    }
+
+
+    @Test
+    public void test() throws Exception {
+
+        mvc.perform(get("/bid/test")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user2))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/bid/test1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user2))
+                .andExpect(status().isOk());
 
     }
 }

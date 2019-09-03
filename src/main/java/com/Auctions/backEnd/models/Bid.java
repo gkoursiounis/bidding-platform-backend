@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.*;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -17,6 +18,8 @@ import java.util.Date;
 @Getter
 @Table(name = "bid")
 @NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "Bid")
 public class Bid extends AuditModel {
 
     @ManyToOne
@@ -24,9 +27,11 @@ public class Bid extends AuditModel {
     private Item item;
 
     @ManyToOne
+   // @XmlElement(name = "Bidder")
     private User bidder;
 
     @Column(name = "offer_amount")
+    @XmlAttribute(name = "Amount")
     private Double offer;
 
     public static final Comparator<Bid> cmp = Comparator.comparingDouble(Bid::getOffer);

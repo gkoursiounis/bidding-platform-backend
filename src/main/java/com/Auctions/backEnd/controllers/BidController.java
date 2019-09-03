@@ -9,6 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Date;
 
 @RestController
@@ -19,13 +23,15 @@ public class BidController extends BaseController{
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BidRepository bidRepository;
+    private final GeolocationRepository geolocationRepository;
 
     @Autowired
     public BidController(UserRepository userRepository, ItemRepository itemRepository,
-                          BidRepository bidRepository) {
+                          BidRepository bidRepository, GeolocationRepository geolocationRepository) {
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.bidRepository = bidRepository;
+        this.geolocationRepository = geolocationRepository;
     }
 
 
@@ -109,5 +115,22 @@ public class BidController extends BaseController{
         itemRepository.save(item);
 
         return ResponseEntity.ok(new BidRes(bid, item.isAuctionCompleted()));
+    }
+
+
+    @GetMapping("/test")
+    public ResponseEntity test() throws JAXBException, IOException {
+        JAXBContext context = JAXBContext.newInstance(Bid.class);
+        Item item = (Item) context.createUnmarshaller()
+                .unmarshal(new FileReader("media/book.xml"));
+
+        geolocationRepository.save(item.getLocation());
+        itemRepository.save(item);
+        return ResponseEntity.ok(item);
+    }
+
+    @GetMapping("/test1")
+    public ResponseEntity test1() {
+        return ResponseEntity.ok(itemRepository.findAll());
     }
 }
