@@ -10,10 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -23,25 +20,27 @@ import java.util.TreeSet;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "geolocation")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "Location")
+//@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlRootElement(name = "Location")
 public class Geolocation extends AuditModel {
 
-    @XmlAttribute(name = "Longitude")
+//    @XmlAttribute(name = "Longitude")
     private double longitude;
 
-    @XmlAttribute(name = "Latitude")
+//    @XmlAttribute(name = "Latitude")
     private double latitude;
 
-    @XmlAttribute(name = "Location")
+//    @XmlElement(name = "Location")
     private String locationTitle;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "location", orphanRemoval = true)
+    @OneToMany(mappedBy = "location")
     @JsonIgnore
+//    @XmlTransient
     private final Set<Item> items = new TreeSet<>();
 
     @OneToMany(mappedBy = "address")
     @JsonIgnore
+//    @XmlTransient
     private final Set<User> users = new TreeSet<>();
 
     public Geolocation(Double longitude, Double latitude, String locationTitle) {

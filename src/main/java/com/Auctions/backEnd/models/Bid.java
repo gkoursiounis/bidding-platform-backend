@@ -18,8 +18,8 @@ import java.util.Date;
 @Getter
 @Table(name = "bid")
 @NoArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "Bid")
+//@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlRootElement(name = "Bid")
 public class Bid extends AuditModel {
 
     @ManyToOne
@@ -31,7 +31,7 @@ public class Bid extends AuditModel {
     private User bidder;
 
     @Column(name = "offer_amount")
-    @XmlAttribute(name = "Amount")
+//    @XmlAttribute(name = "Amount")
     private Double offer;
 
     public static final Comparator<Bid> cmp = Comparator.comparingDouble(Bid::getOffer);

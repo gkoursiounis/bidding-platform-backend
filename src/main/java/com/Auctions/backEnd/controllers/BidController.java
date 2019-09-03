@@ -88,7 +88,7 @@ public class BidController extends BaseController{
                     "You cannot bid at your own auction"
             ));
         }
-
+//TODO fix
         if(java.lang.Double.compare(offer, item.getCurrently()) <= 0){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
@@ -120,7 +120,7 @@ public class BidController extends BaseController{
 
     @GetMapping("/test")
     public ResponseEntity test() throws JAXBException, IOException {
-        JAXBContext context = JAXBContext.newInstance(Bid.class);
+        JAXBContext context = JAXBContext.newInstance(Item.class);
         Item item = (Item) context.createUnmarshaller()
                 .unmarshal(new FileReader("media/book.xml"));
 

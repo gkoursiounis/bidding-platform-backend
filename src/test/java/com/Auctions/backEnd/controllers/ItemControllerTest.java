@@ -1100,7 +1100,8 @@ public class ItemControllerTest {
     @DisplayName("Modify item - name")
     public void modifyItem1() throws Exception {
 
-        String item = TestUtils.makeItem(mvc, categoryId, user1);
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
 
         mvc.perform(patch("/item/" + item)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -1137,7 +1138,8 @@ public class ItemControllerTest {
     @DisplayName("Modify item - unauthorized user")
     public void modifyItem3() throws Exception {
 
-        String item = TestUtils.makeItem(mvc, categoryId, user1);
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
 
         mvc.perform(patch("/item/" + item)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -1156,7 +1158,8 @@ public class ItemControllerTest {
     @DisplayName("Modify item - after the first bid")
     public void modifyItem4() throws Exception {
 
-        String item = TestUtils.makeItem(mvc, categoryId, user1);
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
 
         mvc.perform(post("/bid/makeBid/" + item)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -1200,7 +1203,8 @@ public class ItemControllerTest {
     @DisplayName("Modify item - description")
     public void modifyItem6() throws Exception {
 
-        String item = TestUtils.makeItem(mvc, categoryId, user1);
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
 
         mvc.perform(patch("/item/" + item)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -1219,7 +1223,8 @@ public class ItemControllerTest {
     @DisplayName("Modify item - new buyPrice")
     public void modifyItem7() throws Exception {
 
-        String item = TestUtils.makeItem(mvc, categoryId, user1);
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
 
         mvc.perform(patch("/item/" + item)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -1297,7 +1302,8 @@ public class ItemControllerTest {
     @DisplayName("Modify item - new firstBid")
     public void modifyItem11() throws Exception {
 
-        String item = TestUtils.makeItem(mvc, categoryId, user1);
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
 
         mvc.perform(patch("/item/" + item)
                 .contentType(MediaType.APPLICATION_JSON)
