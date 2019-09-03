@@ -20,7 +20,6 @@ import java.util.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Item")
 @NoArgsConstructor
-
 public class Item extends AuditModel implements Serializable {
 
     public static final long serialVersionUID = 69L;
@@ -57,7 +56,7 @@ public class Item extends AuditModel implements Serializable {
     @OneToMany(mappedBy = "item")
     @OrderBy(value = "offer DESC")
     @JsonIgnoreProperties("item")
-//    @XmlElement(name = "Bids")
+    @XmlElement(name = "Bids")
     private Set<Bid> bids = new TreeSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)

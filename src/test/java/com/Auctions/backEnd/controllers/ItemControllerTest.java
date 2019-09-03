@@ -1399,6 +1399,22 @@ public class ItemControllerTest {
 
 
     @Test
+    @DisplayName("Modify item - new buyPrice > new firstBid - 2")
+    public void modifyItem16() throws Exception {
+
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
+
+        mvc.perform(patch("/item/" + item)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("categoryId", ic.getId().toString())
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+
+    }
+
+
+    @Test
     @DisplayName("Get feed 1")
     public void getFeed1() throws Exception {
 

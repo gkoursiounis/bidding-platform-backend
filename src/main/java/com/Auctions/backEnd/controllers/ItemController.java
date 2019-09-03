@@ -391,6 +391,7 @@ public class ItemController extends BaseController{
                 ));
             }
 
+            item.getCategories().clear();
             ItemCategory cat = category;
             do{
                 item.getCategories().add(cat);
