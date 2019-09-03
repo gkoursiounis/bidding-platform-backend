@@ -33,7 +33,7 @@ public class Geolocation extends AuditModel {
 //    @XmlElement(name = "Location")
     private String locationTitle;
 
-    @OneToMany(mappedBy = "location")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
     @JsonIgnore
 //    @XmlTransient
     private final Set<Item> items = new TreeSet<>();

@@ -17,40 +17,41 @@ import java.util.*;
 @Setter
 @Getter
 @Table(name = "item")
-//@XmlAccessorType(XmlAccessType.FIELD)
-//@XmlRootElement(name = "Item")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "Item")
 @NoArgsConstructor
+
 public class Item extends AuditModel implements Serializable {
 
     public static final long serialVersionUID = 69L;
 
     @ManyToOne
     //@XmlElement(name = "Seller")
-//    @XmlTransient
+   @XmlTransient
     private User seller;
 
     @NotNull
     @Column(name = "item_name", length = 50)
-//    @XmlElement(name = "Name")
+    @XmlElement(name = "Name")
     private String name;
 
     @Column(name = "current_price")
-//    @XmlElement(name = "Currently")
-//    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
+    @XmlElement(name = "Currently")
+    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
     private Double currently;
 
     @Column(name = "buy_price")
-//    @XmlElement(name = "Buy_Price")
-//    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
+    @XmlElement(name = "Buy_Price")
+    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
     private Double buyPrice;
 
     @Column(name = "first_bid")
-//    @XmlElement(name = "First_Bid")
-//    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
+    @XmlElement(name = "First_Bid")
+    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
     private Double firstBid;
 
     @ManyToMany
-
+    @XmlTransient
     private List<ItemCategory> categories = new ArrayList<>();
 
     @OneToMany(mappedBy = "item")
@@ -67,7 +68,7 @@ public class Item extends AuditModel implements Serializable {
     private Boolean auctionCompleted = false;
 
     @Column(name = "description")
-//    @XmlElement(name = "Description")
+    @XmlElement(name = "Description")
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -76,7 +77,7 @@ public class Item extends AuditModel implements Serializable {
     private List<DBFile> media = new ArrayList<>();         //TODO how to delete picture?
 
     @OneToOne
-//    @XmlElement(name = "Location")
+    @XmlElement(name = "Location")
     private Geolocation location;
 
     private int sellerRating;
