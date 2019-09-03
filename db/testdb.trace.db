@@ -10,3 +10,94 @@ select item0_.id as id1_4_, item0_.created_at as created_2_4_, item0_.auction_co
 2019-08-27 20:16:49 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELECT ITEM0_.ID AS ID1_4_, ITEM0_.CREATED_AT AS CREATED_2_4_, ITEM0_.AUCTION_COMPLETED AS AUCTION_3_4_, ITEM0_.BIDDER_RATING AS BIDDER_R4_4_, ITEM0_.BUY_PRICE AS BUY_PRIC5_4_, ITEM0_.CURRENT_PRICE AS CURRENT_6_4_, ITEM0_.DESCRIPTION AS DESCRIPT7_4_, ITEM0_.ENDS_AT AS ENDS_AT8_4_, ITEM0_.FIRST_BID AS FIRST_BI9_4_, ITEM0_.LOCATION_ID AS LOCATIO12_4_, ITEM0_.ITEM_NAME AS ITEM_NA10_4_, ITEM0_.SELLER_ID AS SELLER_13_4_, ITEM0_.SELLER_RATING AS SELLER_11_4_ FROM ITEM ITEM0_ CROSS JOIN ITEM_CATEGORIES CATEGORIES1_, ITEM_CATEGORY ITEMCATEGO2_ WHERE ITEM0_.ID=CATEGORIES1_.ITEMS_ID AND CATEGORIES1_.CATEGORIES_ID=ITEMCATEGO2_.ID AND (? IN (.[*])) AND ITEM0_.AUCTION_COMPLETED='false' "; expected "NOT, EXISTS, INTERSECTS, SELECT, FROM, WITH"; SQL statement:
 select item0_.id as id1_4_, item0_.created_at as created_2_4_, item0_.auction_completed as auction_3_4_, item0_.bidder_rating as bidder_r4_4_, item0_.buy_price as buy_pric5_4_, item0_.current_price as current_6_4_, item0_.description as descript7_4_, item0_.ends_at as ends_at8_4_, item0_.first_bid as first_bi9_4_, item0_.location_id as locatio12_4_, item0_.item_name as item_na10_4_, item0_.seller_id as seller_13_4_, item0_.seller_rating as seller_11_4_ from item item0_ cross join item_categories categories1_, item_category itemcatego2_ where item0_.id=categories1_.items_id and categories1_.categories_id=itemcatego2_.id and (? in (.)) and item0_.auction_completed='false' [42001-197]
+2019-09-03 15:55:22 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PARENT BINARY(255)": "X'aced000573720028636f6d2e41756374696f6e732e6261636b456e642e6d6f64656c732e4974656d43617465676f7279c37e06f2c32f08d40200044c000569... (1235)"; SQL statement:
+insert into item_category (created_at, category_name, parent, id) values (?, ?, ?, ?) [22001-197]
+2019-09-03 15:59:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PARENT BINARY(255)": "X'aced000573720028636f6d2e41756374696f6e732e6261636b456e642e6d6f64656c732e4974656d43617465676f7279c37e06f2c32f08d40200044c000569... (1008)"; SQL statement:
+insert into item_category (created_at, category_name, parent, id) values (?, ?, ?, ?) [22001-197]
+2019-09-03 16:00:42 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PARENT BINARY(255)": "X'aced000573720028636f6d2e41756374696f6e732e6261636b456e642e6d6f64656c732e4974656d43617465676f7279c37e06f2c32f08d40200044c000569... (1008)"; SQL statement:
+insert into item_category (created_at, category_name, parent, id) values (?, ?, ?, ?) [22001-197]
+2019-09-03 16:03:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PARENT BINARY(255)": "X'aced000573720028636f6d2e41756374696f6e732e6261636b456e642e6d6f64656c732e4974656d43617465676f7279c37e06f2c32f08d40200044c000569... (1008)"; SQL statement:
+insert into item_category (created_at, category_name, parent, id) values (?, ?, ?, ?) [22001-197]
+2019-09-03 16:06:12 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PARENT BINARY(255)": "X'aced000573720028636f6d2e41756374696f6e732e6261636b456e642e6d6f64656c732e4974656d43617465676f7279c37e06f2c32f08d40200044c000569... (1008)"; SQL statement:
+insert into item_category (created_at, category_name, parent, id) values (?, ?, ?, ?) [22001-197]
+2019-09-03 16:08:01 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PARENT BINARY(255)": "X'aced000573720028636f6d2e41756374696f6e732e6261636b456e642e6d6f64656c732e4974656d43617465676f7279c37e06f2c32f08d40200044c000569... (1008)"; SQL statement:
+insert into item_category (created_at, category_name, parent, id) values (?, ?, ?, ?) [22001-197]
+2019-09-03 16:08:42 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PARENT BINARY(255)": "X'aced000573720028636f6d2e41756374696f6e732e6261636b456e642e6d6f64656c732e4974656d43617465676f7279c37e06f2c32f08d40200044c000569... (1008)"; SQL statement:
+insert into item_category (created_at, category_name, parent, id) values (?, ?, ?, ?) [22001-197]
+2019-09-03 16:32:14 jdbc[4]: exception
+org.h2.jdbc.JdbcSQLException: Database is already closed (to disable automatic closing at VM shutdown, add ";DB_CLOSE_ON_EXIT=FALSE" to the db URL) [90121-197]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:357)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.message.DbException.get(DbException.java:144)
+	at org.h2.jdbc.JdbcConnection.checkClosed(JdbcConnection.java:1526)
+	at org.h2.jdbc.JdbcStatement.checkClosed(JdbcStatement.java:1201)
+	at org.h2.jdbc.JdbcPreparedStatement.checkClosed(JdbcPreparedStatement.java:1798)
+	at org.h2.jdbc.JdbcStatement.checkClosed(JdbcStatement.java:1175)
+	at org.h2.jdbc.JdbcStatement.getMaxRows(JdbcStatement.java:438)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.getMaxRows(HikariProxyPreparedStatement.java)
+	at org.hibernate.resource.jdbc.internal.ResourceRegistryStandardImpl.close(ResourceRegistryStandardImpl.java:168)
+	at org.hibernate.resource.jdbc.internal.ResourceRegistryStandardImpl.release(ResourceRegistryStandardImpl.java:96)
+	at org.hibernate.loader.Loader.doQuery(Loader.java:959)
+	at org.hibernate.loader.Loader.doQueryAndInitializeNonLazyCollections(Loader.java:340)
+	at org.hibernate.loader.Loader.doList(Loader.java:2689)
+	at org.hibernate.loader.Loader.doList(Loader.java:2672)
+	at org.hibernate.loader.Loader.listIgnoreQueryCache(Loader.java:2506)
+	at org.hibernate.loader.Loader.list(Loader.java:2501)
+	at org.hibernate.loader.hql.QueryLoader.list(QueryLoader.java:504)
+	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.list(QueryTranslatorImpl.java:395)
+	at org.hibernate.engine.query.spi.HQLQueryPlan.performList(HQLQueryPlan.java:220)
+	at org.hibernate.internal.SessionImpl.list(SessionImpl.java:1508)
+	at org.hibernate.query.internal.AbstractProducedQuery.doList(AbstractProducedQuery.java:1537)
+	at org.hibernate.query.internal.AbstractProducedQuery.list(AbstractProducedQuery.java:1505)
+	at org.hibernate.query.Query.getResultList(Query.java:135)
+	at sun.reflect.GeneratedMethodAccessor117.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$DeferredQueryInvocationHandler.invoke(SharedEntityManagerCreator.java:402)
+	at com.sun.proxy.$Proxy184.getResultList(Unknown Source)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution$CollectionExecution.doExecute(JpaQueryExecution.java:129)
+	at org.springframework.data.jpa.repository.query.JpaQueryExecution.execute(JpaQueryExecution.java:91)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.doExecute(AbstractJpaQuery.java:136)
+	at org.springframework.data.jpa.repository.query.AbstractJpaQuery.execute(AbstractJpaQuery.java:125)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.doInvoke(RepositoryFactorySupport.java:605)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.lambda$invoke$3(RepositoryFactorySupport.java:595)
+	at org.springframework.data.repository.core.support.RepositoryFactorySupport$QueryExecutorMethodInterceptor.invoke(RepositoryFactorySupport.java:595)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:59)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:294)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:98)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:135)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:93)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.data.repository.core.support.SurroundingTransactionDetectorMethodInterceptor.invoke(SurroundingTransactionDetectorMethodInterceptor.java:61)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212)
+	at com.sun.proxy.$Proxy152.getAllOpenAuctions(Unknown Source)
+	at com.Auctions.backEnd.BackEndApplication$3.run(BackEndApplication.java:170)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.runAndReset$$$capture(FutureTask.java:308)
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:180)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:294)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+2019-09-03 16:33:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PARENT BINARY(255)": "X'aced000573720028636f6d2e41756374696f6e732e6261636b456e642e6d6f64656c732e4974656d43617465676f7279c37e06f2c32f08d40200044c000569... (1008)"; SQL statement:
+insert into item_category (created_at, category_name, parent, id) values (?, ?, ?, ?) [22001-197]
+2019-09-03 16:34:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "PARENT BINARY(255)": "X'aced000573720028636f6d2e41756374696f6e732e6261636b456e642e6d6f64656c732e4974656d43617465676f727900000000000000450200044c000569... (1008)"; SQL statement:
+insert into item_category (created_at, category_name, parent, id) values (?, ?, ?, ?) [22001-197]

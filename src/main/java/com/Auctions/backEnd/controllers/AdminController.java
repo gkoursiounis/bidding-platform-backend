@@ -195,7 +195,6 @@ public class AdminController extends BaseController{
         }
 
         ItemCategory category = new ItemCategory();
-        category.setName(name);
 
         ItemCategory parent = itemCategoryRepository.findItemCategoryById(categoryId);
         if(parent == null){
@@ -205,10 +204,12 @@ public class AdminController extends BaseController{
             ));
         }
 
-        parent.getSubcategories().add(category);
+        category.setName(name);
         category.setParent(parent);
-        itemCategoryRepository.save(parent);
         itemCategoryRepository.save(category);
+
+        parent.getSubcategories().add(category);
+        itemCategoryRepository.save(parent);
 
         return ResponseEntity.ok(category);
     }

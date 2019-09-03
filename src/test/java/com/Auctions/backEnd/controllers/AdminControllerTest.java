@@ -4,7 +4,9 @@ import com.Auctions.backEnd.BackEndApplication;
 import com.Auctions.backEnd.TestUtils;
 import com.Auctions.backEnd.configs.TestConfig;
 import com.Auctions.backEnd.models.Account;
+import com.Auctions.backEnd.models.ItemCategory;
 import com.Auctions.backEnd.repositories.AccountRepository;
+import com.Auctions.backEnd.repositories.ItemCategoryRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -46,6 +48,9 @@ public class AdminControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ItemCategoryRepository itemCategoryRepository;
 
     private String user1;
     private String user2;
@@ -534,7 +539,9 @@ public class AdminControllerTest {
 
         makeAdmin("user3");
 
-        mvc.perform(post("/admin/newCategory")
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+
+        mvc.perform(post("/admin/newCategory/" + ic.getId().toString())
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("name", "clothes")
                 .header("Authorization", user3))

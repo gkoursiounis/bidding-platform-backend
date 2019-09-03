@@ -18,30 +18,31 @@ import java.util.*;
 @Setter
 @Getter
 @Table(name = "item")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "Item")
+//@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlRootElement(name = "Item")
 @NoArgsConstructor
 public class Item extends AuditModel implements Serializable {
 
     public static final long serialVersionUID = 69L;
 
     @ManyToOne
+   // @XmlElement(name = "Seller")
     private User seller;
 
     @NotNull
     @Column(name = "item_name", length = 50)
-    @XmlElement(name = "Name")
+    //@XmlElement(name = "Name")
     private String name;
 
     @Column(name = "current_price")
-    @XmlElement(name = "Currently")
+   // @XmlElement(name = "Currently")
     private Double currently;
 
     @Column(name = "buy_price")
     private Double buyPrice;
 
     @Column(name = "first_bid")
-    @XmlElement(name = "First_Bid")
+   // @XmlElement(name = "First_Bid")
     private Double firstBid;
 
     @ManyToMany
@@ -50,7 +51,7 @@ public class Item extends AuditModel implements Serializable {
     @OneToMany(mappedBy = "item")
     @OrderBy(value = "offer DESC")
     @JsonIgnoreProperties("item")
-    @XmlElement(name = "Bids")
+  //  @XmlElement(name = "Bids")
     private Set<Bid> bids = new TreeSet<>();
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -70,7 +71,7 @@ public class Item extends AuditModel implements Serializable {
     private List<DBFile> media = new ArrayList<>();         //TODO how to delete picture?
 
     @OneToOne
-    @XmlElement(name = "Location")
+   // @XmlElement(name = "Location")
     private Geolocation location;
 
     private int sellerRating;
