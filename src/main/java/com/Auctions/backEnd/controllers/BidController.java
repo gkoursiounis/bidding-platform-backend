@@ -38,14 +38,17 @@ public class BidController extends BaseController{
     private final ItemRepository itemRepository;
     private final BidRepository bidRepository;
     private final GeolocationRepository geolocationRepository;
+    private final ItemCategoryRepository itemCategoryRepository;
 
     @Autowired
     public BidController(UserRepository userRepository, ItemRepository itemRepository,
-                          BidRepository bidRepository, GeolocationRepository geolocationRepository) {
+                          BidRepository bidRepository, GeolocationRepository geolocationRepository,
+                         ItemCategoryRepository itemCategoryRepository) {
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.bidRepository = bidRepository;
         this.geolocationRepository = geolocationRepository;
+        this.itemCategoryRepository = itemCategoryRepository;
     }
 
 
@@ -204,7 +207,37 @@ public class BidController extends BaseController{
                 location.getItems().add(item);
                 geolocationRepository.save(location);
 
-                System.out.println(xmlItem.getChildren("Category").size());
+//                categories.forEach(cat -> {
+//                    System.err.println(cat.getChildText("Category"));
+//                });
+
+                List<Element> categories = xmlItem.getChildren("Category");
+                for (int j = 0; j < categories.size(); j++) {
+
+                    Element cat = categories.get(j);
+
+                    if(j == 0){
+
+                        ItemCategory category = itemCategoryRepository.findItemCategoryByName(cat.getName());
+                        if(category == null) {
+                            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                                    "Error",
+                                    "Category not found"
+                            ));
+                        }
+
+//                        ItemCategory cat = category;
+//                        do{
+//                            item.getCategories().add(cat);
+//                            cat.getItems().add(item);
+//                            itemCategoryRepository.save(cat);
+//                            cat = cat.getParent();
+//                        }while(cat != null && !cat.getName().equals("All categories"));
+                    }
+//                    System.out.println("Root element :" + cat.getName());
+//                    System.err.println("Root element :" + cat.getText());
+                }
+
 
 
                 return ResponseEntity.ok(item);
