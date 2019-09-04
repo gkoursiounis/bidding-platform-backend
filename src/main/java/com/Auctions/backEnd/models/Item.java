@@ -83,7 +83,6 @@ public class Item extends AuditModel implements Serializable {
 
     private int bidderRating;
 
-
     public Item(final Date createdAt) { super(createdAt); }
 
     public boolean isAuctionCompleted() { return this.auctionCompleted; }
