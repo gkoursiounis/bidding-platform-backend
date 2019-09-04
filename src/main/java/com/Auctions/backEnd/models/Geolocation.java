@@ -5,11 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.Set;
 import java.util.TreeSet;
@@ -17,20 +15,22 @@ import java.util.TreeSet;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "geolocation")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "Location")
+//@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlRootElement(name = "Location")
 public class Geolocation extends AuditModel {
 
-    @XmlAttribute(name = "Longitude")
-    private double longitude;
+//    @XmlAttribute(name = "Longitude")
+    @Column(name = "longitude")
+    private Double longitude;
 
-    @XmlAttribute(name = "Latitude")
-    private double latitude;
+//    @XmlAttribute(name = "Latitude")
+    @Column(name = "latitude")
+    private Double latitude;
 
-    @XmlElement(name = "Location")
+//    @XmlElement(name = "Location")
+    @Column(name = "location_title")
     private String locationTitle;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")

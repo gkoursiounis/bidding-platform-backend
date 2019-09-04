@@ -1,10 +1,6 @@
 package com.Auctions.backEnd.models;
 
-import com.Auctions.backEnd.services.Xml.DoubleXmlAdapter;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +16,8 @@ import java.util.Date;
 @Getter
 @Table(name = "bid")
 @NoArgsConstructor
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "Bid")
+//@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlRootElement(name = "Bid")
 public class Bid extends AuditModel {
 
     @ManyToOne
@@ -33,8 +29,8 @@ public class Bid extends AuditModel {
     private User bidder;
 
     @Column(name = "offer_amount")
-    @XmlAttribute(name = "Amount")
-    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
+//    @XmlAttribute(name = "Amount")
+//    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
     private Double offer;
 
     public static final Comparator<Bid> cmp = Comparator.comparingDouble(Bid::getOffer);

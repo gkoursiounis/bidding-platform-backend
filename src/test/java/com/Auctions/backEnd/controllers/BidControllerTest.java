@@ -226,7 +226,7 @@ public class BidControllerTest {
     @Test
     public void test() throws Exception {
 
-        mvc.perform(get("/bid/test2")
+        mvc.perform(get("/recommend/test2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user2))
                 .andExpect(status().isOk());
