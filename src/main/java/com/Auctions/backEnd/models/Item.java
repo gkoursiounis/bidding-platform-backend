@@ -51,7 +51,7 @@ public class Item extends AuditModel implements Serializable {
 //    @XmlTransient
     private List<ItemCategory> categories = new ArrayList<>();
 
-    @OneToMany( mappedBy = "item", orphanRemoval = true)
+    @OneToMany( mappedBy = "item", cascade = CascadeType.ALL)
     @OrderBy(value = "offer DESC")
     @JsonIgnoreProperties("item")
 //    @XmlElement(name = "Bids")

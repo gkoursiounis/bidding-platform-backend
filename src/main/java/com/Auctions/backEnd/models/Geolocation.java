@@ -33,7 +33,9 @@ public class Geolocation extends AuditModel {
     @Column(name = "location_title")
     private String locationTitle;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "location")
+    //TODO WARNING THIS WAS THE REASON OF ITEM DUPLICATION
+   // @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "location")
+    @OneToMany( mappedBy = "location")
     @JsonIgnore
 //    @XmlTransient
     private final Set<Item> items = new TreeSet<>();

@@ -73,9 +73,7 @@ public class ItemControllerTest {
         user2 = createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
         user3 = createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
 
-        ItemCategory category = new ItemCategory();
-        category.setName("cars");
-        itemCategoryRepository.save(category);
+        ItemCategory category = itemCategoryRepository.findItemCategoryByName("All categories");
         categoryId = category.getId().toString();
     }
 
@@ -128,7 +126,7 @@ public class ItemControllerTest {
                         .param("name", "item1")
                         .param("buyPrice", "10.4")
                         .param("firstBid", "5.3")
-                        .param("categoriesId", categoryId)
+                        .param("categoryId", categoryId)
                         .param("longitude", "23.76695")
                         .param("latitude", "37.968564")
                         .param("locationTitle", "Dit UoA")

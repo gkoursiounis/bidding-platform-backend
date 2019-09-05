@@ -145,10 +145,11 @@ public class RecommendationController extends BaseController{
                         bidder.getBids().add(newBid);
                         userRepository.save(bidder);
 
-                        bidRepository.save(newBid);
+
 
                         item.getBids().add(newBid);
                         itemRepository.save(item);
+                        bidRepository.save(newBid);
                     }
                 }
 

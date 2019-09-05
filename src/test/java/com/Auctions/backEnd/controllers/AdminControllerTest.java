@@ -70,7 +70,7 @@ public class AdminControllerTest {
 
     @AfterEach
     public void  after() {
-        this.testUtils.clearDB();
+      //  this.testUtils.clearDB();
     }
 
     private void unverify(final String username) {

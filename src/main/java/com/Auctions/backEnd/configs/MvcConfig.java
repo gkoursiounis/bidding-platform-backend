@@ -24,15 +24,15 @@ import java.util.Map;
 @EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
 
-    @Override
-    public void configureContentNegotiation(
-            ContentNegotiationConfigurer configurer) {
-        final Map<String, String> parameterMap = new HashMap<String, String>();
-        parameterMap.put("charset", "utf-8");
-
-        configurer.defaultContentType(new MediaType(
-                MediaType.APPLICATION_JSON, parameterMap));
-    }
+//    @Override
+//    public void configureContentNegotiation(
+//            ContentNegotiationConfigurer configurer) {
+//        final Map<String, String> parameterMap = new HashMap<String, String>();
+//        parameterMap.put("charset", "utf-8");
+//
+//        configurer.defaultContentType(new MediaType(
+//                MediaType.APPLICATION_JSON, parameterMap));
+//    }
 }
 
 
