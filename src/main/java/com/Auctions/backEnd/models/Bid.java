@@ -20,11 +20,11 @@ import java.util.Date;
 //@XmlRootElement(name = "Bid")
 public class Bid extends AuditModel {
 
-    @ManyToOne(cascade=CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JsonIgnoreProperties("bids")
     private Item item;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
    // @XmlElement(name = "Bidder")
     private User bidder;
 

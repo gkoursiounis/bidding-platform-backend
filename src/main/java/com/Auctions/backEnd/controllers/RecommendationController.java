@@ -97,62 +97,6 @@ public class RecommendationController extends BaseController{
                 Element xmlItem = itemList.get(i);
                 Item item = new Item();
 
-                List<Element> bids = xmlItem.getChildren("Bids");
-                for (int a = 0; a < bids.size(); a++) {
-
-                    Element BidElement = bids.get(a);
-                    List<Element> bidList = BidElement.getChildren("Bid");
-                    for (int b = 0; b  < bidList.size(); b++) {
-
-                        Element bid = bidList.get(b);
-
-                        String username = bid.getChild("Bidder").getAttribute("UserID").getValue();
-                        User bidder = userRepository.findByAccount_Username(username);
-                        if(bidder == null){
-                            Account account = new Account();
-                            account.setUsername(username);
-                            account.setEmail(username + "@di.uoa.gr");
-                            account.setPassword(passwordEncoder.encode("123456"));
-                            account.setVerified(true);
-                            account.setAdmin(false);
-
-                            bidder = new User();
-                            bidder.setFirstName("FirstName");
-                            bidder.setLastName("LastName");
-                            bidder.setTelNumber("1234567890");
-                            bidder.setTaxNumber("1234");
-                            bidder.setAccount(account);
-
-                            accountRepository.save(account);
-                        }
-
-                        if(bidder.getAddress() == null){
-                            zero.getUsers().add(bidder);
-                            bidder.setAddress(zero);
-                            geolocationRepository.save(zero);
-                        }
-
-                        if(bidder.getBidderRating() == 0){
-                            bidder.setBidderRating(
-                                    Integer.valueOf(bid.getChild("Bidder").getAttribute("Rating").getValue()));
-                        }
-
-                        Bid newBid = new Bid();
-                        newBid.setOffer(Double.valueOf(bid.getChildText("Amount").substring(1)));
-                        newBid.setBidder(bidder);
-                        newBid.setItem(item);
-
-                        bidder.getBids().add(newBid);
-                        userRepository.save(bidder);
-
-
-
-                        item.getBids().add(newBid);
-                        itemRepository.save(item);
-                        bidRepository.save(newBid);
-                    }
-                }
-
 
                 item.setName(xmlItem.getChildText("Name"));
 
@@ -233,6 +177,59 @@ public class RecommendationController extends BaseController{
                     }
                 }
 
+                List<Element> bids = xmlItem.getChildren("Bids");
+                for (int a = 0; a < bids.size(); a++) {
+
+                    Element BidElement = bids.get(a);
+                    List<Element> bidList = BidElement.getChildren("Bid");
+                    for (int b = 0; b  < bidList.size(); b++) {
+
+                        Element bid = bidList.get(b);
+
+                        String username = bid.getChild("Bidder").getAttribute("UserID").getValue();
+                        User bidder = userRepository.findByAccount_Username(username);
+                        if(bidder == null){
+                            Account account = new Account();
+                            account.setUsername(username);
+                            account.setEmail(username + "@di.uoa.gr");
+                            account.setPassword(passwordEncoder.encode("123456"));
+                            account.setVerified(true);
+                            account.setAdmin(false);
+
+                            bidder = new User();
+                            bidder.setFirstName("FirstName");
+                            bidder.setLastName("LastName");
+                            bidder.setTelNumber("1234567890");
+                            bidder.setTaxNumber("1234");
+                            bidder.setAccount(account);
+
+                            accountRepository.save(account);
+                        }
+
+                        if(bidder.getAddress() == null){
+                            zero.getUsers().add(bidder);
+                            bidder.setAddress(zero);
+                            geolocationRepository.save(zero);
+                        }
+
+                        if(bidder.getBidderRating() == 0){
+                            bidder.setBidderRating(
+                                    Integer.valueOf(bid.getChild("Bidder").getAttribute("Rating").getValue()));
+                        }
+
+                        Bid newBid = new Bid();
+                        newBid.setOffer(Double.valueOf(bid.getChildText("Amount").substring(1)));
+                        newBid.setBidder(bidder);
+                        newBid.setItem(item);
+                        bidRepository.save(newBid);
+
+                        bidder.getBids().add(newBid);
+                        userRepository.save(bidder);
+
+                        item.getBids().add(newBid);
+                    }
+                }
+
                 String username = xmlItem.getChild("Seller").getAttribute("UserID").getValue();
                 User seller = userRepository.findByAccount_Username(username);
                 if(seller == null){
@@ -268,9 +265,6 @@ public class RecommendationController extends BaseController{
                 item.setSeller(seller);
                 userRepository.save(seller);
                 itemRepository.save(item);
-
-                return ResponseEntity.ok(item);
-
             }
         } catch(JDOMException e) {
             e.printStackTrace();
@@ -278,44 +272,45 @@ public class RecommendationController extends BaseController{
             ioe.printStackTrace();
         }
 
-        return ResponseEntity.ok(null);
-
-
+        return ResponseEntity.ok(new Message(
+                "Ok",
+                "All Items have bee imported"
+        ));
     }
 
 
 
-    @GetMapping("/test3")
-    public ResponseEntity test3() {
-
-        SAXBuilder builder = new SAXBuilder();
-        File xmlFile = new File("media/book.xml");
-
-        try {
-
-            Document document = (Document) builder.build(xmlFile);
-            Element rootNode = document.getRootElement();
-            List list = rootNode.getChildren();
-
-            for (int i = 0; i < list.size(); i++) {
-
-                Element node = (Element) list.get(i);
-
-                System.out.println("First Name : " + node.getChildText("Name"));
-                Attribute attribute =  node.getChild("Location").getAttribute("Longitude");
-                System.out.println("Student roll no : "
-                        + attribute.getValue() );
-
-
-
-            }
-
-        } catch (IOException io) {
-            System.out.println(io.getMessage());
-        } catch (JDOMException jdomex) {
-            System.out.println(jdomex.getMessage());
-        }
-        return ResponseEntity.ok(null);
-    }
+//    @GetMapping("/test3")
+//    public ResponseEntity test3() {
+//
+//        SAXBuilder builder = new SAXBuilder();
+//        File xmlFile = new File("media/book.xml");
+//
+//        try {
+//
+//            Document document = (Document) builder.build(xmlFile);
+//            Element rootNode = document.getRootElement();
+//            List list = rootNode.getChildren();
+//
+//            for (int i = 0; i < list.size(); i++) {
+//
+//                Element node = (Element) list.get(i);
+//
+//                System.out.println("First Name : " + node.getChildText("Name"));
+//                Attribute attribute =  node.getChild("Location").getAttribute("Longitude");
+//                System.out.println("Student roll no : "
+//                        + attribute.getValue() );
+//
+//
+//
+//            }
+//
+//        } catch (IOException io) {
+//            System.out.println(io.getMessage());
+//        } catch (JDOMException jdomex) {
+//            System.out.println(jdomex.getMessage());
+//        }
+//        return ResponseEntity.ok(null);
+//    }
 
 }
