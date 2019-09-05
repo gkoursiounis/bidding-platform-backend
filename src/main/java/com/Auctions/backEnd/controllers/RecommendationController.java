@@ -73,6 +73,15 @@ public class RecommendationController extends BaseController{
     @GetMapping("/test2")
     public ResponseEntity test2() {
 
+            Geolocation zero = geolocationRepository.findLocationByLatitudeAndLongitude(0.0,0.0);
+            if(zero == null){
+                zero = new Geolocation();
+                zero.setLatitude(0.0);
+                zero.setLongitude(0.0);
+                zero.setLocationTitle("Zero Point");
+                geolocationRepository.save(zero);
+            }
+
         try {
             File inputFile = new File("media/book.xml");
 
@@ -96,8 +105,6 @@ public class RecommendationController extends BaseController{
                     for (int b = 0; b  < bidList.size(); b++) {
 
                         Element bid = bidList.get(b);
-                        Bid newBid = new Bid();
-                        newBid.setOffer(Double.valueOf(bid.getChildText("Amount").substring(1)));
 
                         String username = bid.getChild("Bidder").getAttribute("UserID").getValue();
                         User bidder = userRepository.findByAccount_Username(username);
@@ -120,18 +127,9 @@ public class RecommendationController extends BaseController{
                         }
 
                         if(bidder.getAddress() == null){
-                            String locationTitle = bid.getChild("Bidder").getChildText("Location") + ", " +
-                                    bid.getChild("Bidder").getChildText("Country");
-
-//                            List<Geolocation> results = geolocationRepository.searchLocations(locationTitle);
-//                            if(!results.isEmpty()){
-//
-//                                results.get(0).getLatitude()
-//                            }
-//                            zeroZero.getUsers().add(bidder);
-//                            bidder.setAddress(zeroZero);
-//                            geolocationRepository.save(zeroZero);
-
+                            zero.getUsers().add(bidder);
+                            bidder.setAddress(zero);
+                            geolocationRepository.save(zero);
                         }
 
                         if(bidder.getBidderRating() == 0){
@@ -139,11 +137,18 @@ public class RecommendationController extends BaseController{
                                     Integer.valueOf(bid.getChild("Bidder").getAttribute("Rating").getValue()));
                         }
 
+                        Bid newBid = new Bid();
+                        newBid.setOffer(Double.valueOf(bid.getChildText("Amount").substring(1)));
+                        newBid.setBidder(bidder);
+                        newBid.setItem(item);
 
                         bidder.getBids().add(newBid);
-                        newBid.setBidder(bidder);
                         userRepository.save(bidder);
+
                         bidRepository.save(newBid);
+
+                        item.getBids().add(newBid);
+                        itemRepository.save(item);
                     }
                 }
 
@@ -245,6 +250,12 @@ public class RecommendationController extends BaseController{
                     seller.setAccount(account);
 
                     accountRepository.save(account);
+                }
+
+                if(seller.getAddress() == null){
+                    zero.getUsers().add(seller);
+                    seller.setAddress(zero);
+                    geolocationRepository.save(zero);
                 }
 
                 if(seller.getSellerRating() == 0){
