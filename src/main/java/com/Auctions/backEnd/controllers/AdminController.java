@@ -20,13 +20,15 @@ public class AdminController extends BaseController{
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final ItemCategoryRepository itemCategoryRepository;
+    private final ItemRepository itemRepository;
 
     @Autowired
     public AdminController(UserRepository userRepository, AccountRepository accountRepository,
-                          ItemCategoryRepository itemCategoryRepository){
+                          ItemCategoryRepository itemCategoryRepository, ItemRepository itemRepository){
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.itemCategoryRepository = itemCategoryRepository;
+        this.itemRepository = itemRepository;
     }
 
 
@@ -211,6 +213,29 @@ public class AdminController extends BaseController{
         itemCategoryRepository.save(parent);
 
         return ResponseEntity.ok(category);
+    }
+
+
+    /**
+     * The administrator can get a list of All the existing items/auctions
+     * The front-end part is responsible for creating the file and converting
+     * to XML if necessary
+     *
+     * @return list of all items
+     */
+    @GetMapping("/allAuctions")
+    public ResponseEntity getAllItems(){
+
+        User requester = requestUser();
+        if(!requester.isAdmin()){
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You need to be an admin to perform this action"
+            ));
+        }
+
+        return ResponseEntity.ok(itemRepository.findAll());
     }
 
 

@@ -77,6 +77,7 @@ public class ItemController extends BaseController{
     }
 
 
+    //TODO remove
     /**
      * A User can get a list of All the items/auctions existing in the database
      *
