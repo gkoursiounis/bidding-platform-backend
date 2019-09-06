@@ -247,9 +247,9 @@ public class ItemController extends BaseController{
 
             ItemCategory cat = category;
             do{
-                item.getCategories().add(cat);
                 cat.getItems().add(item);
                 itemCategoryRepository.save(cat);
+                item.getCategories().add(cat);
                 cat = cat.getParent();
             }while(cat != null && !cat.getName().equals("All categories"));
         }

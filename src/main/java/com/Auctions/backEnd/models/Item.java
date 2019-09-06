@@ -27,7 +27,7 @@ public class Item extends AuditModel implements Serializable {
    @XmlTransient
     private User seller;
 
-    @NotNull
+    //@NotNull(message = "Set Fucking name BITCH")
     @Column(name = "item_name", length = 50)
 //    @XmlElement(name = "Name")
     private String name;
@@ -47,7 +47,7 @@ public class Item extends AuditModel implements Serializable {
 //    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
     private Double firstBid;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "items")
+    @ManyToMany(mappedBy = "items")
 //    @XmlTransient
     private List<ItemCategory> categories = new ArrayList<>();
 
