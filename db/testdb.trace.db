@@ -675,3 +675,6 @@ org.h2.jdbc.JdbcSQLException: Database is already closed (to disable automatic c
 	at com.intellij.rt.execution.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:47)
 	at com.intellij.rt.execution.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:242)
 	at com.intellij.rt.execution.junit.JUnitStarter.main(JUnitStarter.java:70)
+2019-09-06 16:27:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Value too long for column "DESCRIPTION VARCHAR(255)": "'brand new beautiful handmade european blown glass ornament from christopher radko. this particular ornament features a snowman ... (1791)"; SQL statement:
+insert into item (created_at, auction_completed, bidder_rating, buy_price, current_price, description, ends_at, first_bid, location_id, item_name, seller_id, seller_rating, id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) [22001-197]

@@ -155,7 +155,6 @@ public class BackEndApplication implements CommandLineRunner {
 				itemCategoryRepository.save(root);
 
 				System.err.println("Creating admin account...");
-
 			}
 		}, 0, 365, TimeUnit.DAYS);
 
@@ -177,9 +176,12 @@ public class BackEndApplication implements CommandLineRunner {
 				auctions.forEach(item -> {
 
 					if(item.getEndsAt().getTime() < System.currentTimeMillis()) {
+
+						System.err.println("Closing auction with id " + item.getId());
+
 						item.setAuctionCompleted(true);
 						itemRepository.save(item);
-						System.err.println("HERE");
+
 						Notification toSeller = new Notification();
 						toSeller.setRecipient(item.getSeller());
 						toSeller.setItemId(item.getId());

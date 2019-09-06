@@ -70,7 +70,7 @@ public class RecommendationController extends BaseController{
      * @throws SAXException
      * @throws XPathExpressionException
      */
-    @GetMapping("/test2")
+    @GetMapping
     public ResponseEntity test2() {
 
             Geolocation zero = geolocationRepository.findLocationByLatitudeAndLongitude(0.0,0.0);
@@ -83,7 +83,7 @@ public class RecommendationController extends BaseController{
             }
 
         try {
-            File inputFile = new File("media/book.xml");
+            File inputFile = new File("ebay/items-1.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
@@ -93,6 +93,8 @@ public class RecommendationController extends BaseController{
             List<Element> itemList = classElement.getChildren();
 
             for (int i = 0; i < itemList.size(); i++) {
+
+                System.out.println("Importing " + (i+1) + " of " + itemList.size());
 
                 Element xmlItem = itemList.get(i);
                 Item item = new Item();
@@ -106,7 +108,7 @@ public class RecommendationController extends BaseController{
                 item.setFirstBid(
                         Double.valueOf(xmlItem.getChildText("First_Bid").substring(1)));
 
-                item.setDescription(xmlItem.getChildText("Description"));
+                //item.setDescription(xmlItem.getChildText("Description"));
 
                 if(xmlItem.getChildText("Buy_Price") != null){
                     item.setBuyPrice(
@@ -121,7 +123,7 @@ public class RecommendationController extends BaseController{
                 item.setEndsAt(new Date(new Date().getTime() + 10*86400000));
 
                 Geolocation location;
-                if (longitude.getValue() != null && latitude.getValue() != null){
+                if (longitude != null && latitude != null){
 
                     Double lat = Double.valueOf(latitude.getValue());
                     Double lon = Double.valueOf(longitude.getValue());
@@ -132,7 +134,7 @@ public class RecommendationController extends BaseController{
                     }
                 }
                 else {
-                    location = new Geolocation(null, null, locationTitle);
+                    location = zero;
                 }
 
                 item.setLocation(location);

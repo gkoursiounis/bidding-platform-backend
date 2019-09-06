@@ -22,12 +22,12 @@ public class Account extends AuditModel {
     // Fields
 
     @NotNull
-    @Size(min=5, max=15)
+   // @Size(min=5, max=15)
     @Column(name = "account_username")
     private String username;
 
     @NotNull
-    @Email
+    //@Email
     @Column(name = "account_email")
     private String email;
 

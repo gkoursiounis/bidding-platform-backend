@@ -52,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/search/searchBar").permitAll()
                 .antMatchers("/search/filters").permitAll()
                 .antMatchers("/user/{username}").permitAll()
+                .antMatchers("/recommend").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JWTConfigurer(this.tokenProvider))

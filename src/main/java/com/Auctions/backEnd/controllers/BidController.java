@@ -93,7 +93,8 @@ public class BidController extends BaseController{
         }
 
         item.setCurrently(offer);
-        if(java.lang.Double.compare(item.getBuyPrice(), offer) <= 0){
+        if(item.getBuyPrice() != null &&
+                java.lang.Double.compare(item.getBuyPrice(), offer) <= 0){
             item.setAuctionCompleted(true);
             notifySeller(item);
         }
