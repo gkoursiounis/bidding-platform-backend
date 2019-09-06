@@ -184,9 +184,6 @@ public class AuthController extends BaseController{
         account.setPassword(pwd);
         account.setEmail(signupAccount.getEmail());
 
-        //TODO temporary
-        account.setVerified(true);
-
         account = accountRepository.save(account);
 
         User user = new User();

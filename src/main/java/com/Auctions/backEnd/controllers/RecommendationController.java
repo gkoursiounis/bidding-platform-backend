@@ -99,7 +99,7 @@ public class RecommendationController extends BaseController{
                 Element xmlItem = itemList.get(i);
                 Item item = new Item();
 
-                System.out.println(xmlItem.getChildText("Name"));
+              //  System.out.println(xmlItem.getChildText("Name"));
 
                 item.setName(xmlItem.getChildText("Name"));
 
@@ -197,7 +197,6 @@ public class RecommendationController extends BaseController{
                             account.setEmail(username + "@di.uoa.gr");
                             account.setPassword(passwordEncoder.encode("123456"));
                             account.setVerified(true);
-                            account.setAdmin(false);
 
                             bidder = new User();
                             bidder.setFirstName("FirstName");
@@ -241,7 +240,6 @@ public class RecommendationController extends BaseController{
                     account.setEmail(username + "@di.uoa.gr");
                     account.setPassword(passwordEncoder.encode("123456"));
                     account.setVerified(true);
-                    account.setAdmin(false);
 
                     account  = accountRepository.save(account);
 

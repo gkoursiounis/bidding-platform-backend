@@ -269,7 +269,7 @@ public class AdminController extends BaseController{
         if (user.isVerified()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "You delete a verified user"
+                    "You can not delete a verified user"
             ));
         }
 

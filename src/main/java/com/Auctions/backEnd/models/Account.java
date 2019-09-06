@@ -37,7 +37,7 @@ public class Account extends AuditModel {
     private String password;
 
     @Column(name = "account_verified")
-    private boolean verified;
+    private boolean verified = false;
 
     @Column(name = "account_admin")
     private boolean admin = false;
