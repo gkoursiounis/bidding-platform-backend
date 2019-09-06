@@ -47,7 +47,7 @@ public class Item extends AuditModel implements Serializable {
 //    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
     private Double firstBid;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "items")
 //    @XmlTransient
     private List<ItemCategory> categories = new ArrayList<>();
 

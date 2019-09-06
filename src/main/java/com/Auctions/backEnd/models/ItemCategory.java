@@ -34,7 +34,7 @@ public class ItemCategory extends AuditModel  {
     @JsonIgnoreProperties("parent")
     private List<ItemCategory> subcategories = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JsonIgnore
     private List<Item> items = new ArrayList<>();
 }

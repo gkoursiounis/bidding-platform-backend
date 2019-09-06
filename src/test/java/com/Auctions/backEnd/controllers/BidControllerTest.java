@@ -234,8 +234,16 @@ public class BidControllerTest {
 
         mvc.perform(get("/recommend")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user2))
-                .andExpect(status().isOk());
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andDo( mvcResult ->
+                        mvc.perform(get("/item/allAuctions")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", user1))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.*", hasSize(10)))
+                );
+
 
 
 

@@ -99,6 +99,7 @@ public class RecommendationController extends BaseController{
                 Element xmlItem = itemList.get(i);
                 Item item = new Item();
 
+                System.out.println(xmlItem.getChildText("Name"));
 
                 item.setName(xmlItem.getChildText("Name"));
 
@@ -242,19 +243,19 @@ public class RecommendationController extends BaseController{
                     account.setVerified(true);
                     account.setAdmin(false);
 
+                    account  = accountRepository.save(account);
+
                     seller = new User();
                     seller.setFirstName("FirstName");
                     seller.setLastName("LastName");
                     seller.setTelNumber("1234567890");
                     seller.setTaxNumber("1234");
                     seller.setAccount(account);
-
-                    accountRepository.save(account);
                 }
 
                 if(seller.getAddress() == null){
-                    zero.getUsers().add(seller);
                     seller.setAddress(zero);
+                    zero.getUsers().add(seller);
                     geolocationRepository.save(zero);
                 }
 
@@ -263,9 +264,9 @@ public class RecommendationController extends BaseController{
                             Integer.valueOf(xmlItem.getChild("Seller").getAttribute("Rating").getValue()));
                 }
 
-                seller.getItems().add(item);
                 item.setSeller(seller);
                 userRepository.save(seller);
+                seller.getItems().add(item);
                 itemRepository.save(item);
             }
         } catch(JDOMException e) {
