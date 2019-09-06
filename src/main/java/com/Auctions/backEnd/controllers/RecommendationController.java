@@ -78,7 +78,7 @@ public class RecommendationController extends BaseController{
                 zero = new Geolocation();
                 zero.setLatitude(0.0);
                 zero.setLongitude(0.0);
-                zero.setLocationTitle("Zero Point");
+                zero.setLocationTitle("No available location");
                 geolocationRepository.save(zero);
             }
 

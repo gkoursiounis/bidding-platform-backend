@@ -266,10 +266,10 @@ public class AdminController extends BaseController{
             ));
         }
 
-        if (user.isAdmin()){
+        if (user.isVerified()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "You cannot delete an administrator"
+                    "You delete a verified user"
             ));
         }
 
