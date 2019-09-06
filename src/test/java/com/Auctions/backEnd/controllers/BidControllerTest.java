@@ -3,6 +3,7 @@ package com.Auctions.backEnd.controllers;
 import com.Auctions.backEnd.BackEndApplication;
 import com.Auctions.backEnd.TestUtils;
 import com.Auctions.backEnd.configs.TestConfig;
+import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.models.ItemCategory;
 import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.ItemCategoryRepository;
@@ -23,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -75,6 +77,14 @@ public class BidControllerTest {
     }
 
 
+    private void verify(final String username) {
+
+        Account account = accountRepository.findByUsername(username);
+        assertNotNull(account);
+        account.setVerified(true);
+        accountRepository.save(account);
+    }
+
     /**
      * User successfully makes a bid of 6.0E with firstBid 5.4E
      *
@@ -84,6 +94,7 @@ public class BidControllerTest {
     @DisplayName("Successful item creation")
     public void makeBid1() throws Exception {
 
+        verify("user1");
         ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
         String item_id = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
 
@@ -243,6 +254,20 @@ public class BidControllerTest {
                                 .andExpect(status().isOk())
                                 .andExpect(jsonPath("$.*", hasSize(10)))
                 );
+
+
+
+
+    }
+
+
+    @Test
+    public void lsh() throws Exception {
+
+        mvc.perform(get("/recommend/lsh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
 
 
 

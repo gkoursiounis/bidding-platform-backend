@@ -25,32 +25,6 @@ public class User extends AuditModel {
     @JsonIgnore
     private Account account;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "follows",
-//            inverseJoinColumns = @JoinColumn(name = "follower_id"),
-//            joinColumns = @JoinColumn(name = "following_id")
-//    )
-//    @JsonIgnore
-//    private Set<User> followers = new TreeSet<>();
-//
-//    @ManyToMany
-//    @JoinTable(
-//            name = "follows",
-//            inverseJoinColumns = @JoinColumn(name = "following_id"),
-//            joinColumns = @JoinColumn(name = "follower_id")
-//    )
-//    @JsonIgnore
-//    public Set<User> following = new TreeSet<>();
-//
-//    @ManyToMany
-//    @JoinTable(
-//            name = "blocked_relation",
-//            joinColumns = @JoinColumn(name = "blocked_id"),
-//            inverseJoinColumns = @JoinColumn(name = "blockers_id"))
-//    @JsonIgnore
-//    private Set<User> blockedBy = new TreeSet<>();
-
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     @OrderBy(value = "createdAt DESC")
     @JsonIgnore
@@ -66,10 +40,6 @@ public class User extends AuditModel {
     @OrderBy(value = "createdAt DESC")
     @JsonIgnore
     private Set<Notification> notifications = new TreeSet<>();
-
-//    @ManyToMany(cascade = CascadeType.DETACH)
-//    private Set<HashTag> hashTags = new HashSet<>();
-
 
     @NotNull
     @Column(name = "firstName")
@@ -114,8 +84,8 @@ public class User extends AuditModel {
     public boolean isVerified() {
         return this.account.isVerified() || this.account.isAdmin();
     }
-    
-    @JsonIgnore
+
+    @JsonGetter("admin")
     public boolean isAdmin() {
         return this.account.isAdmin();
     }
