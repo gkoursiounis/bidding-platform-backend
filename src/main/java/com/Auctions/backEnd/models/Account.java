@@ -27,7 +27,7 @@ public class Account extends AuditModel {
     private String username;
 
     @NotNull
-    //@Email
+    @Email
     @Column(name = "account_email")
     private String email;
 

@@ -1,91 +1,56 @@
-package com.Auctions.backEnd.controllers;
+package com.Auctions.backEnd.services;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
-import com.Auctions.backEnd.responses.BidRes;
-import com.Auctions.backEnd.responses.Message;
-import info.debatty.java.lsh.LSHMinHash;
-import org.jdom.Attribute;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-import org.xml.sax.SAXException;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
-import java.io.*;
-import java.util.Arrays;
-import java.util.Date;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
-
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-@RestController
-@CrossOrigin(origins = "*")
-@RequestMapping("/recommend")
-public class RecommendationController extends BaseController{
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
-    private final UserRepository userRepository;
-    private final ItemRepository itemRepository;
-    private final BidRepository bidRepository;
-    private final GeolocationRepository geolocationRepository;
-    private final ItemCategoryRepository itemCategoryRepository;
-    private final AccountRepository accountRepository;
-    private final PasswordEncoder passwordEncoder;
+public abstract class XmlReader {
 
     @Autowired
-    public RecommendationController(UserRepository userRepository, ItemRepository itemRepository,
-                         BidRepository bidRepository, GeolocationRepository geolocationRepository,
-                         ItemCategoryRepository itemCategoryRepository, PasswordEncoder passwordEncoder,
-                                    AccountRepository accountRepository) {
-        this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
-        this.bidRepository = bidRepository;
-        this.geolocationRepository = geolocationRepository;
-        this.itemCategoryRepository = itemCategoryRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.accountRepository = accountRepository;
-    }
+    private static GeolocationRepository geolocationRepository;
+
+    @Autowired
+    private static ItemCategoryRepository itemCategoryRepository;
+
+    @Autowired
+    private static ItemRepository itemRepository;
+
+    @Autowired
+    private static UserRepository userRepository;
+
+    @Autowired
+    private static AccountRepository accountRepository;
+
+    @Autowired
+    private static PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private static BidRepository bidRepository;
 
 
-    /**
-     * https://www.tutorialspoint.com/java_xml/java_jdom_parse_document.htm#
-     * https://www.mkyong.com/java/how-to-read-xml-file-in-java-jdom-example/
-     *
-     * @return
-     * @throws IOException
-     * @throws ParserConfigurationException
-     * @throws SAXException
-     * @throws XPathExpressionException
-     */
-    @GetMapping
-    public ResponseEntity test2() {
-
-            Geolocation zero = geolocationRepository.findLocationByLatitudeAndLongitude(0.0,0.0);
-            if(zero == null){
-                zero = new Geolocation();
-                zero.setLatitude(0.0);
-                zero.setLongitude(0.0);
-                zero.setLocationTitle("No available location");
-                geolocationRepository.save(zero);
-            }
+    public static void XmlLoader(String pathname, int amount){
+        Geolocation zero = geolocationRepository.findLocationByLatitudeAndLongitude(0.0,0.0);
+        if(zero == null){
+            zero = new Geolocation();
+            zero.setLatitude(0.0);
+            zero.setLongitude(0.0);
+            zero.setLocationTitle("No available location");
+            geolocationRepository.save(zero);
+        }
 
         try {
-            File inputFile = new File("ebay/items-10.xml");
+            File inputFile = new File(pathname);
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
@@ -94,12 +59,22 @@ public class RecommendationController extends BaseController{
             Element classElement = document.getRootElement();
             List<Element> itemList = classElement.getChildren();
 
-            for (int i = 0; i < itemList.size(); i++) {
+            int itemsToRead;
+            if(itemList.size() < amount){
+                itemsToRead = itemList.size();
+            }
+            else {
+                itemsToRead = amount;
+            }
 
-                System.out.println("Importing " + (i+1) + " of " + itemList.size());
+            for (int i = 0; i < itemsToRead; i++) {
+
+                System.out.println("Importing " + (i+1) + " of " + itemsToRead);
 
                 Element xmlItem = itemList.get(i);
                 Item item = new Item();
+
+                //System.out.println(xmlItem.getChildText("Name"));
 
                 item.setName(xmlItem.getChildText("Name"));
 
@@ -284,82 +259,5 @@ public class RecommendationController extends BaseController{
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
-
-        return ResponseEntity.ok(new Message(
-                "Ok",
-                "All Items have bee imported"
-        ));
     }
-
-    @GetMapping("/lsh")
-   public ResponseEntity lsh() throws JDOMException, IOException {
-
-        File inputFile = new File("ebay/items-100.xml");
-
-        SAXBuilder saxBuilder = new SAXBuilder();
-        Document document = saxBuilder.build(inputFile);
-
-        // System.out.println("Root element :" + document.getRootElement().getName());
-        Element classElement = document.getRootElement();
-        List<Element> itemList = classElement.getChildren();
-
-        System.err.println(itemList.size());
-
-//        boolean[] vector1 = new boolean[] {true, true, true, true, true};
-//        boolean[] vector2 = new boolean[] {false, false, false, true, false};
-//        boolean[] vector3 = new boolean[] {false, false, true, true, false};
-//
-//        int sizeOfVectors = 5;
-//        int numberOfBuckets = 10;
-//        int stages = 4;
-//
-//        LSHMinHash lsh = new LSHMinHash(stages, numberOfBuckets, sizeOfVectors);
-//
-//        int[] firstHash = lsh.hash(vector1);
-//        int[] secondHash = lsh.hash(vector2);
-//        int[] thirdHash = lsh.hash(vector3);
-//
-//        System.out.println(Arrays.toString(firstHash));
-//        System.out.println(Arrays.toString(secondHash));
-//        System.out.println(Arrays.toString(thirdHash));
-
-        return ResponseEntity.ok(null);
-    }
-
-
-
-
-//    @GetMapping("/test3")
-//    public ResponseEntity test3() {
-//
-//        SAXBuilder builder = new SAXBuilder();
-//        File xmlFile = new File("media/book.xml");
-//
-//        try {
-//
-//            Document document = (Document) builder.build(xmlFile);
-//            Element rootNode = document.getRootElement();
-//            List list = rootNode.getChildren();
-//
-//            for (int i = 0; i < list.size(); i++) {
-//
-//                Element node = (Element) list.get(i);
-//
-//                System.out.println("First Name : " + node.getChildText("Name"));
-//                Attribute attribute =  node.getChild("Location").getAttribute("Longitude");
-//                System.out.println("Student roll no : "
-//                        + attribute.getValue() );
-//
-//
-//
-//            }
-//
-//        } catch (IOException io) {
-//            System.out.println(io.getMessage());
-//        } catch (JDOMException jdomex) {
-//            System.out.println(jdomex.getMessage());
-//        }
-//        return ResponseEntity.ok(null);
-//    }
-
 }

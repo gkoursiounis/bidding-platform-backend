@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.*;
 
@@ -15,46 +13,32 @@ import java.util.*;
 @Setter
 @Getter
 @Table(name = "item")
-//@XmlAccessorType(XmlAccessType.FIELD)
-//@XmlRootElement(name = "Item")
 @NoArgsConstructor
 public class Item extends AuditModel implements Serializable {
 
     public static final long serialVersionUID = 69L;
 
     @ManyToOne
-    //@XmlElement(name = "Seller")
-   @XmlTransient
     private User seller;
 
-    @NotNull
     @Column(name = "item_name", length = 50)
-//    @XmlElement(name = "Name")
     private String name;
 
     @Column(name = "current_price")
-//    @XmlElement(name = "Currently")
-//    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
     private Double currently;
 
     @Column(name = "buy_price")
-//    @XmlElement(name = "Buy_Price")
-//    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
     private Double buyPrice;
 
     @Column(name = "first_bid")
-//    @XmlElement(name = "First_Bid")
-//    @XmlJavaTypeAdapter(DoubleXmlAdapter.class)
     private Double firstBid;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "items")
-//    @XmlTransient
+    @ManyToMany(mappedBy = "items")
     private List<ItemCategory> categories = new ArrayList<>();
 
     @OneToMany( mappedBy = "item")
     @OrderBy(value = "offer DESC")
     @JsonIgnoreProperties("item")
-//    @XmlElement(name = "Bids")
     private List<Bid> bids = new ArrayList<>();
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -65,7 +49,6 @@ public class Item extends AuditModel implements Serializable {
     private Boolean auctionCompleted = false;
 
     @Column(name = "description")
-//    @XmlElement(name = "Description")
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -74,7 +57,6 @@ public class Item extends AuditModel implements Serializable {
     private List<DBFile> media = new ArrayList<>();         //TODO how to delete picture?
 
     @OneToOne
-//    @XmlElement(name = "Location")
     private Geolocation location;
 
     private int sellerRating;

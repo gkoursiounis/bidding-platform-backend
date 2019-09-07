@@ -3,6 +3,7 @@ package com.Auctions.backEnd;
 import com.Auctions.backEnd.controllers.BaseController;
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
+import com.Auctions.backEnd.services.XmlReader;
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -44,21 +45,8 @@ import java.util.concurrent.TimeUnit;
 @EnableJpaAuditing
 public class BackEndApplication implements CommandLineRunner {
 
-	/* Used to print list of routes
-	@Autowired
-	private RequestMappingHandlerMapping requestMappingHandlerMapping;
-	*/
-
 	public static void main(String[] args) {
 		SpringApplication.run(BackEndApplication.class, args);
-
-//		SpringApplication sa = new SpringApplication(BackEndApplication.class);
-//		sa.setBannerMode(Banner.Mode.OFF);
-//		sa.setLogStartupInfo(false);
-//
-//		ApplicationContext c = sa.run(args);
-//		MyObject bean = c.getBean(MyObject.class);
-//		bean.doSomething();
 	}
 
 	@Bean
@@ -84,7 +72,6 @@ public class BackEndApplication implements CommandLineRunner {
 	}
 
 
-
 	private Connector redirectConnector() {
 		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
 		connector.setScheme("http");
@@ -93,6 +80,7 @@ public class BackEndApplication implements CommandLineRunner {
 		connector.setRedirectPort(8443);
 		return connector;
 	}
+
 
 	@Autowired
 	private UserRepository userRepository;
@@ -131,8 +119,6 @@ public class BackEndApplication implements CommandLineRunner {
 				admin.setEmail("sdi1600077@di.uoa.gr");
 				admin.setAdmin(true);
 				admin.setVerified(true);
-//
-//			accountRepository.save(admin);
 
 				User user = new User();
 				user.setFirstName("TEDiadiktyoy");
@@ -206,5 +192,16 @@ public class BackEndApplication implements CommandLineRunner {
 				});
 			}
 		}, 0, 5, TimeUnit.SECONDS);
+
+
+		exec.scheduleAtFixedRate(new Runnable() {
+
+			@Override
+			public void run() {
+
+				System.out.println("HELLO");
+				XmlReader.XmlLoader("ebay/items-100.xml", 10);
+			}
+		}, 0, 365, TimeUnit.DAYS);
 	}
 }
