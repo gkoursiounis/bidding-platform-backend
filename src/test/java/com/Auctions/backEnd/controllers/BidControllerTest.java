@@ -1,14 +1,12 @@
 package com.Auctions.backEnd.controllers;
 
+import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.BackEndApplication;
 import com.Auctions.backEnd.TestUtils;
 import com.Auctions.backEnd.configs.TestConfig;
 import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.models.ItemCategory;
-import com.Auctions.backEnd.repositories.AccountRepository;
-import com.Auctions.backEnd.repositories.BidRepository;
-import com.Auctions.backEnd.repositories.GeolocationRepository;
-import com.Auctions.backEnd.repositories.ItemCategoryRepository;
+import com.Auctions.backEnd.repositories.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterEach;
@@ -56,6 +54,9 @@ public class BidControllerTest {
 
     @Autowired
     private GeolocationRepository geolocationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     private String user1;
     private String user2;
@@ -299,12 +300,17 @@ public class BidControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
-                .andDo( mvcResult ->
-                        mvc.perform(get("/recommend/lsh")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .header("Authorization", user1))
-                                .andExpect(status().isOk())
-                );
+                .andDo( mvcResult -> {
+
+//                        mvc.perform(get("/recommend/lsh")
+//                                .contentType(MediaType.APPLICATION_JSON)
+//                                .header("Authorization", user1))
+//                                .andExpect(status().isOk())
+                } );
+
+        Thread.sleep(5000);
+        User ss = userRepository.findByAccount_Username("goldcoastvideo");
+        assertEquals(ss.getBids().size(), 2);
 
     }
 }

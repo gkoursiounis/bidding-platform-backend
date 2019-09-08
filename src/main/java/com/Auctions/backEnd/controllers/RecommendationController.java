@@ -84,7 +84,7 @@ public class RecommendationController extends BaseController{
             }
 
         try {
-            File inputFile = new File("ebay/items-10.xml");
+            File inputFile = new File("media/book.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);

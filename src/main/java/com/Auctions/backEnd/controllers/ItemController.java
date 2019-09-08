@@ -252,7 +252,7 @@ public class ItemController extends BaseController{
                 item.getCategories().add(cat);
                 cat = cat.getParent();
             }while(cat != null && !cat.getName().equals("All categories"));
-            Collections.reverse(item.getCategories());
+           Collections.reverse(item.getCategories());
         }
 
         if(media != null){
