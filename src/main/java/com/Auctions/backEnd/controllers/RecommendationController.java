@@ -84,7 +84,7 @@ public class RecommendationController extends BaseController{
             }
 
         try {
-            File inputFile = new File("media/book.xml");
+            File inputFile = new File("ebay/items-10.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
@@ -304,21 +304,19 @@ public class RecommendationController extends BaseController{
         for (int i = 0; i < userSize; i++) {
             vectors[i] = new int[itemSize];
 
+            List<Item> items = new ArrayList<>();
+            allUsers.get(i).getBids().forEach(bid -> {
+                items.add(bid.getItem());
+            });
 
             for (int j = 0; j < itemSize; j++) {
-                int i1 = i;
-                int j1 = j;
-                allUsers.get(i).getBids().forEach(bid -> {
-                    if(allItems.get(j1).equals(bid.getItem())){
-                        vectors[i1][j1] = 1;
-                    }
-                    else{
-                        vectors[i1][j1] = 0;
-                    }
-                });
+                if (items.contains(allItems.get(j))) {
+                    vectors[i][j] = 1;
+                } else {
+                    vectors[i][j] = 0;
+                }
             }
         }
-
 
         for (int i = 0; i < userSize; i++) {
 

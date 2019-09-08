@@ -302,15 +302,13 @@ public class BidControllerTest {
                 .andExpect(status().isOk())
                 .andDo( mvcResult -> {
 
-//                        mvc.perform(get("/recommend/lsh")
-//                                .contentType(MediaType.APPLICATION_JSON)
-//                                .header("Authorization", user1))
-//                                .andExpect(status().isOk())
+                        mvc.perform(get("/recommend/lsh")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header("Authorization", user1))
+                                .andExpect(status().isOk());
                 } );
 
-        Thread.sleep(5000);
-        User ss = userRepository.findByAccount_Username("goldcoastvideo");
-        assertEquals(ss.getBids().size(), 2);
+
 
     }
 }
