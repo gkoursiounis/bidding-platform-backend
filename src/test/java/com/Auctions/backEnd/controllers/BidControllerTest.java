@@ -7,6 +7,7 @@ import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.models.ItemCategory;
 import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.BidRepository;
+import com.Auctions.backEnd.repositories.GeolocationRepository;
 import com.Auctions.backEnd.repositories.ItemCategoryRepository;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -52,6 +53,9 @@ public class BidControllerTest {
 
     @Autowired
     private BidRepository bidRepository;
+
+    @Autowired
+    private GeolocationRepository geolocationRepository;
 
     private String user1;
     private String user2;
@@ -147,6 +151,7 @@ public class BidControllerTest {
                 .andExpect(jsonPath("content.*", hasSize(1)));
 
         assertEquals(1, bidRepository.findAll().size());
+        assertEquals(1, geolocationRepository.findAll().size());
     }
 
 
