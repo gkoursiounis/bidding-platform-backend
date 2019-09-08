@@ -166,16 +166,19 @@ public class RecommendationController extends BaseController{
                     }
                     else {
 
-                        ItemCategory subcategory = new ItemCategory();
-                        subcategory.setName(cat.getText());
-                        subcategory.setParent(category);
-                        itemCategoryRepository.save(subcategory);
+                        if (itemCategoryRepository.findItemCategoryByName(cat.getText()) == null) {
 
-                        category.getSubcategories().add(subcategory);
-                        itemCategoryRepository.save(category);
+                            ItemCategory subcategory = new ItemCategory();
+                            subcategory.setName(cat.getText());
+                            subcategory.setParent(category);
+                            itemCategoryRepository.save(subcategory);
 
-                        item.getCategories().add(subcategory);
-                        category = subcategory;
+                            category.getSubcategories().add(subcategory);
+                            itemCategoryRepository.save(category);
+
+                            item.getCategories().add(subcategory);
+                            category = subcategory;
+                        }
                     }
                 }
 
@@ -326,40 +329,20 @@ public class RecommendationController extends BaseController{
             }
             System.out.println();
         }
-//
-//        int count = 80;
-//
-//        // R^n
-//        int n = 16;
-//
-//        int stages = 5;
-//        int buckets = 15;
-//
-//        // Produce some vectors in R^n
-//        Random r = new Random();
-//        int[][] vectors = new int[count][];
-//        for (int i = 0; i < count; i++) {
-//            vectors[i] = new int[n];
-//
-//            for (int j = 0; j < n; j++) {
-//                vectors[i][j] = ThreadLocalRandom.current().nextInt(0, 1 + 1);
-//              //  System.out.print(vectors[i][j]);
-//            }
-//          //  System.out.println();
-//        }
-//
-//        LSHSuperBit lsh = new LSHSuperBit(stages, buckets, n);
-//
-//        // Compute a SuperBit signature, and a LSH hash
-//        for (int i = 0; i < count; i++) {
-//            int[] vector = vectors[i];
-//            int[] hash = lsh.hash(vector);
-//            for (int v : vector) {
-//                System.out.print(v);
-//            }
-//            System.out.print(" : " + hash[0]);
-//            System.out.print("\n");
-//        }
+
+        int stages = 5;
+        int buckets = 15;
+
+        LSHSuperBit lsh = new LSHSuperBit(stages, buckets, itemSize);
+
+        for (int i = 0; i < userSize; i++) {
+
+            int[] vector = vectors[i];
+            int[] hash = lsh.hash(vector);
+
+            System.out.print(allUsers.get(i).getUsername() + " : " + hash[0]);
+            System.out.print("\n");
+        }
 
         return ResponseEntity.ok(null);
     }
