@@ -126,15 +126,7 @@ public class SearchController extends BaseController{
 
 
     /**
-     *
      * https://www.baeldung.com/java-lists-intersection
-     *
-     * @param categoryId
-     * @param lowerPrice
-     * @param higherPrice
-     * @param locationTitle
-     * @param description
-     * @return
      */
 //    @GetMapping("/filters")
 //    public ResponseEntity filterSearch(@Nullable @RequestParam Long categoryId,
