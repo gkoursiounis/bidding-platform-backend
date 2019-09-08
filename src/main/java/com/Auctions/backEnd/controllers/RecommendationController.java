@@ -293,39 +293,75 @@ public class RecommendationController extends BaseController{
     @GetMapping("/lsh")
    public ResponseEntity lsh() throws JDOMException, IOException {
 
-        int count = 80;
 
-        // R^n
-        int n = 16;
+        List<User> allUsers = userRepository.findAll();
+        int userSize = allUsers.size();
 
-        int stages = 5;
-        int buckets = 15;
+        List<Item> allItems = itemRepository.findAll();
+        int itemSize = allItems.size();
 
-        // Produce some vectors in R^n
-        Random r = new Random();
-        int[][] vectors = new int[count][];
-        for (int i = 0; i < count; i++) {
-            vectors[i] = new int[n];
+        int[][] vectors = new int[userSize][];
+        for (int i = 0; i < userSize; i++) {
+            vectors[i] = new int[itemSize];
 
-            for (int j = 0; j < n; j++) {
-                vectors[i][j] = ThreadLocalRandom.current().nextInt(0, 1 + 1);
-              //  System.out.print(vectors[i][j]);
+
+            for (int j = 0; j < itemSize; j++) {
+                int i1 = i;
+                int j1 = j;
+                allUsers.get(i).getBids().forEach(bid -> {
+                    if(allItems.get(j1).equals(bid.getItem())){
+                        vectors[i1][j1] = 1;
+                    }
+                    else{
+                        vectors[i1][j1] = 0;
+                    }
+                });
             }
-          //  System.out.println();
         }
 
-        LSHSuperBit lsh = new LSHSuperBit(stages, buckets, n);
 
-        // Compute a SuperBit signature, and a LSH hash
-        for (int i = 0; i < count; i++) {
-            int[] vector = vectors[i];
-            int[] hash = lsh.hash(vector);
-            for (int v : vector) {
-                System.out.print(v);
+        for (int i = 0; i < userSize; i++) {
+
+            System.out.print(allUsers.get(i).getUsername() + "   ");
+            for (int j = 0; j < itemSize; j++) {
+               System.out.print(vectors[i][j]);
             }
-            System.out.print(" : " + hash[0]);
-            System.out.print("\n");
+            System.out.println();
         }
+//
+//        int count = 80;
+//
+//        // R^n
+//        int n = 16;
+//
+//        int stages = 5;
+//        int buckets = 15;
+//
+//        // Produce some vectors in R^n
+//        Random r = new Random();
+//        int[][] vectors = new int[count][];
+//        for (int i = 0; i < count; i++) {
+//            vectors[i] = new int[n];
+//
+//            for (int j = 0; j < n; j++) {
+//                vectors[i][j] = ThreadLocalRandom.current().nextInt(0, 1 + 1);
+//              //  System.out.print(vectors[i][j]);
+//            }
+//          //  System.out.println();
+//        }
+//
+//        LSHSuperBit lsh = new LSHSuperBit(stages, buckets, n);
+//
+//        // Compute a SuperBit signature, and a LSH hash
+//        for (int i = 0; i < count; i++) {
+//            int[] vector = vectors[i];
+//            int[] hash = lsh.hash(vector);
+//            for (int v : vector) {
+//                System.out.print(v);
+//            }
+//            System.out.print(" : " + hash[0]);
+//            System.out.print("\n");
+//        }
 
         return ResponseEntity.ok(null);
     }

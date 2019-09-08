@@ -30,7 +30,7 @@ public class ItemCategory extends AuditModel  {
     @JsonIgnoreProperties("parent")
     private List<ItemCategory> subcategories = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "categories")
     @JsonIgnore
     private List<Item> items = new ArrayList<>();
 }

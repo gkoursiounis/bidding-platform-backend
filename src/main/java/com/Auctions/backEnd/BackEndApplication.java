@@ -192,16 +192,5 @@ public class BackEndApplication implements CommandLineRunner {
 				});
 			}
 		}, 0, 5, TimeUnit.SECONDS);
-
-
-		exec.scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-
-				System.out.println("HELLO");
-				XmlReader.XmlLoader("ebay/items-100.xml", 10);
-			}
-		}, 0, 365, TimeUnit.DAYS);
 	}
 }

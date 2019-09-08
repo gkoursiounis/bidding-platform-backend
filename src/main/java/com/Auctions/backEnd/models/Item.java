@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.*;
 
@@ -21,6 +22,7 @@ public class Item extends AuditModel implements Serializable {
     @ManyToOne
     private User seller;
 
+    @NotNull
     @Column(name = "item_name", length = 50)
     private String name;
 
@@ -33,7 +35,10 @@ public class Item extends AuditModel implements Serializable {
     @Column(name = "first_bid")
     private Double firstBid;
 
-    @ManyToMany(mappedBy = "items")
+    @ManyToMany
+    @JoinTable(name = "itemCategory_item",
+            joinColumns = @JoinColumn(name = "item_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_category_id"))
     private List<ItemCategory> categories = new ArrayList<>();
 
     @OneToMany( mappedBy = "item")
