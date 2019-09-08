@@ -7,11 +7,19 @@ import com.Auctions.backEnd.repositories.ItemRepository;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.Search.SortComparator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.validation.constraints.Null;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -121,112 +129,167 @@ public class SearchController extends BaseController{
      *
      * https://www.baeldung.com/java-lists-intersection
      *
-     * @param categoriesId
+     * @param categoryId
      * @param lowerPrice
      * @param higherPrice
      * @param locationTitle
      * @param description
      * @return
      */
+//    @GetMapping("/filters")
+//    public ResponseEntity filterSearch(@Nullable @RequestParam Long categoryId,
+//                                       @Nullable @RequestParam Double lowerPrice,
+//                                       @Nullable @RequestParam Double higherPrice,
+//                                       @Nullable @RequestParam String locationTitle,
+//                                       @Nullable @RequestParam String description){
+//
+//        List<Item> results = new ArrayList<>();
+//
+//        //search according to category parameters
+//        if(categoryId != null) {
+//
+//            ItemCategory category = itemCategoryRepository.findItemCategoryById(categoryId);
+//            if(category == null){
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+//                        "Error",
+//                        "Category not found"
+//                ));
+//            }
+//            results.retainAll(category.getItems());
+//        }
+//
+//        //search according to price parameters
+//        if(lowerPrice != null && higherPrice != null){
+//
+//            List<Item> byPrice = itemRepository.searchByPrice(lowerPrice, higherPrice);
+//            if(byPrice == null){
+//                return ResponseEntity.ok(null);
+//            }
+//            if(results.isEmpty()){
+//                results.addAll(byPrice);
+//            }
+//            else{
+//                results.retainAll(byPrice);
+//            }
+//        }
+//        else if(higherPrice != null){
+//
+//            List<Item> byHigherPrice = itemRepository.searchByHigherPrice(higherPrice);
+//            if(byHigherPrice == null){
+//                return ResponseEntity.ok(null);
+//            }
+//            if(results.isEmpty()){
+//                results.addAll(byHigherPrice);
+//            }
+//            else{
+//                results.retainAll(byHigherPrice);
+//            }
+//        }
+//        else if(lowerPrice != null){
+//
+//            List<Item> byLowerPrice = itemRepository.searchByLowerPrice(lowerPrice);
+//            if(byLowerPrice == null){
+//                return ResponseEntity.ok(null);
+//            }
+//            if(results.isEmpty()){
+//                results.addAll(byLowerPrice);
+//            }
+//            else{
+//                results.retainAll(byLowerPrice);
+//            }
+//        }
+//
+//        //search according to location parameter
+//        if(locationTitle != null){
+//
+//            List<Item> byLocationTitle = itemRepository.searchByLocation(locationTitle);
+//            if(byLocationTitle == null){
+//                return ResponseEntity.ok(null);
+//            }
+//            if(results.isEmpty()){
+//                results.addAll(byLocationTitle);
+//            }
+//            else{
+//                results.retainAll(byLocationTitle);
+//            }
+//        }
+//
+//
+//        //search according to description parameter
+//        if(description != null){
+//
+//            List<Item> byDescription = itemRepository.searchByDescription(description);
+//            if(byDescription == null){
+//                return ResponseEntity.ok(null);
+//            }
+//            if(results.isEmpty()){
+//                results.addAll(byDescription);
+//            }
+//            else{
+//                results.retainAll(byDescription);
+//            }
+//        }
+//
+//        return ResponseEntity.ok(results);
+//    }
+
+
+
+    public Page findByCriteria(String categoryName, Double lowerPrice, Double higherPrice,
+                               String locationTitle, String description, Pageable pageable){
+
+        return itemRepository.findAll(new Specification<Item>() {
+            @Override
+            public Predicate toPredicate(Root<Item> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> predicates = new ArrayList<>();
+
+                if(categoryName != null) {
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("categories").get("name"), categoryName)));
+                }
+
+                if(lowerPrice != null && higherPrice != null){
+                    predicates.add(criteriaBuilder.between(root.get("currently"), lowerPrice, higherPrice));
+                }
+                else if(higherPrice != null){
+                    predicates.add(criteriaBuilder.le(root.get("currently"), higherPrice));
+                }
+                else if(lowerPrice != null){
+                    predicates.add(criteriaBuilder.ge(root.get("currently"), lowerPrice));
+                }
+
+                if(description != null){
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(
+                            criteriaBuilder.lower(root.get("description")), "%" + description.toLowerCase() + "%")));
+                }
+                if(locationTitle != null){
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.like(criteriaBuilder.lower(
+                            root.get("location").get("locationTitle")),"%" + locationTitle.toLowerCase() + "%")));
+                }
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        }, pageable);
+    }
+
+    /**
+     * https://javadeveloperzone.com/spring/spring-jpa-dynamic-query-example/
+     *
+     * @param categoryName - exact name of the category (case-sensitive)
+     * @param lowerPrice - lower price of items
+     * @param higherPrice - higher price of items
+     * @param locationTitle - location of auction (non case-sensitive)
+     * @param description - description of an item (non case-sensitive)
+     * @param pageable - pageable (page number, page size, optional sorting)
+     * @return
+     */
     @GetMapping("/filters")
-    public ResponseEntity filterSearch(@Nullable @RequestParam List<Long> categoriesId,
+    public ResponseEntity filterSearch(@Nullable @RequestParam String categoryName,
                                        @Nullable @RequestParam Double lowerPrice,
                                        @Nullable @RequestParam Double higherPrice,
                                        @Nullable @RequestParam String locationTitle,
-                                       @Nullable @RequestParam String description){
+                                       @Nullable @RequestParam String description,
+                                       Pageable pageable){
 
-        List<Item> results = new ArrayList<>();
-//TODO continue
-        //search according to categories parameters
-//        if(categoriesId != null) {
-//
-//            Set<Item> res = new TreeSet<>();
-//            for (Long id : categoriesId) {
-//                ItemCategory category = itemCategoryRepository.findItemCategoryById(Long.valueOf(id));
-//
-//                if (category == null) {
-//                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-//                            "Error",
-//                            "Category not found. Invalid category Id"
-//                    ));
-//                }
-//                res.addAll(category.getItems());
-//            }
-//            results.addAll(res);
-//        }
-
-        //search according to price parameters
-        if(lowerPrice != null && higherPrice != null){
-
-            List<Item> byPrice = itemRepository.searchByPrice(lowerPrice, higherPrice);
-            if(byPrice == null){
-                return ResponseEntity.ok(null);
-            }
-            if(results.isEmpty()){
-                results.addAll(byPrice);
-            }
-            else{
-                results.retainAll(byPrice);
-            }
-        }
-        else if(higherPrice != null){
-
-            List<Item> byHigherPrice = itemRepository.searchByHigherPrice(higherPrice);
-            if(byHigherPrice == null){
-                return ResponseEntity.ok(null);
-            }
-            if(results.isEmpty()){
-                results.addAll(byHigherPrice);
-            }
-            else{
-                results.retainAll(byHigherPrice);
-            }
-        }
-        else if(lowerPrice != null){
-
-            List<Item> byLowerPrice = itemRepository.searchByLowerPrice(lowerPrice);
-            if(byLowerPrice == null){
-                return ResponseEntity.ok(null);
-            }
-            if(results.isEmpty()){
-                results.addAll(byLowerPrice);
-            }
-            else{
-                results.retainAll(byLowerPrice);
-            }
-        }
-
-        //search according to location parameter
-        if(locationTitle != null){
-
-            List<Item> byLocationTitle = itemRepository.searchByLocation(locationTitle);
-            if(byLocationTitle == null){
-                return ResponseEntity.ok(null);
-            }
-            if(results.isEmpty()){
-                results.addAll(byLocationTitle);
-            }
-            else{
-                results.retainAll(byLocationTitle);
-            }
-        }
-
-
-        //search according to description parameter
-        if(description != null){
-
-            List<Item> byDescription = itemRepository.searchByDescription(description);
-            if(byDescription == null){
-                return ResponseEntity.ok(null);
-            }
-            if(results.isEmpty()){
-                results.addAll(byDescription);
-            }
-            else{
-                results.retainAll(byDescription);
-            }
-        }
-
-        return ResponseEntity.ok(results);
+        return ResponseEntity.ok(findByCriteria(categoryName, lowerPrice, higherPrice, locationTitle, description, pageable));
     }
+
 }

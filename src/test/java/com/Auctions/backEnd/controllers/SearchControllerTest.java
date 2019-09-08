@@ -2,6 +2,7 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.BackEndApplication;
 import com.Auctions.backEnd.TestUtils;
+import com.Auctions.backEnd.models.Account;
 import com.Auctions.backEnd.models.ItemCategory;
 import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.ItemCategoryRepository;
@@ -23,6 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import static com.Auctions.backEnd.TestUtils.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -64,15 +66,20 @@ public class SearchControllerTest {
         user2 = createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
         user3 = createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
 
-        ItemCategory category = new ItemCategory();
-        category.setName("cars");
-        itemCategoryRepository.save(category);
+        ItemCategory category = itemCategoryRepository.findItemCategoryByName("All categories");
         categoryId = category.getId().toString();
     }
 
     @AfterEach
     private void after() { testUtils.clearDB(); }
 
+    private void verify(final String username) {
+
+        Account account = accountRepository.findByUsername(username);
+        assertNotNull(account);
+        account.setVerified(true);
+        accountRepository.save(account);
+    }
 
     /**
      * User gets a list of results using the search bar
@@ -605,5 +612,26 @@ public class SearchControllerTest {
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.*", hasSize(0)));
+    }
+
+    @Test
+    public void filterSearch12() throws Exception {
+
+    verify("user1");
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "skata","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "sta moutra mas","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "skara","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/test")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("higherPrice", "11.0")
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("content.*", hasSize(2)));
     }
 }

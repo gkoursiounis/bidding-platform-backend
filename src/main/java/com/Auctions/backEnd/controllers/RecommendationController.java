@@ -5,6 +5,7 @@ import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.BidRes;
 import com.Auctions.backEnd.responses.Message;
 import info.debatty.java.lsh.LSHMinHash;
+import info.debatty.java.lsh.LSHSuperBit;
 import org.jdom.Attribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.*;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -294,34 +293,39 @@ public class RecommendationController extends BaseController{
     @GetMapping("/lsh")
    public ResponseEntity lsh() throws JDOMException, IOException {
 
-        File inputFile = new File("ebay/items-100.xml");
+        int count = 80;
 
-        SAXBuilder saxBuilder = new SAXBuilder();
-        Document document = saxBuilder.build(inputFile);
+        // R^n
+        int n = 16;
 
-        // System.out.println("Root element :" + document.getRootElement().getName());
-        Element classElement = document.getRootElement();
-        List<Element> itemList = classElement.getChildren();
+        int stages = 5;
+        int buckets = 15;
 
-        System.err.println(itemList.size());
+        // Produce some vectors in R^n
+        Random r = new Random();
+        int[][] vectors = new int[count][];
+        for (int i = 0; i < count; i++) {
+            vectors[i] = new int[n];
 
-//        boolean[] vector1 = new boolean[] {true, true, true, true, true};
-//        boolean[] vector2 = new boolean[] {false, false, false, true, false};
-//        boolean[] vector3 = new boolean[] {false, false, true, true, false};
-//
-//        int sizeOfVectors = 5;
-//        int numberOfBuckets = 10;
-//        int stages = 4;
-//
-//        LSHMinHash lsh = new LSHMinHash(stages, numberOfBuckets, sizeOfVectors);
-//
-//        int[] firstHash = lsh.hash(vector1);
-//        int[] secondHash = lsh.hash(vector2);
-//        int[] thirdHash = lsh.hash(vector3);
-//
-//        System.out.println(Arrays.toString(firstHash));
-//        System.out.println(Arrays.toString(secondHash));
-//        System.out.println(Arrays.toString(thirdHash));
+            for (int j = 0; j < n; j++) {
+                vectors[i][j] = ThreadLocalRandom.current().nextInt(0, 1 + 1);
+              //  System.out.print(vectors[i][j]);
+            }
+          //  System.out.println();
+        }
+
+        LSHSuperBit lsh = new LSHSuperBit(stages, buckets, n);
+
+        // Compute a SuperBit signature, and a LSH hash
+        for (int i = 0; i < count; i++) {
+            int[] vector = vectors[i];
+            int[] hash = lsh.hash(vector);
+            for (int v : vector) {
+                System.out.print(v);
+            }
+            System.out.print(" : " + hash[0]);
+            System.out.print("\n");
+        }
 
         return ResponseEntity.ok(null);
     }
