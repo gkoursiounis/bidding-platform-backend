@@ -21,13 +21,15 @@ public class UserController extends BaseController{
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final NotificationRepository notificationRepository;
+    private final UserMessageRepository userMessageRepository;
 
     @Autowired
     public UserController(UserRepository userRepository, ItemRepository itemRepository,
-                          NotificationRepository notificationRepository){
+                          NotificationRepository notificationRepository, UserMessageRepository userMessageRepository){
         this.userRepository = userRepository;
         this.itemRepository = itemRepository;
         this.notificationRepository = notificationRepository;
+        this.userMessageRepository = userMessageRepository;
     }
 
 
@@ -171,11 +173,11 @@ public class UserController extends BaseController{
         ));
     }
 
-//TODO additional features --> modify user details
+
     /**
      * User can mark all of his unseen notifications as seen
      *
-     * @return <HTTP>OK</HTTP>
+     * @return the notification as seen
      */
     @PatchMapping("/markNotification/{notId}")
     public ResponseEntity markNotification(@PathVariable (value = "notId") long notId) {
@@ -183,6 +185,19 @@ public class UserController extends BaseController{
         User requester = requestUser();
 
         Notification not = notificationRepository.findNotificationById(notId);
+        if(not == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "Notification not found"
+            ));
+        }
+
+        if(!requester.getUsername().equals(not.getRecipient().getUsername())){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "This notification is not yours"
+            ));
+        }
         not.setSeen(true);
         notificationRepository.save(not);
 
@@ -275,5 +290,185 @@ public class UserController extends BaseController{
                 "Error",
                 "Only the seller and the highest bidder can rate the participants of this auction"
         ));
+    }
+
+
+    /**
+     * User can get a list of the messages he sent
+     *
+     * @return list of sent messages
+     */
+    @GetMapping("/sentMessages")
+    public ResponseEntity getSentMessages() {
+
+        return ResponseEntity.ok(requestUser().getMessagesSent());
+    }
+
+    /**
+     * User can get a list of the messages he received
+     *
+     * @return list of received messages
+     */
+    @GetMapping("/receivedMessages")
+    public ResponseEntity getReceivedMessages() {
+
+        return ResponseEntity.ok(requestUser().getMessagesReceived());
+    }
+
+
+    /**
+     * User(seller) can send a message to a highest bidder of his auction
+     *
+     * @return the message
+     */
+    @GetMapping("/messageBidder/{itemId}")
+    public ResponseEntity sendMessageToBidder(@PathVariable (value = "itemId") long itemId,
+                                              @RequestParam String text) {
+
+        User requester = requestUser();
+
+        Item item = itemRepository.findItemById(itemId);
+        if(item == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "Auction not found"
+            ));
+        }
+
+        if(!item.isAuctionCompleted()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "The auction is still active"
+            ));
+        }
+
+        if(!requester.getUsername().equals(item.getSeller().getUsername())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "This auction does not belong to you"
+            ));
+        }
+
+        User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();
+        if(highestBidder == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "This auction has no highest bidder"
+            ));
+        }
+
+        UserMessage message = new UserMessage();
+        message.setMessage(text);
+        message.setRecipient(highestBidder);
+        message.setSender(requester);
+
+        return ResponseEntity.ok(message);
+    }
+
+
+    /**
+     * User(highest bidder) can send a message to the seller of an auction he won
+     *
+     * @return the message
+     */
+    @GetMapping("/messageSeller/{itemId}")
+    public ResponseEntity sendMessageToSeller(@PathVariable (value = "itemId") long itemId,
+                                              @RequestParam String text) {
+
+        User requester = requestUser();
+
+        Item item = itemRepository.findItemById(itemId);
+        if(item == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "Auction not found"
+            ));
+        }
+
+        if(!item.isAuctionCompleted()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "The auction is still active"
+            ));
+        }
+
+        User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();
+        if(highestBidder == null || !requester.getUsername().equals(highestBidder.getUsername())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "Highest bidder does not exist or you are not the highest bidder"
+            ));
+        }
+
+        UserMessage message = new UserMessage();
+        message.setMessage(text);
+        message.setRecipient(requester);
+        message.setSender(item.getSeller());
+
+        return ResponseEntity.ok(message);
+    }
+
+
+    /**
+     * User can mark a message as seen
+     *
+     * @return the notification as seen
+     */
+    @PatchMapping("/markMessage/{messId}")
+    public ResponseEntity markMessage(@PathVariable (value = "messId") long messId) {
+
+        User requester = requestUser();
+
+        UserMessage message = userMessageRepository.findUserMessageById(messId);
+        if(!requester.getUsername().equals(message.getRecipient().getUsername())){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "This message is not yours"
+            ));
+        }
+
+        message.setSeen(true);
+        userMessageRepository.save(message);
+
+        return ResponseEntity.ok(message);
+
+    }
+
+
+    /**
+     * User can delete a message
+     *
+     * @return <HTTP>OK</HTTP>
+     */
+    @PatchMapping("/deleteMessage/{messId}")
+    public ResponseEntity deleteMessage(@PathVariable (value = "messId") long messId) {
+
+        User requester = requestUser();
+
+        UserMessage message = userMessageRepository.findUserMessageById(messId);
+        if(message == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "Message not found"
+            ));
+        }
+
+        if(!requester.getUsername().equals(message.getRecipient().getUsername()) &&
+                !requester.getUsername().equals(message.getSender().getUsername())){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You are not neither the recipient not the sender"
+            ));
+        }
+
+        message.getRecipient().getMessagesReceived().remove(message);
+        message.getSender().getMessagesSent().remove(message);
+        userMessageRepository.deleteById(message.getId());
+
+        return ResponseEntity.ok(new Message(
+                "Ok",
+                "Message has been deleted"
+        ));
+
     }
 }
