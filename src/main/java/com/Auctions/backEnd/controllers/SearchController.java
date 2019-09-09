@@ -81,7 +81,9 @@ public class SearchController extends BaseController{
      * @return a list of items
      */
     @GetMapping("/searchBar")
-    public ResponseEntity searchBar(@RequestParam String text, Integer lower, Integer upper){
+    public ResponseEntity searchBar(@RequestParam String text,
+                                    @RequestParam Integer lower,
+                                    @RequestParam Integer upper){
 
         if(text == null || text.isEmpty() || lower == null || upper == null || lower < 0 || upper < lower){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(

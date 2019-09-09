@@ -298,9 +298,11 @@ public class RecommendationController extends BaseController{
 
 
         List<User> allUsers = userRepository.findAll();
+        allUsers.removeIf(user -> user.getBids().isEmpty());
         int userSize = allUsers.size();
 
         List<Item> allItems = itemRepository.findAll();
+        //R^n
         int itemSize = allItems.size();
 
         int[][] vectors = new int[userSize][];
