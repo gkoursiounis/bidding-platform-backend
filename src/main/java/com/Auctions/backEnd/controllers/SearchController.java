@@ -15,10 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.validation.constraints.Null;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,7 +77,7 @@ public class SearchController extends BaseController{
      * @param upper - the lower bound of the results sublist (exclusive)
      * @return a list of items
      */
-    @GetMapping("/searchBar")
+    @PutMapping("/searchBar")
     public ResponseEntity searchBar(@RequestBody String text,
                                     @RequestParam Integer lower,
                                     @RequestParam Integer upper){
@@ -229,7 +226,7 @@ public class SearchController extends BaseController{
 
 
 
-    public Page findByCriteria(String categoryName, Double lowerPrice, Double higherPrice,
+    public Page findByCriteria(String categoryId, Double lowerPrice, Double higherPrice,
                                String locationTitle, String description, Pageable pageable){
 
         return itemRepository.findAll(new Specification<Item>() {
@@ -237,8 +234,9 @@ public class SearchController extends BaseController{
             public Predicate toPredicate(Root<Item> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> predicates = new ArrayList<>();
 
-                if(categoryName != null) {
-                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("categories").get("name"), categoryName)));
+                if(categoryId != null) {
+                    Join<Item, ItemCategory> join = root.join("categories", JoinType.LEFT);
+                    predicates.add(criteriaBuilder.and(criteriaBuilder.equal(join.get("id"), categoryId)));
                 }
 
                 if(lowerPrice != null && higherPrice != null){
@@ -267,7 +265,7 @@ public class SearchController extends BaseController{
     /**
      * https://javadeveloperzone.com/spring/spring-jpa-dynamic-query-example/
      *
-     * @param categoryName - exact name of the category (case-sensitive)
+     * @param categoryId - exact name of the category (case-sensitive)
      * @param lowerPrice - lower price of items
      * @param higherPrice - higher price of items
      * @param locationTitle - location of auction (non case-sensitive)
@@ -276,14 +274,14 @@ public class SearchController extends BaseController{
      * @return
      */
     @GetMapping("/filters")
-    public ResponseEntity filterSearch(@Nullable @RequestParam String categoryName,
+    public ResponseEntity filterSearch(@Nullable @RequestParam String categoryId,
                                        @Nullable @RequestParam Double lowerPrice,
                                        @Nullable @RequestParam Double higherPrice,
                                        @Nullable @RequestParam String locationTitle,
                                        @Nullable @RequestParam String description,
                                        Pageable pageable){
 
-        return ResponseEntity.ok(findByCriteria(categoryName, lowerPrice, higherPrice, locationTitle, description, pageable));
+        return ResponseEntity.ok(findByCriteria(categoryId, lowerPrice, higherPrice, locationTitle, description, pageable));
     }
 
 }

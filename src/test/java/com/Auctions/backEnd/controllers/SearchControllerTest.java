@@ -631,11 +631,32 @@ public class SearchControllerTest {
         TestUtils.makeFullItem(mvc,categoryId,"item1",
                 "skara","100.0","5.0", "Dit Uoa", user1);
 
-        mvc.perform(get("/search/test")
+        mvc.perform(get("/search/filters")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("higherPrice", "11.0")
+                .param("locationTitle", "DIT")
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("content.*", hasSize(2)));
+                .andExpect(jsonPath("content.*", hasSize(3)));
+    }
+
+    @Test
+    public void filterSearch13() throws Exception {
+
+        verify("user1");
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "skata","100.0","10.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "sta moutra mas","100.0","15.0", "Dit Uoa", user1);
+
+        TestUtils.makeFullItem(mvc,categoryId,"item1",
+                "skara","100.0","5.0", "Dit Uoa", user1);
+
+        mvc.perform(get("/search/filters")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("categoryId", categoryId)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("content.*", hasSize(3)));
     }
 }
