@@ -81,7 +81,7 @@ public class SearchController extends BaseController{
      * @return a list of items
      */
     @GetMapping("/searchBar")
-    public ResponseEntity searchBar(@RequestParam String text,
+    public ResponseEntity searchBar(@RequestBody String text,
                                     @RequestParam Integer lower,
                                     @RequestParam Integer upper){
 

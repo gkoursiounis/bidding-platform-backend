@@ -68,6 +68,10 @@ public class SearchControllerTest {
 
         ItemCategory category = itemCategoryRepository.findItemCategoryByName("All categories");
         categoryId = category.getId().toString();
+
+        verify("user1");
+        verify("user2");
+        verify("user3");
     }
 
     @AfterEach
@@ -101,7 +105,7 @@ public class SearchControllerTest {
 
         mvc.perform(get("/search/searchBar")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("text", "fancy dress")
+                .content("fancy dress")
                 .param("lower", "0")
                 .param("upper", "10")
                 .header("Authorization", user1))
