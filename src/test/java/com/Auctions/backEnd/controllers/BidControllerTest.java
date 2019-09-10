@@ -71,20 +71,20 @@ public class BidControllerTest {
                 .alwaysDo(MockMvcResultHandlers.print())
                 .build();
 
-        user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
-        user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
-        user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
-
+      //  user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
+//        user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
+      // user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
+        user3 = TestUtils.login(mvc, "tediadiktyoy", "adminadmin");
         ItemCategory category = new ItemCategory();
         category.setName("cat1");
         itemCategoryRepository.save(category);
         categoryId = category.getId().toString();
     }
 
-    @AfterEach
-    public void after() {
-        this.testUtils.clearDB();
-    }
+//    @AfterEach
+//    public void after() {
+//        this.testUtils.clearDB();
+//    }
 
 
     private void verify(final String username) {
@@ -284,7 +284,7 @@ public class BidControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", user1))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.*", hasSize(10)))
+                                .andExpect(jsonPath("$.*", hasSize(100)))
                 );
 
 
@@ -304,12 +304,23 @@ public class BidControllerTest {
 
                         mvc.perform(get("/recommend/lsh")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .param("username", "mrwvh")
+                                .param("username", "rulabula")
                                 .header("Authorization", user1))
                                 .andExpect(status().isOk());
                 } );
 
 
 
+    }
+
+    @Test
+    public void lsh1() throws Exception {
+
+
+        mvc.perform(get("/recommend/lsh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("username", "mrwvh")
+                .header("Authorization", user3))
+                .andExpect(status().isOk());
     }
 }

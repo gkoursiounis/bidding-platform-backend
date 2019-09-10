@@ -86,7 +86,7 @@ public class RecommendationController extends BaseController{
             }
 
         try {
-            File inputFile = new File("ebay/items-10.xml");
+            File inputFile = new File("ebay/items-100.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
@@ -326,14 +326,14 @@ public class RecommendationController extends BaseController{
             }
         }
 
-        for (int i = 0; i < userSize; i++) {
-
-            System.out.print(allUsers.get(i).getUsername() + "   ");
-            for (int j = 0; j < itemSize; j++) {
-               System.out.print(vectors[i][j]  + " ");
-            }
-            System.out.println();
-        }
+//        for (int i = 0; i < userSize; i++) {
+//
+//            System.out.print(allUsers.get(i).getUsername() + "   ");
+//            for (int j = 0; j < itemSize; j++) {
+//               System.out.print(vectors[i][j]  + " ");
+//            }
+//            System.out.println();
+//        }
 
         int stages = 5;
         int buckets = 15;
@@ -366,8 +366,8 @@ public class RecommendationController extends BaseController{
                 System.err.println("avgRating " + avgRating);
             }
 
-            System.out.print(allUsers.get(i).getUsername() + " :\t" + hash[0]);
-            System.out.print("\n");
+           // System.out.print(allUsers.get(i).getUsername() + " :\t" + hash[0]);
+            //System.out.print("\n");
         }
 
         System.out.println("\n\n\n");
@@ -390,31 +390,49 @@ public class RecommendationController extends BaseController{
         double lambda = 1 / neighborhood.stream().mapToDouble(
                 neighbourPosition -> cosineSimilarity(vectors[finalActiveUserPosition], vectors[neighbourPosition])).sum();
 
+        //auctions that users has participated in
+        List<Item> participations = new ArrayList<>();
+        allUsers.get(finalActiveUserPosition).getBids().forEach(bid -> {
+            participations.add(bid.getItem());
+        });
+
 //        List<Item> possibleRecommends = new ArrayList<>();
 //        //exclude user
 //
 //
 //        //for every neighbour of the active user we get the auctions they have participated in
+        List<RatedItem> ratedItems = new ArrayList<>();
         double finalAvgRating = avgRating;
         neighborhood.forEach(neighbourPosition -> {
             allUsers.get(neighbourPosition).getBids().forEach(bid -> {
 
-                double sum = neighborhood.stream().mapToDouble(neighbourPos ->
-                        lambda * cosineSimilarity(vectors[finalActiveUserPosition], vectors[neighbourPos]) *
-                        (bid.getItem().getBidderRating() -
-                                Arrays.stream(vectors[neighbourPos]).average().orElse(0))).sum();
-                System.out.println(finalAvgRating + sum);
+                if (!participations.contains(bid.getItem())) {
+
+                    double sum = neighborhood.stream().mapToDouble(neighbourPos ->
+                            cosineSimilarity(vectors[finalActiveUserPosition], vectors[neighbourPos]) *
+                                    (1 - Arrays.stream(vectors[neighbourPos]).average().orElse(0))
+                    ).sum();
+                    System.out.println(finalAvgRating + lambda * sum);
+                    ratedItems.add(new RatedItem(bid.getItem(), finalAvgRating + lambda * sum));
+                }
             });
             //user.getBids().forEach(bid -> { possibleRecommends.add(bid.getItem()); });
         });
 
         System.out.println("\n\n\n");
+        int finalActiveUserBucket = activeUserBucket;
         map.entrySet().forEach(entry-> {
-            System.out.println(entry.getKey());
-            List<Integer> nn = entry.getValue();
-            nn.forEach(user -> { System.out.println(allUsers.get(user).getUsername()); });
-            //System.out.println(entry.getKey() + " " + entry.getValue());
+            if(entry.getKey() == finalActiveUserBucket) {
+                System.out.println(entry.getKey());
+                List<Integer> nn = entry.getValue();
+                nn.forEach(user -> {
+                    System.out.println(allUsers.get(user).getUsername());
+                });
+                //System.out.println(entry.getKey() + " " + entry.getValue());
+            }
         });
+
+        System.out.println("\n\n\nFINAL");
 
         return ResponseEntity.ok(null);
     }
@@ -455,4 +473,14 @@ public class RecommendationController extends BaseController{
 //        return ResponseEntity.ok(null);
 //    }
 
+}
+
+class RatedItem{
+    Item item;
+    double rating;
+
+    RatedItem(Item item, double rating){
+        this.item = item;
+        this.rating = rating;
+    }
 }
