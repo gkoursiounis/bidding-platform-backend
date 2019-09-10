@@ -111,21 +111,20 @@ public class BackEndApplication implements CommandLineRunner {
 			@Override
 			public void run() {
 
-				userRepository.deleteAll();
-				accountRepository.deleteAll();
-				Account admin = new Account();
-				admin.setUsername("tediadiktyoy");
-				admin.setPassword(passwordEncoder.encode("adminadmin"));
-				admin.setEmail("sdi1600077@di.uoa.gr");
-				admin.setAdmin(true);
-				admin.setVerified(true);
+				if(userRepository.findByAccount_Username("tediadiktyoy") == null) {
+					Account admin = new Account();
+					admin.setUsername("tediadiktyoy");
+					admin.setPassword(passwordEncoder.encode("adminadmin"));
+					admin.setEmail("sdi1600077@di.uoa.gr");
+					admin.setAdmin(true);
+					admin.setVerified(true);
 
-				User user = new User();
-				user.setFirstName("TEDiadiktyoy");
-				user.setLastName("spring2019");
-				user.setTelNumber("1234567890");
-				user.setTaxNumber("1234");
-				user.setAccount(admin);
+					User user = new User();
+					user.setFirstName("TEDiadiktyoy");
+					user.setLastName("spring2019");
+					user.setTelNumber("1234567890");
+					user.setTaxNumber("1234");
+					user.setAccount(admin);
 //
 //				Geolocation address = new Geolocation();
 //				address.setLatitude(37.968564);
@@ -133,14 +132,14 @@ public class BackEndApplication implements CommandLineRunner {
 //				address.setLocationTitle("Dept. Informatics and Telecomms");
 //				user.setAddress(address);
 
-				userRepository.save(user);
-				accountRepository.save(admin);
+					userRepository.save(user);
+					accountRepository.save(admin);
 
-				ItemCategory root = new ItemCategory();
-				root.setName("All categories");
-				itemCategoryRepository.save(root);
-
-				System.err.println("Creating admin account...");
+					ItemCategory root = new ItemCategory();
+					root.setName("All categories");
+					itemCategoryRepository.save(root);
+				}
+				System.err.println("Setting up admin account...");
 			}
 		}, 0, 365, TimeUnit.DAYS);
 

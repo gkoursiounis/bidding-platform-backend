@@ -94,7 +94,7 @@ public class SearchController extends BaseController{
         //split string to words
         String[] values = text.split(" "); //TODO maybe extend to recognize ,-..
         for (String element : values) {
-            res.addAll(itemRepository.searchItems(element));
+            res.addAll(itemRepository.searchItems(element.toLowerCase()));
         }
 
         Map<Item, Integer> map = new HashMap<>();

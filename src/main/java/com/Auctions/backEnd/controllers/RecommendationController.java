@@ -33,6 +33,8 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 
+import static info.debatty.java.lsh.SuperBit.cosineSimilarity;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/recommend")
@@ -294,7 +296,7 @@ public class RecommendationController extends BaseController{
     }
 
     @GetMapping("/lsh")
-   public ResponseEntity lsh() throws JDOMException, IOException {
+   public ResponseEntity lsh(@RequestParam String username) throws JDOMException, IOException {
 
 
         List<User> allUsers = userRepository.findAll();
@@ -302,12 +304,11 @@ public class RecommendationController extends BaseController{
         int userSize = allUsers.size();
 
         List<Item> allItems = itemRepository.findAll();
-        //R^n
         int itemSize = allItems.size();
 
-        int[][] vectors = new int[userSize][];
+        double[][] vectors = new double[userSize][];
         for (int i = 0; i < userSize; i++) {
-            vectors[i] = new int[itemSize];
+            vectors[i] = new double[itemSize];
 
             List<Item> items = new ArrayList<>();
             allUsers.get(i).getBids().forEach(bid -> {
@@ -315,8 +316,10 @@ public class RecommendationController extends BaseController{
             });
 
             for (int j = 0; j < itemSize; j++) {
-                if (items.contains(allItems.get(j))) {
+                if(items.contains(allItems.get(j))) {
                     vectors[i][j] = 1;
+                } else if(items.contains(allUsers.get(i).getItemSeen())){
+                    vectors[i][j] = 0.5;
                 } else {
                     vectors[i][j] = 0;
                 }
@@ -327,7 +330,7 @@ public class RecommendationController extends BaseController{
 
             System.out.print(allUsers.get(i).getUsername() + "   ");
             for (int j = 0; j < itemSize; j++) {
-               System.out.print(vectors[i][j]);
+               System.out.print(vectors[i][j]  + " ");
             }
             System.out.println();
         }
@@ -335,16 +338,83 @@ public class RecommendationController extends BaseController{
         int stages = 5;
         int buckets = 15;
 
+        int activeUserBucket = -1;
+        int activeUserPosition = 0;
+        double avgRating = 0.0;
+
         LSHSuperBit lsh = new LSHSuperBit(stages, buckets, itemSize);
+        Map<Integer, List<Integer>> map = new HashMap<>();
 
         for (int i = 0; i < userSize; i++) {
 
-            int[] vector = vectors[i];
+            double[] vector = vectors[i];
             int[] hash = lsh.hash(vector);
 
-            System.out.print(allUsers.get(i).getUsername() + " : " + hash[0]);
+            List<Integer> neighbours = map.get(hash[0]);
+            if(neighbours == null){
+                neighbours = new ArrayList<>();
+            }
+            neighbours.add(i);
+            map.put(hash[0], neighbours);
+
+            if(allUsers.get(i).getUsername().equals(username)){
+                activeUserBucket = hash[0];
+                activeUserPosition = i;
+                System.err.println("activeUserBucket " + activeUserBucket);
+                System.err.println("activeUserPosition " + activeUserPosition);
+                avgRating =  Arrays.stream(vector).average().orElse(0);
+                System.err.println("avgRating " + avgRating);
+            }
+
+            System.out.print(allUsers.get(i).getUsername() + " :\t" + hash[0]);
             System.out.print("\n");
         }
+
+        System.out.println("\n\n\n");
+
+        List<Integer> neighborhood = map.get(activeUserBucket);
+        neighborhood.removeIf(number -> allUsers.get(number).getUsername().equals(username));
+
+//        System.out.println("dddd");
+//        for (Integer k : neighborhood) {
+//            System.out.println(vectors[activeUserPosition]);
+//            System.out.println(vectors[k]);
+//            System.out.println("cosine" +
+//                    "");
+//            System.out.println(cosineSimilarity(vectors[activeUserPosition], vectors[k]));
+//        }
+//        System.out.println("dd");
+        //get lambda
+
+        int finalActiveUserPosition = activeUserPosition;
+        double lambda = 1 / neighborhood.stream().mapToDouble(
+                neighbourPosition -> cosineSimilarity(vectors[finalActiveUserPosition], vectors[neighbourPosition])).sum();
+
+//        List<Item> possibleRecommends = new ArrayList<>();
+//        //exclude user
+//
+//
+//        //for every neighbour of the active user we get the auctions they have participated in
+        double finalAvgRating = avgRating;
+        neighborhood.forEach(neighbourPosition -> {
+            allUsers.get(neighbourPosition).getBids().forEach(bid -> {
+
+                double sum = neighborhood.stream().mapToDouble(neighbourPos ->
+                        lambda * cosineSimilarity(vectors[finalActiveUserPosition], vectors[neighbourPos]) *
+                        (bid.getItem().getBidderRating() -
+                                Arrays.stream(vectors[neighbourPos]).average().orElse(0))).sum();
+                System.out.println(finalAvgRating + sum);
+            });
+            //user.getBids().forEach(bid -> { possibleRecommends.add(bid.getItem()); });
+        });
+
+        System.out.println("\n\n\n");
+        map.entrySet().forEach(entry-> {
+            System.out.println(entry.getKey());
+            List<Integer> nn = entry.getValue();
+            nn.forEach(user -> { System.out.println(allUsers.get(user).getUsername()); });
+            //System.out.println(entry.getKey() + " " + entry.getValue());
+        });
 
         return ResponseEntity.ok(null);
     }

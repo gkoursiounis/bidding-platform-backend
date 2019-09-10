@@ -30,6 +30,11 @@ public class User extends AuditModel {
     @JsonIgnore
     private Set<Item> items = new TreeSet<>();
 
+    @OneToMany
+    @OrderBy(value = "createdAt DESC")
+    @JsonIgnore
+    private List<Item> itemSeen = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "bidder", cascade = CascadeType.REMOVE)
     @OrderBy(value = "createdAt DESC")

@@ -64,9 +64,21 @@ public class Item extends AuditModel implements Serializable {
     @OneToOne
     private Geolocation location;
 
-    private int sellerRating;
+    private int sellerRating = 0;
 
-    private int bidderRating;
+    private int bidderRating = 0;
+
+    @JsonGetter("getMediaPath")
+    public List<String> getMediaPath() {
+        if(media != null) {
+            List<String> paths = new ArrayList<>();
+            this.media.forEach(picture -> {
+                paths.add(picture.getDownloadLink());
+            });
+            return paths;
+        }
+        return null;
+    }
 
     public Item(final Date createdAt) { super(createdAt); }
 

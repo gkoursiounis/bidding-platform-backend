@@ -75,6 +75,10 @@ public class ItemControllerTest {
 
         ItemCategory category = itemCategoryRepository.findItemCategoryByName("All categories");
         categoryId = category.getId().toString();
+
+        verify("user1");
+        verify("user2");
+        verify("user3");
     }
 
     @AfterEach
@@ -100,6 +104,14 @@ public class ItemControllerTest {
         Account account = accountRepository.findByUsername(username);
         assertNotNull(account);
         account.setVerified(false);
+        accountRepository.save(account);
+    }
+
+    private void verify(final String username) {
+
+        Account account = accountRepository.findByUsername(username);
+        assertNotNull(account);
+        account.setVerified(true);
         accountRepository.save(account);
     }
 
@@ -703,7 +715,7 @@ public class ItemControllerTest {
                         .param("name", "item1")
                         .param("buyPrice", "10.4")
                         .param("firstBid", "5.3")
-                        .param("categoriesId", categoryId)
+                        .param("categoryId", categoryId)
                         .param("longitude", "23.76695")
                         .param("latitude", "37.968564")
                         .param("locationTitle", "Dit UoA")

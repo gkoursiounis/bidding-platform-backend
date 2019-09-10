@@ -304,6 +304,7 @@ public class BidControllerTest {
 
                         mvc.perform(get("/recommend/lsh")
                                 .contentType(MediaType.APPLICATION_JSON)
+                                .param("username", "mrwvh")
                                 .header("Authorization", user1))
                                 .andExpect(status().isOk());
                 } );
