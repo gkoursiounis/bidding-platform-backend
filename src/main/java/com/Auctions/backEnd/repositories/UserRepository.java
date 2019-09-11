@@ -44,9 +44,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> getPendingUsers();
 
 
-    @Query( "SELECT u "+
+    @Query( "SELECT u.itemSeen "+
             "FROM User u "+
             "WHERE u = :user")
-    Page<User> getUserHistory(@Param("user") User user, Pageable pageable);
+    Page<Item> getUserHistory(@Param("user") User user, Pageable pageable);
 }
 
