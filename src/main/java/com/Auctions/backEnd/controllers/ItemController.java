@@ -403,7 +403,8 @@ public class ItemController extends BaseController{
         if(firstBid != null){
 
             if((buyPrice != null && java.lang.Double.compare(buyPrice, firstBid) < 0) ||
-                    (buyPrice == null && java.lang.Double.compare(item.getBuyPrice(), firstBid) < 0)){
+                    (buyPrice == null && item.getBuyPrice() != null &&
+                            java.lang.Double.compare(item.getBuyPrice(), firstBid) < 0)){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                         "Error",
                         "Buy price cannot be less than the first bid"

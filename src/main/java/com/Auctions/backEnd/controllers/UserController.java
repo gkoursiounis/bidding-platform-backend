@@ -7,6 +7,7 @@ import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -136,11 +137,8 @@ public class UserController extends BaseController{
     @GetMapping("/myHistory")
     public ResponseEntity getMyHistory(Pageable pageable) {
 
-        User requester = requestUser();
-        int start = (int) pageable.getOffset();
-        int end = (start + pageable.getPageSize()) > requester.getItemSeen().size() ? requester.getItemSeen().size() : (start + pageable.getPageSize());
-        Page<Item> pages = new PageImpl<Item>(requester.getItemSeen().subList(start, end), pageable, requester.getItemSeen().size());
-        return ResponseEntity.ok(pages);
+        final Page<Item> page = new PageImpl<>(requestUser().getItemSeen(), pageable, requestUser().getItemSeen().size());
+        return ResponseEntity.ok(page);
     }
 
 

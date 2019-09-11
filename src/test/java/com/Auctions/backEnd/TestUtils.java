@@ -236,7 +236,7 @@ public class TestUtils {
 				mvc.perform(
 						post("/item")
 								.param("name", "item1")
-								.param("buyPrice", "10.4")
+								//.param("buyPrice", "10.4")
 								.param("firstBid", "5.3")
 								.param("categoryId", categoryId)
 								.param("longitude", "23.76695")

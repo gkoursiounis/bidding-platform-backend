@@ -31,7 +31,7 @@ public class User extends AuditModel {
     private Set<Item> items = new TreeSet<>();
 
     @OneToMany
-    @OrderBy(value = "createdAt DESC")
+    @JoinColumn(name = "items_user_seen")
     @JsonIgnore
     private List<Item> itemSeen = new ArrayList<>();
 

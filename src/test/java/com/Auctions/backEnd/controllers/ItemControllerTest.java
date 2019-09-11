@@ -69,6 +69,7 @@ public class ItemControllerTest {
                 .alwaysDo(MockMvcResultHandlers.print())
                 .build();
 
+       // user1 = TestUtils.login(mvc, "tediadiktyoy", "adminadmin");
         user1 = createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
         user2 = createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
         user3 = createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");

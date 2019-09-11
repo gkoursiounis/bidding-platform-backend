@@ -71,10 +71,10 @@ public class BidControllerTest {
                 .alwaysDo(MockMvcResultHandlers.print())
                 .build();
 
-    //    user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
-    //    user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
-     //  user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
-        user3 = TestUtils.login(mvc, "tediadiktyoy", "adminadmin");
+       user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
+       user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email42@di.uoa.gr");
+      user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
+     //   user1 = TestUtils.login(mvc, "tediadiktyoy", "adminadmin");
 //        ItemCategory category = new ItemCategory();
 //        category.setName("cat1");
 //        itemCategoryRepository.save(category);
@@ -105,6 +105,7 @@ public class BidControllerTest {
     public void makeBid1() throws Exception {
 
         verify("user1");
+        verify("user2");
 
         mvc.perform(get("/item/openAuctions")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -151,8 +152,15 @@ public class BidControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("content.*", hasSize(1)));
 
-        assertEquals(1, bidRepository.findAll().size());
-        assertEquals(1, geolocationRepository.findAll().size());
+        mvc.perform(get("/user/myHistory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "1")
+                .param("size", "2")
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+
+       // assertEquals(1, bidRepository.findAll().size());
+       // assertEquals(1, geolocationRepository.findAll().size());
     }
 
 
