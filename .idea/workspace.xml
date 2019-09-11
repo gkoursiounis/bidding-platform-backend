@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7fd5b0c1-8e05-4e06-9316-1ef9af2c730c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/configs/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/configs/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/ItemController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/ItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/ItemRepository.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
@@ -53,20 +50,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/ItemRepository.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="336">
-              <caret line="73" column="49" selection-start-line="73" selection-start-column="49" selection-end-line="73" selection-end-column="49" />
+            <state relative-caret-position="302">
+              <caret line="71" column="38" selection-start-line="71" selection-start-column="38" selection-end-line="71" selection-end-column="38" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/configs/SecurityConfig.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="179">
-              <caret line="47" column="48" selection-start-line="47" selection-start-column="48" selection-end-line="47" selection-end-column="48" />
+            <state relative-caret-position="281">
+              <caret line="53" column="29" lean-forward="true" selection-start-line="53" selection-start-column="29" selection-end-line="53" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -139,8 +136,8 @@
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/ItemController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/ItemRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/configs/SecurityConfig.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/ItemRepository.java" />
       </list>
     </option>
   </component>
@@ -441,7 +438,7 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7104167" visible="true" weight="0.23600605" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7104167" visible="true" weight="0.23600605" />
       <window_info id="Structure" order="1" sideWeight="0.28958333" side_tool="true" visible="true" weight="0.23600605" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -456,7 +453,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Version Control" order="6" weight="0.3289689" />
       <window_info anchor="bottom" id="ConsoleMavenPlugin" order="7" weight="0.32779455" />
-      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.21440262" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.21440262" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5015129" side_tool="true" weight="0.36006546" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.28150573" />
       <window_info anchor="bottom" id="TODO" order="11" weight="0.3666121" />
@@ -766,10 +763,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/ItemRepository.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/configs/SecurityConfig.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="73" column="49" selection-start-line="73" selection-start-column="49" selection-end-line="73" selection-end-column="49" />
+        <state relative-caret-position="281">
+          <caret line="53" column="29" lean-forward="true" selection-start-line="53" selection-start-column="29" selection-end-line="53" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -784,10 +781,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/configs/SecurityConfig.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/ItemRepository.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="47" column="48" selection-start-line="47" selection-start-column="48" selection-end-line="47" selection-end-column="48" />
+        <state relative-caret-position="302">
+          <caret line="71" column="38" selection-start-line="71" selection-start-column="38" selection-end-line="71" selection-end-column="38" />
         </state>
       </provider>
     </entry>
