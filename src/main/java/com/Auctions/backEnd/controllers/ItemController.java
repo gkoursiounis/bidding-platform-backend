@@ -53,6 +53,33 @@ public class ItemController extends BaseController{
     @GetMapping("/{itemId}")
     public ResponseEntity getItem(@PathVariable (value = "itemId") long itemId){
 
+        User requester = requestUser();
+
+        Item item = itemRepository.findItemById(itemId);
+        if(item == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "Item not found. Invalid item Id"
+            ));
+        }
+
+        requester.getItems().add(item);
+        userRepository.save(requester);
+
+        return ResponseEntity.ok(item);
+    }
+
+
+    /**
+     * A User can get an item/auction details using its itemId
+     * If the itemId is invalid then we get an <HTTP>NOT FOUND</HTTP>
+     *
+     * @param itemId - Id of the item
+     * @return the item details
+     */
+    @GetMapping("/{itemId}/visitor")
+    public ResponseEntity getItemAsVisitor(@PathVariable (value = "itemId") long itemId){
+
         Item item = itemRepository.findItemById(itemId);
         if(item == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
@@ -325,6 +352,7 @@ public class ItemController extends BaseController{
     @PatchMapping("/{itemId}")
     public ResponseEntity modifyItem(@PathVariable (value = "itemId") long itemId,
                                      @Nullable @RequestParam String name,
+                                     @Nullable @RequestParam(name = "media") List<MultipartFile> media,
                                      @Nullable @RequestParam Double buyPrice,
                                      @Nullable @RequestParam Double firstBid,
                                      @Nullable @RequestParam Long categoryId,
@@ -401,6 +429,32 @@ public class ItemController extends BaseController{
                 itemCategoryRepository.save(cat);
                 cat = cat.getParent();
             }while(cat != null && !cat.getName().equals("All categories"));
+        }
+
+        if(media != null){
+
+            for(MultipartFile picture : media){
+
+                if (!BaseController.contentTypes.contains(picture.getContentType())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                            "Error",
+                            "Image type not supported"
+                    ));
+                }
+
+                if (picture.getSize() > DBFile.MAXIMUM_IMAGE_SIZE) {
+
+                    ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                            "Error",
+                            "Image over limits"
+                    ));
+                }
+
+                DBFile dbFile = dBFileStorageService.storeFile(picture);
+                dbFile.setDownloadLink("/downloadFile/" + dbFile.getId() + "." + dbFile.getFileType().split("/")[1]);
+                dbFile = dbFileRepository.save(dbFile);
+                item.getMedia().add(dbFile);
+            }
         }
 
         itemRepository.save(item);

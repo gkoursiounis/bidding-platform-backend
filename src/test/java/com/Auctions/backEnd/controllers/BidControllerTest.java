@@ -296,7 +296,7 @@ public class BidControllerTest {
     @Test
     public void lsh() throws Exception {
 
-        mvc.perform(get("/recommend")
+        mvc.perform(get("/recommend/xmlRead")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", user1))
                 .andExpect(status().isOk())
@@ -322,5 +322,20 @@ public class BidControllerTest {
                 .param("username", "mrwvh")
                 .header("Authorization", user3))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void visitor() throws Exception {
+
+        mvc.perform(get("/recommend/xmlRead")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk())
+                .andDo( mvcResult -> {
+
+                    mvc.perform(get("/recommend/visitor")
+                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(status().isOk());
+                } );
     }
 }

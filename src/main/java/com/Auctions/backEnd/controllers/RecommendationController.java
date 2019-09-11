@@ -6,6 +6,8 @@ import com.Auctions.backEnd.responses.BidRes;
 import com.Auctions.backEnd.responses.Message;
 import info.debatty.java.lsh.LSHMinHash;
 import info.debatty.java.lsh.LSHSuperBit;
+import lombok.Getter;
+import lombok.Setter;
 import org.jdom.Attribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,8 +75,17 @@ public class RecommendationController extends BaseController{
      * @throws SAXException
      * @throws XPathExpressionException
      */
-    @GetMapping
-    public ResponseEntity test2() {
+    @GetMapping("/xmlRead")
+    public ResponseEntity loadFromXml() {
+
+//        User requester = requestUser();
+//
+//        if(!requester.isAdmin()){
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+//                    "Error",
+//                    "You need to be an admin to perform this action"
+//            ));
+//        }
 
             Geolocation zero = geolocationRepository.findLocationByLatitudeAndLongitude(0.0,0.0);
             if(zero == null){
@@ -295,8 +306,20 @@ public class RecommendationController extends BaseController{
         ));
     }
 
+
+    @GetMapping("/visitor")
+    public ResponseEntity popularItems(){
+        List<Item> items = itemRepository.popularItems();
+        if(items.size() > 5){
+            return ResponseEntity.ok(items.subList(0,5));
+        }
+        return ResponseEntity.ok(items);
+    }
+
+
+
     @GetMapping("/lsh")
-   public ResponseEntity lsh(@RequestParam String username) throws JDOMException, IOException {
+    public ResponseEntity lsh(@RequestParam String username) throws JDOMException, IOException {
 
 
         List<User> allUsers = userRepository.findAll();
@@ -423,11 +446,20 @@ public class RecommendationController extends BaseController{
                     ).sum();
                     System.out.println(finalAvgRating + lambda * sum);
 
-//                    List<Item> it = new ArrayList<>();
-//                    ratedItems.forEach(item -> it.add(item.item) );
+                    List<Item> existingRatings = new ArrayList<>();
+                    ratedItems.forEach(item -> existingRatings.add(item.item));
+                    if(!existingRatings.contains(bid.getItem())){
+                        ratedItems.add(new RatedItem(bid.getItem(), finalAvgRating + lambda * sum));
+                    }
+                    else{
+                        double score = finalAvgRating + lambda * sum;
+                        if(ratedItems.get(existingRatings.indexOf(bid.getItem())).getRating() < score){
+                            ratedItems.get(existingRatings.indexOf(bid.getItem())).setRating(score);
+                        }
+                    }
 
                     //checkRatedItems()
-                    ratedItems.add(new RatedItem(bid.getItem(), finalAvgRating + lambda * sum));
+                    //ratedItems.add(new RatedItem(bid.getItem(), finalAvgRating + lambda * sum));
                 }
             });
             //user.getBids().forEach(bid -> { possibleRecommends.add(bid.getItem()); });
@@ -442,54 +474,22 @@ public class RecommendationController extends BaseController{
                 nn.forEach(user -> {
                     System.out.println(allUsers.get(user).getUsername());
                 });
-                //System.out.println(entry.getKey() + " " + entry.getValue());
             }
         });
 
+        ratedItems.sort(Comparator.comparingDouble(RatedItem::getRating).reversed());
+
         System.out.println("\n\n\nFINAL");
-        ratedItems.forEach(item -> { System.out.println(item.item.getName() + " with rating " + item.rating);});
+        ratedItems.forEach(item -> { System.out.println(item.item.getName() + " with rating " + item.getRating());});
 
-        return ResponseEntity.ok(null);
+        List<Item> finalRatings = new ArrayList<>();
+        ratedItems.forEach(item -> finalRatings.add(item.item));
+        return ResponseEntity.ok(finalRatings);
     }
-
-
-
-
-//    @GetMapping("/test3")
-//    public ResponseEntity test3() {
-//
-//        SAXBuilder builder = new SAXBuilder();
-//        File xmlFile = new File("media/book.xml");
-//
-//        try {
-//
-//            Document document = (Document) builder.build(xmlFile);
-//            Element rootNode = document.getRootElement();
-//            List list = rootNode.getChildren();
-//
-//            for (int i = 0; i < list.size(); i++) {
-//
-//                Element node = (Element) list.get(i);
-//
-//                System.out.println("First Name : " + node.getChildText("Name"));
-//                Attribute attribute =  node.getChild("Location").getAttribute("Longitude");
-//                System.out.println("Student roll no : "
-//                        + attribute.getValue() );
-//
-//
-//
-//            }
-//
-//        } catch (IOException io) {
-//            System.out.println(io.getMessage());
-//        } catch (JDOMException jdomex) {
-//            System.out.println(jdomex.getMessage());
-//        }
-//        return ResponseEntity.ok(null);
-//    }
-
 }
 
+@Getter
+@Setter
 class RatedItem{
     Item item;
     double rating;
@@ -498,12 +498,4 @@ class RatedItem{
         this.item = item;
         this.rating = rating;
     }
-
-//    boolean checkRatedItems(List<RatedItem> list, Item item, double rating){
-//        for(int i = 0; i<list.size(); i++){
-//            if(list.get(i).item.equals(item)){
-//
-//            }
-//        }
-//    }
 }
