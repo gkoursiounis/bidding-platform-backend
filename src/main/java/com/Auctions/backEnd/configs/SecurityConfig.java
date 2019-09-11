@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/file/upload").permitAll()
                 .antMatchers("/account/checkUsername").permitAll()
                 .antMatchers("/account/checkEmail").permitAll()
-                .antMatchers("/downloadFile/{fileId}").permitAll()
+                .antMatchers("/media/downloadFile/{fileId}").permitAll()
                 .antMatchers("/item/{itemId}").permitAll()
                 .antMatchers("/item/allCategories").permitAll()
                 .antMatchers("/item/feed").permitAll()
