@@ -5,7 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/testdb.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/db/testdb.mv.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ebay/items-10.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ebay/items-10.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java" afterDir="false" />
     </list>
@@ -25,8 +25,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="321" column="41" selection-start-line="321" selection-start-column="41" selection-end-line="321" selection-end-column="41" />
+            <state relative-caret-position="80">
+              <caret line="306" column="60" selection-start-line="306" selection-start-column="52" selection-end-line="306" selection-end-column="60" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -37,7 +37,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/TestUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1156">
+            <state relative-caret-position="527">
               <caret line="46" column="23" selection-start-line="46" selection-start-column="23" selection-end-line="46" selection-end-column="23" />
             </state>
           </provider>
@@ -55,20 +55,38 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ebay/items-10.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="28">
-              <caret line="159" column="41" selection-start-line="159" selection-start-column="36" selection-end-line="159" selection-end-column="41" />
+            <state relative-caret-position="109">
+              <caret line="209" column="30" selection-start-line="209" selection-start-column="10" selection-end-line="209" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/configs/SecurityConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="145">
+              <caret line="45" column="43" selection-start-line="45" selection-start-column="31" selection-end-line="45" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="742">
+              <caret line="417" column="61" lean-forward="true" selection-start-line="417" selection-start-column="61" selection-end-line="417" selection-end-column="61" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="453">
-              <caret line="481" column="29" selection-start-line="481" selection-start-column="29" selection-end-line="481" selection-end-column="29" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="94">
+              <caret line="119" column="30" selection-start-line="119" selection-start-column="30" selection-end-line="119" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -85,6 +103,8 @@
       <find>boncon123</find>
       <find>mrwvh</find>
       <find>rulabula</find>
+      <find>STAR WARS INFINITIES</find>
+      <find>downloadFile</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -114,6 +134,7 @@
         <option value="$PROJECT_DIR$/application.properties" />
         <option value="$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java" />
       </list>
     </option>
   </component>
@@ -128,7 +149,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -208,6 +228,16 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="backEnd" type="462c0819:PsiDirectoryNode" />
+              <item name="controllers" type="462c0819:PsiDirectoryNode" />
+              <item name="RecommendationController.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
+            </path>
+            <path>
+              <item name="backEnd" type="b2602c69:ProjectViewProjectNode" />
+              <item name="auctions" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="backEnd" type="462c0819:PsiDirectoryNode" />
               <item name="models" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -272,6 +302,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -296,7 +327,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.BidControllerTest.lsh1">
+  <component name="RunManager" selected="JUnit.BidControllerTest.lsh">
     <configuration name="BackEndApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.Auctions.backEnd.BackEndApplication" />
       <module name="backEnd" />
@@ -376,9 +407,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.BidControllerTest.lsh1" />
-        <item itemvalue="JUnit.BidControllerTest.test" />
         <item itemvalue="JUnit.BidControllerTest.lsh" />
+        <item itemvalue="JUnit.BidControllerTest.test" />
+        <item itemvalue="JUnit.BidControllerTest.lsh1" />
         <item itemvalue="Application.BackEndApplication" />
         <item itemvalue="JUnit.ItemControllerTest.createItem1" />
       </list>
@@ -398,43 +429,43 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="BidControllerTest_lsh - 2019.09.11 at 00h 09m 00s.xml">
-      <configuration name="BidControllerTest.lsh" configurationId="JUnit" />
+    <history-entry file="BidControllerTest_lsh1 - 2019.09.11 at 14h 42m 02s.xml">
+      <configuration name="BidControllerTest.lsh1" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BidControllerTest_lsh - 2019.09.11 at 00h 14m 50s.xml">
-      <configuration name="BidControllerTest.lsh" configurationId="JUnit" />
+    <history-entry file="BidControllerTest_lsh1 - 2019.09.11 at 14h 55m 55s.xml">
+      <configuration name="BidControllerTest.lsh1" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BidControllerTest_lsh - 2019.09.11 at 00h 16m 01s.xml">
-      <configuration name="BidControllerTest.lsh" configurationId="JUnit" />
+    <history-entry file="BidControllerTest_lsh1 - 2019.09.11 at 14h 58m 19s.xml">
+      <configuration name="BidControllerTest.lsh1" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BidControllerTest_lsh - 2019.09.11 at 00h 18m 56s.xml">
-      <configuration name="BidControllerTest.lsh" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="BidControllerTest_lsh - 2019.09.11 at 00h 21m 52s.xml">
-      <configuration name="BidControllerTest.lsh" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="BidControllerTest_test - 2019.09.11 at 00h 28m 21s.xml">
+    <history-entry file="BidControllerTest_test - 2019.09.11 at 14h 58m 47s.xml">
       <configuration name="BidControllerTest.test" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BidControllerTest_lsh1 - 2019.09.11 at 00h 31m 24s.xml">
-      <configuration name="BidControllerTest.lsh1" configurationId="JUnit" />
+    <history-entry file="BidControllerTest_test - 2019.09.11 at 15h 02m 03s.xml">
+      <configuration name="BidControllerTest.test" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BidControllerTest_lsh1 - 2019.09.11 at 00h 33m 27s.xml">
-      <configuration name="BidControllerTest.lsh1" configurationId="JUnit" />
+    <history-entry file="BidControllerTest_test - 2019.09.11 at 15h 03m 29s.xml">
+      <configuration name="BidControllerTest.test" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BidControllerTest_lsh1 - 2019.09.11 at 00h 34m 47s.xml">
-      <configuration name="BidControllerTest.lsh1" configurationId="JUnit" />
+    <history-entry file="BidControllerTest_lsh - 2019.09.11 at 15h 04m 35s.xml">
+      <configuration name="BidControllerTest.lsh" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BidControllerTest_lsh1 - 2019.09.11 at 00h 37m 10s.xml">
-      <configuration name="BidControllerTest.lsh1" configurationId="JUnit" />
+    <history-entry file="BidControllerTest_lsh - 2019.09.11 at 15h 26m 49s.xml">
+      <configuration name="BidControllerTest.lsh" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BidControllerTest_lsh - 2019.09.11 at 15h 27m 20s.xml">
+      <configuration name="BidControllerTest.lsh" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BidControllerTest_lsh - 2019.09.11 at 15h 29m 34s.xml">
+      <configuration name="BidControllerTest.lsh" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7557118" visible="true" weight="0.2322239" />
-      <window_info id="Structure" order="1" sideWeight="0.24428822" side_tool="true" visible="true" weight="0.2322239" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7093023" visible="true" weight="0.23600605" />
+      <window_info id="Structure" order="1" sideWeight="0.29069766" side_tool="true" visible="true" weight="0.23600605" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -442,13 +473,13 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.4893617" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49848714" visible="true" weight="0.06873977" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49848714" visible="true" weight="0.15548281" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.5155483" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Version Control" order="6" weight="0.3289689" />
       <window_info anchor="bottom" id="ConsoleMavenPlugin" order="7" weight="0.32779455" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.08510638" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.21440262" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5015129" side_tool="true" weight="0.36006546" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.28150573" />
       <window_info anchor="bottom" id="TODO" order="11" weight="0.3666121" />
@@ -672,13 +703,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-810">
-          <caret line="26" column="13" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/services/File/DBFileStorageService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
@@ -714,13 +738,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="38" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/ItemController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-840">
@@ -730,22 +747,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/TestUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1156">
+        <state relative-caret-position="527">
           <caret line="46" column="23" selection-start-line="46" selection-start-column="23" selection-end-line="46" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ebay/items-10.xml">
+    <entry file="file://$PROJECT_DIR$/application.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="159" column="41" selection-start-line="159" selection-start-column="36" selection-end-line="159" selection-end-column="41" />
+        <state relative-caret-position="255">
+          <caret line="15" column="38" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="321" column="41" selection-start-line="321" selection-start-column="41" selection-end-line="321" selection-end-column="41" />
+        <state relative-caret-position="80">
+          <caret line="306" column="60" selection-start-line="306" selection-start-column="52" selection-end-line="306" selection-end-column="60" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -754,11 +771,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="481" column="29" selection-start-line="481" selection-start-column="29" selection-end-line="481" selection-end-column="29" />
+        <state relative-caret-position="742">
+          <caret line="417" column="61" lean-forward="true" selection-start-line="417" selection-start-column="61" selection-end-line="417" selection-end-column="61" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ebay/items-10.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="109">
+          <caret line="209" column="30" selection-start-line="209" selection-start-column="10" selection-end-line="209" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/configs/SecurityConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="145">
+          <caret line="45" column="43" selection-start-line="45" selection-start-column="31" selection-end-line="45" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="94">
+          <caret line="119" column="30" selection-start-line="119" selection-start-column="30" selection-end-line="119" selection-end-column="30" />
         </state>
       </provider>
     </entry>

@@ -86,7 +86,7 @@ public class RecommendationController extends BaseController{
             }
 
         try {
-            File inputFile = new File("ebay/items-100.xml");
+            File inputFile = new File("ebay/items-10.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
@@ -336,7 +336,7 @@ public class RecommendationController extends BaseController{
 //        }
 
         int stages = 5;
-        int buckets = 15;
+        int buckets = 2;
 
         int activeUserBucket = -1;
         int activeUserPosition = 0;
@@ -370,9 +370,18 @@ public class RecommendationController extends BaseController{
             //System.out.print("\n");
         }
 
-        System.out.println("\n\n\n");
+        System.out.println("\n\n\n NEIGHBORS");
 
         List<Integer> neighborhood = map.get(activeUserBucket);
+
+        for (Integer integer : neighborhood) {
+            System.out.print(allUsers.get(integer).getUsername() + "   ");
+            for (int j = 0; j < itemSize; j++) {
+               System.out.print(vectors[integer][j]  + " ");
+            }
+            System.out.println();
+        }
+
         neighborhood.removeIf(number -> allUsers.get(number).getUsername().equals(username));
 
 //        System.out.println("dddd");
@@ -406,13 +415,18 @@ public class RecommendationController extends BaseController{
         neighborhood.forEach(neighbourPosition -> {
             allUsers.get(neighbourPosition).getBids().forEach(bid -> {
 
-                if (!participations.contains(bid.getItem())) {
+                if(!participations.contains(bid.getItem())) {
 
                     double sum = neighborhood.stream().mapToDouble(neighbourPos ->
                             cosineSimilarity(vectors[finalActiveUserPosition], vectors[neighbourPos]) *
                                     (1 - Arrays.stream(vectors[neighbourPos]).average().orElse(0))
                     ).sum();
                     System.out.println(finalAvgRating + lambda * sum);
+
+//                    List<Item> it = new ArrayList<>();
+//                    ratedItems.forEach(item -> it.add(item.item) );
+
+                    //checkRatedItems()
                     ratedItems.add(new RatedItem(bid.getItem(), finalAvgRating + lambda * sum));
                 }
             });
@@ -433,6 +447,7 @@ public class RecommendationController extends BaseController{
         });
 
         System.out.println("\n\n\nFINAL");
+        ratedItems.forEach(item -> { System.out.println(item.item.getName() + " with rating " + item.rating);});
 
         return ResponseEntity.ok(null);
     }
@@ -483,4 +498,12 @@ class RatedItem{
         this.item = item;
         this.rating = rating;
     }
+
+//    boolean checkRatedItems(List<RatedItem> list, Item item, double rating){
+//        for(int i = 0; i<list.size(); i++){
+//            if(list.get(i).item.equals(item)){
+//
+//            }
+//        }
+//    }
 }

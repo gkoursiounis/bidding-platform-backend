@@ -117,7 +117,7 @@ public class FileController extends BaseController{
      * @param fileId
      * @return
      */
-    @GetMapping("/downloadPicture/{fileId}")
+    @GetMapping("/downloadFile/{fileId}")
     public ResponseEntity downloadFile(@PathVariable(value = "fileId") String fileId) {
 
         DBFile dbFile = dBFileStorageService.getFile(fileId);
