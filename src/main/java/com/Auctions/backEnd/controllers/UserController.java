@@ -137,7 +137,8 @@ public class UserController extends BaseController{
     @GetMapping("/myHistory")
     public ResponseEntity getMyHistory(Pageable pageable) {
 
-        final Page<Item> page = new PageImpl<>(requestUser().getItemSeen(), pageable, requestUser().getItemSeen().size());
+        long size= requestUser().getItemSeen().size();
+        final Page<Item> page = new PageImpl<>(requestUser().getItemSeen(), pageable, size);
         return ResponseEntity.ok(page);
     }
 

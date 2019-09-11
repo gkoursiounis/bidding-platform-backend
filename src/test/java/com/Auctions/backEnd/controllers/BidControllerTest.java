@@ -79,6 +79,8 @@ public class BidControllerTest {
 //        category.setName("cat1");
 //        itemCategoryRepository.save(category);
 //        categoryId = category.getId().toString();
+        verify("user1");
+        verify("user2");
     }
 
 //    @AfterEach
@@ -104,8 +106,7 @@ public class BidControllerTest {
     @DisplayName("Successful item creation")
     public void makeBid1() throws Exception {
 
-        verify("user1");
-        verify("user2");
+
 
         mvc.perform(get("/item/openAuctions")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -173,11 +174,40 @@ public class BidControllerTest {
     @DisplayName("Invalid itemId")
     public void makeBid2() throws Exception {
 
-        mvc.perform(post("/bid/makeBid/12345")
+//        mvc.perform(post("/bid/makeBid/12345")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .param("offer", "6.0")
+//                .header("Authorization", user2))
+//                .andExpect(status().isNotFound());
+
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item_id = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
+
+        mvc.perform(get("/item/" + item_id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("offer", "6.0")
-                .header("Authorization", user2))
-                .andExpect(status().isNotFound());
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+
+        item_id = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
+
+        mvc.perform(get("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+
+        item_id = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
+
+        mvc.perform(get("/item/" + item_id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+
+        mvc.perform(get("/user/myHistory")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "1")
+                .param("size", "2")
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
     }
 
 
