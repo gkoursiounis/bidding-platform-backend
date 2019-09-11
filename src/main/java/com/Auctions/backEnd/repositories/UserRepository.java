@@ -42,11 +42,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "FROM User u, Account a "+
             "WHERE u.account = a and a.verified = 'false'")
     List<User> getPendingUsers();
-
-
-    @Query( "SELECT u.itemSeen "+
-            "FROM User u "+
-            "WHERE u = :user")
-    Page<Item> getUserHistory(@Param("user") User user, Pageable pageable);
 }
 

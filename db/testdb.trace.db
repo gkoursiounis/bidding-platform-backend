@@ -137,3 +137,6 @@ select user0_.id as id1_9_, user0_.created_at as created_2_9_, user0_.fk_account
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.lang.Thread.run(Thread.java:748)
+2019-09-11 20:34:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Syntax error in SQL statement "SELECT COUNT(.[*]) AS COL_0_0_ FROM USER USER0_ CROSS JOIN USER_ITEM_SEEN ITEMSEEN1_, ITEM ITEM2_ WHERE USER0_.ID=ITEMSEEN1_.USER_ID AND ITEMSEEN1_.ITEM_SEEN_ID=ITEM2_.ID AND USER0_.ID=? "; expected "*, DISTINCT, NOT, EXISTS, INTERSECTS, SELECT, FROM, WITH"; SQL statement:
+select count(.) as col_0_0_ from user user0_ cross join user_item_seen itemseen1_, item item2_ where user0_.id=itemseen1_.user_id and itemseen1_.item_seen_id=item2_.id and user0_.id=? [42001-197]

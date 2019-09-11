@@ -5,6 +5,8 @@ import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.FormattedUser;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -135,7 +137,10 @@ public class UserController extends BaseController{
     public ResponseEntity getMyHistory(Pageable pageable) {
 
         User requester = requestUser();
-        return ResponseEntity.ok(userRepository.getUserHistory(requester, pageable));
+        int start = (int) pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > requester.getItemSeen().size() ? requester.getItemSeen().size() : (start + pageable.getPageSize());
+        Page<Item> pages = new PageImpl<Item>(requester.getItemSeen().subList(start, end), pageable, requester.getItemSeen().size());
+        return ResponseEntity.ok(pages);
     }
 
 
@@ -146,7 +151,6 @@ public class UserController extends BaseController{
      */
     @GetMapping("/myNotifications")
     public ResponseEntity getMyNotifications() {
-
         return ResponseEntity.ok(requestUser().getNotifications());
     }
 
