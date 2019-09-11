@@ -63,8 +63,10 @@ public class ItemController extends BaseController{
             ));
         }
 
-        requester.getItems().add(item);
-        userRepository.save(requester);
+        if(!requester.getItemSeen().contains(item)){
+            requester.getItemSeen().add(item);
+            userRepository.save(requester);
+        }
 
         return ResponseEntity.ok(item);
     }
@@ -134,49 +136,49 @@ public class ItemController extends BaseController{
 
 
 
-    @GetMapping("/feed")
-    public ResponseEntity getFeed() {
-
-        PageRequest.of(0, 5);
-        List<Item> feed = itemRepository.getAll();
-
-        if(feed.size() > 5){
-
-            List<Item> returnedFeed = new ArrayList<>();
-            for(int i = 0; i < 5; i++) {
-                returnedFeed.add(feed.get(i));
-            }
-
-            return ResponseEntity.ok(returnedFeed);
-        }
-
-        return ResponseEntity.ok(feed);
-    }
-
-    @GetMapping("/older/{itemId}")
-    public ResponseEntity getOlderAuctions(@PathVariable Long itemId){
-
-        return itemRepository.findById(itemId).map((item) -> {
-
-            List<Item> olderItems =  itemRepository.getOlderItems(item.getCreatedAt());
-
-            if(olderItems.size() > 5){
-
-                List<Item> returnedFeed = new ArrayList<>();
-                for(int i = 0; i < 5; i++) {
-                    returnedFeed.add(olderItems.get(i));
-                }
-
-                return ResponseEntity.ok(returnedFeed);
-            }
-
-            return ResponseEntity.ok(olderItems);
-
-        }).orElseGet(()-> new ResponseEntity(new Message(
-                "Error",
-                "Item not found"
-        ), HttpStatus.NOT_FOUND));
-    }
+//    @GetMapping("/feed")
+//    public ResponseEntity getFeed() {
+//
+//        PageRequest.of(0, 5);
+//        List<Item> feed = itemRepository.getAll();
+//
+//        if(feed.size() > 5){
+//
+//            List<Item> returnedFeed = new ArrayList<>();
+//            for(int i = 0; i < 5; i++) {
+//                returnedFeed.add(feed.get(i));
+//            }
+//
+//            return ResponseEntity.ok(returnedFeed);
+//        }
+//
+//        return ResponseEntity.ok(feed);
+//    }
+//
+//    @GetMapping("/older/{itemId}")
+//    public ResponseEntity getOlderAuctions(@PathVariable Long itemId){
+//
+//        return itemRepository.findById(itemId).map((item) -> {
+//
+//            List<Item> olderItems =  itemRepository.getOlderItems(item.getCreatedAt());
+//
+//            if(olderItems.size() > 5){
+//
+//                List<Item> returnedFeed = new ArrayList<>();
+//                for(int i = 0; i < 5; i++) {
+//                    returnedFeed.add(olderItems.get(i));
+//                }
+//
+//                return ResponseEntity.ok(returnedFeed);
+//            }
+//
+//            return ResponseEntity.ok(olderItems);
+//
+//        }).orElseGet(()-> new ResponseEntity(new Message(
+//                "Error",
+//                "Item not found"
+//        ), HttpStatus.NOT_FOUND));
+//    }
 
 
 
