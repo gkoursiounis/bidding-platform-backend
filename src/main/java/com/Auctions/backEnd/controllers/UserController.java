@@ -5,6 +5,7 @@ import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.FormattedUser;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -122,6 +123,19 @@ public class UserController extends BaseController{
 
         User requester = requestUser();
         return ResponseEntity.ok(requester.getBids());
+    }
+
+
+    /**
+     * User can get a list of the auctions he has visited
+     *
+     * @return list of history
+     */
+    @GetMapping("/myHistory")
+    public ResponseEntity getMyHistory(Pageable pageable) {
+
+        User requester = requestUser();
+        return ResponseEntity.ok(userRepository.getUserHistory(requester, pageable));
     }
 
 

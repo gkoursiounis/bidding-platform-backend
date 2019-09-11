@@ -69,9 +69,7 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
 
     @Query(
             "select i from Item i join i.bids b " +
-            "order by b.size DESC " //+
-          //  "union " +
-          //  "select i from User i join i.itemSeen b"
+            "order by b.size DESC "
     )
     List<Item> popularItems();
 }

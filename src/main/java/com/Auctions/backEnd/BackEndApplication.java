@@ -118,9 +118,11 @@ public class BackEndApplication implements CommandLineRunner {
 					userRepository.save(user);
 					accountRepository.save(admin);
 
-					ItemCategory root = new ItemCategory();
-					root.setName("All categories");
-					itemCategoryRepository.save(root);
+					if(itemCategoryRepository.findItemCategoryByName("All categories") == null) {
+						ItemCategory root = new ItemCategory();
+						root.setName("All categories");
+						itemCategoryRepository.save(root);
+					}
 				}
 				System.err.println("Setting up admin account...");
 			}

@@ -71,14 +71,14 @@ public class BidControllerTest {
                 .alwaysDo(MockMvcResultHandlers.print())
                 .build();
 
-        user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
-        user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
-       user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
-     //   user3 = TestUtils.login(mvc, "tediadiktyoy", "adminadmin");
-        ItemCategory category = new ItemCategory();
-        category.setName("cat1");
-        itemCategoryRepository.save(category);
-        categoryId = category.getId().toString();
+    //    user1 = TestUtils.createAccount(mvc, "user1", "myPwd123", "FirstName1", "LastName1", "email1@di.uoa.gr");
+    //    user2 = TestUtils.createAccount(mvc, "user2", "myPwd123", "FirstName2", "LastName2", "email2@di.uoa.gr");
+     //  user3 = TestUtils.createAccount(mvc, "user3", "myPwd123", "FirstName3", "LastName3", "email3@di.uoa.gr");
+        user3 = TestUtils.login(mvc, "tediadiktyoy", "adminadmin");
+//        ItemCategory category = new ItemCategory();
+//        category.setName("cat1");
+//        itemCategoryRepository.save(category);
+//        categoryId = category.getId().toString();
     }
 
 //    @AfterEach
@@ -275,16 +275,16 @@ public class BidControllerTest {
     @Test
     public void test() throws Exception {
 
-        mvc.perform(get("/recommend")
+        mvc.perform(get("/recommend/xmlRead")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
+                .header("Authorization", user3))
                 .andExpect(status().isOk())
                 .andDo( mvcResult ->
                         mvc.perform(get("/item/allAuctions")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header("Authorization", user1))
                                 .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.*", hasSize(10)))
+                                .andExpect(jsonPath("$.*", hasSize(500)))
                 );
 
 

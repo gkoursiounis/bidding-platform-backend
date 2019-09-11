@@ -1,5 +1,6 @@
 package com.Auctions.backEnd.repositories;
 
+import com.Auctions.backEnd.models.Item;
 import com.Auctions.backEnd.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,5 +42,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "FROM User u, Account a "+
             "WHERE u.account = a and a.verified = 'false'")
     List<User> getPendingUsers();
+
+
+    @Query( "SELECT u "+
+            "FROM User u "+
+            "WHERE u = :user")
+    Page<User> getUserHistory(@Param("user") User user, Pageable pageable);
 }
 

@@ -503,7 +503,9 @@ public class ItemController extends BaseController{
         }
 
         item.getSeller().getItems().remove(item);
+        item.getSeller().getItemSeen().remove(item);
         userRepository.save(item.getSeller());
+
         itemRepository.deleteById(item.getId());
 
         return ResponseEntity.status(HttpStatus.OK).body(new Message(

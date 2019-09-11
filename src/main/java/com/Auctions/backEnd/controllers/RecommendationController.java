@@ -97,7 +97,7 @@ public class RecommendationController extends BaseController{
             }
 
         try {
-            File inputFile = new File("ebay/items-10.xml");
+            File inputFile = new File("ebay/items-3.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
@@ -321,6 +321,7 @@ public class RecommendationController extends BaseController{
     @GetMapping("/lsh")
     public ResponseEntity lsh(@RequestParam String username) throws JDOMException, IOException {
 
+        //check user exists
 
         List<User> allUsers = userRepository.findAll();
         allUsers.removeIf(user -> user.getBids().isEmpty());

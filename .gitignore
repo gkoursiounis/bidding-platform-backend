@@ -27,6 +27,7 @@ target/
 
 # media folder
 media/*
+ebay/*
 
 # application properties
 #application.properties
