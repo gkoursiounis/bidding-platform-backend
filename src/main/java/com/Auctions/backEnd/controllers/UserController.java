@@ -140,6 +140,11 @@ public class UserController extends BaseController{
         int page = pageable.getPageNumber();
         int size = pageable.getPageSize();
         int totalElements = requestUser().getItemSeen().size();
+
+        if(totalElements == 0){
+            return ResponseEntity.ok(new ResultPage(null, totalElements, 0));
+        }
+
         List<List<Item>> subset = Lists.partition(requestUser().getItemSeen(), size);
 
         return ResponseEntity.ok(new ResultPage(subset.get(page), totalElements, (int)Math.ceil((double)totalElements / size)));
