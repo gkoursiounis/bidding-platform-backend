@@ -325,6 +325,10 @@ public class RecommendationController extends BaseController{
         List<Item> allItems = itemRepository.findAll();
         int itemSize = allItems.size();
 
+        if(itemSize == 0){
+            return ResponseEntity.ok(null);
+        }
+
         double[][] vectors = new double[userSize][];
         for (int i = 0; i < userSize; i++) {
             vectors[i] = new double[itemSize];

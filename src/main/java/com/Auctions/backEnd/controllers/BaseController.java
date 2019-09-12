@@ -93,10 +93,23 @@ public abstract class BaseController {
         Notification toSeller = new Notification();
         toSeller.setRecipient(item.getSeller());
         toSeller.setItemId(item.getId());
-        toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
+        toSeller.setMessage("Your auction has been completed! Click here for details");
         notificationRepository.save(toSeller);
 
         item.getSeller().getNotifications().add(toSeller);
         userRepository.save(item.getSeller());
+    }
+
+
+    void notifyForVerification(User user){
+
+        Notification toUser = new Notification();
+        toUser.setRecipient(user);
+        toUser.setItemId(null);
+        toUser.setMessage("You are now verified!");
+        notificationRepository.save(toUser);
+
+        user.getNotifications().add(toUser);
+        userRepository.save(user);
     }
 }

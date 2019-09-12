@@ -155,7 +155,7 @@ public class BackEndApplication implements CommandLineRunner {
 						Notification toSeller = new Notification();
 						toSeller.setRecipient(item.getSeller());
 						toSeller.setItemId(item.getId());
-						toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
+						toSeller.setMessage("Your auction has been completed! Click here for details");
 						notificationRepository.save(toSeller);
 
 						item.getSeller().getNotifications().add(toSeller);
@@ -166,7 +166,7 @@ public class BackEndApplication implements CommandLineRunner {
 							User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();
 							toBuyer.setRecipient(highestBidder);
 							toBuyer.setItemId(item.getId());
-							toBuyer.setMessage("Congratulations! You won the auction for \"" + item.getName() + "\"");
+							toBuyer.setMessage("Congratulations, you won an auction! Click here for details");
 							notificationRepository.save(toBuyer);
 
 							highestBidder.getNotifications().add(toBuyer);

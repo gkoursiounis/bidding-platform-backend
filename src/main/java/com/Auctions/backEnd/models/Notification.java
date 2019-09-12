@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -21,7 +22,8 @@ public class Notification extends AuditModel {
 
     String message;
 
-    long itemId;
+    @Nullable
+    Long itemId;
 
     boolean seen = false;
 

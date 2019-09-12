@@ -109,6 +109,7 @@ public class AdminController extends BaseController{
         pending.forEach(user -> {
             user.getAccount().setVerified(true);
             accountRepository.save(user.getAccount());
+            notifyForVerification(user);
         });
 
         return ResponseEntity.ok(new Message(
@@ -153,6 +154,7 @@ public class AdminController extends BaseController{
 
         user.getAccount().setVerified(true);
         accountRepository.save(user.getAccount());
+        notifyForVerification(user);
 
         return ResponseEntity.status(HttpStatus.OK).body(new Message(
                 "Ok",
