@@ -101,6 +101,11 @@ public abstract class BaseController {
     }
 
 
+    /**
+     * Helper function to notify user when his
+     * verification is completed by the administrator
+     * @param user - the unverified user
+     */
     void notifyForVerification(User user){
 
         Notification toUser = new Notification();

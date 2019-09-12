@@ -5,7 +5,9 @@ import com.Auctions.backEnd.models.ItemCategory;
 import com.Auctions.backEnd.repositories.ItemCategoryRepository;
 import com.Auctions.backEnd.repositories.ItemRepository;
 import com.Auctions.backEnd.responses.Message;
+import com.Auctions.backEnd.responses.ResultPage;
 import com.Auctions.backEnd.services.Search.SortComparator;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,19 +75,16 @@ public class SearchController extends BaseController{
      * https://www.geeksforgeeks.org/sort-elements-by-frequency-set-5-using-java-map/
      *
      * @param text - the keyword string
-     * @param lower - the lower bound of the results sublist (inclusive)
-     * @param upper - the lower bound of the results sublist (exclusive)
      * @return a list of items
      */
     @PutMapping("/searchBar")
     public ResponseEntity searchBar(@RequestBody String text,
-                                    @RequestParam Integer lower,
-                                    @RequestParam Integer upper){
+                                    Pageable pageable){
 
-        if(text == null || text.isEmpty() || lower == null || upper == null || lower < 0 || upper < lower){
+        if(text == null || text.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "No keywords given or sublist range out of range"
+                    "No keywords given"
             ));
         }
 
@@ -113,14 +112,19 @@ public class SearchController extends BaseController{
         //sort the map using Collections CLass
         Collections.sort(outputArray, comp);
 
-        LinkedHashSet<Item> hashSet = new LinkedHashSet<>(outputArray);
+        ArrayList<Item> result = new ArrayList<>(new LinkedHashSet<>(outputArray));
 
-        ArrayList<Item> result = new ArrayList<>(hashSet);
-        if(upper > result.size() - 1){
-            return ResponseEntity.ok(result.subList(lower, result.size()));
+        int page = pageable.getPageNumber();
+        int size = pageable.getPageSize();
+        int totalElements = result.size();
+
+        if(totalElements == 0){
+            return ResponseEntity.ok(new ResultPage(null, totalElements, 0));
         }
 
-        return ResponseEntity.ok(result.subList(lower, upper));
+        List<List<Item>> subset = Lists.partition(result, size);
+
+        return ResponseEntity.ok(new ResultPage(subset.get(page), totalElements, (int)Math.ceil((double)totalElements / size)));
     }
 
 

@@ -359,7 +359,7 @@ public class RecommendationController extends BaseController{
 //        }
 
         int stages = 5;
-        int buckets = 2;
+        int buckets = (int) Math.sqrt(userSize);
 
         int activeUserBucket = -1;
         int activeUserPosition = 0;
@@ -383,30 +383,30 @@ public class RecommendationController extends BaseController{
             if(allUsers.get(i).getUsername().equals(username)){
                 activeUserBucket = hash[0];
                 activeUserPosition = i;
-                System.err.println("activeUserBucket " + activeUserBucket);
-                System.err.println("activeUserPosition " + activeUserPosition);
+             //   System.err.println("activeUserBucket " + activeUserBucket);
+            // System.err.println("activeUserPosition " + activeUserPosition);
                 avgRating =  Arrays.stream(vector).average().orElse(0);
-                System.err.println("avgRating " + avgRating);
+             //   System.err.println("avgRating " + avgRating);
             }
 
            // System.out.print(allUsers.get(i).getUsername() + " :\t" + hash[0]);
             //System.out.print("\n");
         }
 
-        System.out.println("\n\n\n NEIGHBORS");
+//        System.out.println("\n\n\n NEIGHBORS");
 
         List<Integer> neighborhood = map.get(activeUserBucket);
         if(neighborhood == null){
             return ResponseEntity.ok(null);
         }
 
-        for (Integer integer : neighborhood) {
-            System.out.print(allUsers.get(integer).getUsername() + "   ");
-            for (int j = 0; j < itemSize; j++) {
-               System.out.print(vectors[integer][j]  + " ");
-            }
-            System.out.println();
-        }
+//        for (Integer integer : neighborhood) {
+//            System.out.print(allUsers.get(integer).getUsername() + "   ");
+//            for (int j = 0; j < itemSize; j++) {
+//               System.out.print(vectors[integer][j]  + " ");
+//            }
+//            System.out.println();
+//        }
 
         neighborhood.removeIf(number -> allUsers.get(number).getUsername().equals(username));
 
@@ -436,7 +436,8 @@ public class RecommendationController extends BaseController{
         neighborhood.forEach(neighbourPosition -> {
             allUsers.get(neighbourPosition).getBids().forEach(bid -> {
 
-                if(!participations.contains(bid.getItem())) {
+                if(!participations.contains(bid.getItem()) &&
+                        !allUsers.get(finalActiveUserPosition).getItems().contains(bid.getItem())) {
 
                     double sum = neighborhood.stream().mapToDouble(neighbourPos ->
                             cosineSimilarity(vectors[finalActiveUserPosition], vectors[neighbourPos]) *
@@ -459,21 +460,20 @@ public class RecommendationController extends BaseController{
             });
         });
 
-        System.out.println("\n\n\n");
-        int finalActiveUserBucket = activeUserBucket;
-        map.entrySet().forEach(entry-> {
-            if(entry.getKey() == finalActiveUserBucket) {
-                System.out.println(entry.getKey());
-                List<Integer> nn = entry.getValue();
-                nn.forEach(user -> {
-                    System.out.println(allUsers.get(user).getUsername());
-                });
-            }
-        });
+//        System.out.println("\n\n\n");
+//        int finalActiveUserBucket = activeUserBucket;
+//        map.entrySet().forEach(entry-> {
+//            if(entry.getKey() == finalActiveUserBucket) {
+//                System.out.println(entry.getKey());
+//                List<Integer> nn = entry.getValue();
+//                nn.forEach(user -> {
+//                    System.out.println(allUsers.get(user).getUsername());
+//                });
+//            }
+//        });
 
         ratedItems.sort(Comparator.comparingDouble(RatedItem::getRating).reversed());
-
-        System.out.println("\n\n\nFINAL");
+//        System.out.println("\n\n\nFINAL");
         ratedItems.forEach(item -> { System.out.println(item.getItem().getName() + " with rating " + item.getRating());});
 
         List<Item> finalRatings = new ArrayList<>();
