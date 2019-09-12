@@ -292,6 +292,13 @@ public class UserController extends BaseController{
         User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();
 
         if(requester.equals(item.getSeller())){
+
+            if(item.getBidderRating() != 0){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                        "Error",
+                        "You cannot rate again"
+                ));
+            }
             item.setBidderRating(rating);
             itemRepository.save(item);
 
@@ -301,6 +308,13 @@ public class UserController extends BaseController{
             return ResponseEntity.ok(item);
         }
         else if(requester.equals(highestBidder)){
+
+            if(item.getSellerRating() != 0){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                        "Error",
+                        "You cannot rate again"
+                ));
+            }
             item.setSellerRating(rating);
             itemRepository.save(item);
 
