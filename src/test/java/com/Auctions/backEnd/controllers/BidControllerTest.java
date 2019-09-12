@@ -202,12 +202,19 @@ public class BidControllerTest {
                 .header("Authorization", user1))
                 .andExpect(status().isOk());
 
-        mvc.perform(get("/user/myHistory")
+        mvc.perform(get("/item/" + item_id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("page", "1")
-                .param("size", "2")
                 .header("Authorization", user1))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(mvcResult ->
+
+                    mvc.perform(get("/user/myHistory")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .param("page", "0")
+                            .param("size", "2")
+                            .header("Authorization", user1))
+                            .andExpect(status().isOk())
+                );
     }
 
 

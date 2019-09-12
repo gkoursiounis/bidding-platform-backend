@@ -3,18 +3,18 @@ package com.Auctions.backEnd.controllers;
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.FormattedUser;
+import com.Auctions.backEnd.responses.ResultPage;
 import com.Auctions.backEnd.responses.Message;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -137,9 +137,12 @@ public class UserController extends BaseController{
     @GetMapping("/myHistory")
     public ResponseEntity getMyHistory(Pageable pageable) {
 
-        long size= requestUser().getItemSeen().size();
-        final Page<Item> page = new PageImpl<>(requestUser().getItemSeen(), pageable, size);
-        return ResponseEntity.ok(page);
+        int page = pageable.getPageNumber();
+        int size = pageable.getPageSize();
+        int totalElements = requestUser().getItemSeen().size();
+        List<List<Item>> subset = Lists.partition(requestUser().getItemSeen(), size);
+
+        return ResponseEntity.ok(new ResultPage(subset.get(page), totalElements, (int)Math.ceil((double)totalElements / size)));
     }
 
 

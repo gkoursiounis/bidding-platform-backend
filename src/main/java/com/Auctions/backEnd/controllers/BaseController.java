@@ -93,7 +93,7 @@ public abstract class BaseController {
         Notification toSeller = new Notification();
         toSeller.setRecipient(item.getSeller());
         toSeller.setItemId(item.getId());
-        toSeller.setMessage("Your auction with name " + item.getName() + " has been completed");
+        toSeller.setMessage("Your auction with name \"" + item.getName() + "\" has been completed");
         notificationRepository.save(toSeller);
 
         item.getSeller().getNotifications().add(toSeller);

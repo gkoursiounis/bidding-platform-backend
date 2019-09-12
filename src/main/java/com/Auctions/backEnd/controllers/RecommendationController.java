@@ -2,12 +2,9 @@ package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
-import com.Auctions.backEnd.responses.BidRes;
 import com.Auctions.backEnd.responses.Message;
-import info.debatty.java.lsh.LSHMinHash;
+import com.Auctions.backEnd.responses.RatedItem;
 import info.debatty.java.lsh.LSHSuperBit;
-import lombok.Getter;
-import lombok.Setter;
 import org.jdom.Attribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,20 +13,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
-import java.io.*;
 import java.util.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.ThreadLocalRandom;
 
-import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -321,7 +311,12 @@ public class RecommendationController extends BaseController{
     @GetMapping("/lsh")
     public ResponseEntity lsh(@RequestParam String username) throws JDOMException, IOException {
 
-        //check user exists
+        if(userRepository.findByAccount_Username(username) == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
+                    "Error",
+                    "User not found"
+            ));
+        }
 
         List<User> allUsers = userRepository.findAll();
         allUsers.removeIf(user -> user.getBids().isEmpty());
@@ -397,6 +392,9 @@ public class RecommendationController extends BaseController{
         System.out.println("\n\n\n NEIGHBORS");
 
         List<Integer> neighborhood = map.get(activeUserBucket);
+        if(neighborhood == null){
+            return ResponseEntity.ok(null);
+        }
 
         for (Integer integer : neighborhood) {
             System.out.print(allUsers.get(integer).getUsername() + "   ");
@@ -417,7 +415,6 @@ public class RecommendationController extends BaseController{
 //            System.out.println(cosineSimilarity(vectors[activeUserPosition], vectors[k]));
 //        }
 //        System.out.println("dd");
-        //get lambda
 
         int finalActiveUserPosition = activeUserPosition;
         double lambda = 1 / neighborhood.stream().mapToDouble(
@@ -429,11 +426,7 @@ public class RecommendationController extends BaseController{
             participations.add(bid.getItem());
         });
 
-//        List<Item> possibleRecommends = new ArrayList<>();
-//        //exclude user
-//
-//
-//        //for every neighbour of the active user we get the auctions they have participated in
+        //for every neighbour of the active user we get the auctions they have participated in
         List<RatedItem> ratedItems = new ArrayList<>();
         double finalAvgRating = avgRating;
         neighborhood.forEach(neighbourPosition -> {
@@ -448,7 +441,7 @@ public class RecommendationController extends BaseController{
                     System.out.println(finalAvgRating + lambda * sum);
 
                     List<Item> existingRatings = new ArrayList<>();
-                    ratedItems.forEach(item -> existingRatings.add(item.item));
+                    ratedItems.forEach(item -> existingRatings.add(item.getItem()));
                     if(!existingRatings.contains(bid.getItem())){
                         ratedItems.add(new RatedItem(bid.getItem(), finalAvgRating + lambda * sum));
                     }
@@ -458,12 +451,8 @@ public class RecommendationController extends BaseController{
                             ratedItems.get(existingRatings.indexOf(bid.getItem())).setRating(score);
                         }
                     }
-
-                    //checkRatedItems()
-                    //ratedItems.add(new RatedItem(bid.getItem(), finalAvgRating + lambda * sum));
                 }
             });
-            //user.getBids().forEach(bid -> { possibleRecommends.add(bid.getItem()); });
         });
 
         System.out.println("\n\n\n");
@@ -481,22 +470,11 @@ public class RecommendationController extends BaseController{
         ratedItems.sort(Comparator.comparingDouble(RatedItem::getRating).reversed());
 
         System.out.println("\n\n\nFINAL");
-        ratedItems.forEach(item -> { System.out.println(item.item.getName() + " with rating " + item.getRating());});
+        ratedItems.forEach(item -> { System.out.println(item.getItem().getName() + " with rating " + item.getRating());});
 
         List<Item> finalRatings = new ArrayList<>();
-        ratedItems.forEach(item -> finalRatings.add(item.item));
+        ratedItems.forEach(item -> finalRatings.add(item.getItem()));
         return ResponseEntity.ok(finalRatings);
     }
 }
 
-@Getter
-@Setter
-class RatedItem{
-    Item item;
-    double rating;
-
-    RatedItem(Item item, double rating){
-        this.item = item;
-        this.rating = rating;
-    }
-}
