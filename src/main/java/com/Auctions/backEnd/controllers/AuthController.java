@@ -11,14 +11,9 @@ import com.Auctions.backEnd.responses.FormattedUser;
 import com.Auctions.backEnd.responses.LoginRes;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.Security.TokenProvider;
-import io.jsonwebtoken.*;
-
-import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,8 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-
-import javax.crypto.spec.SecretKeySpec;
 import java.util.regex.Pattern;
 
 @RestController
@@ -44,17 +37,6 @@ public class AuthController extends BaseController{
     private final AccountRepository accountRepository;
     private final GeolocationRepository geolocationRepository;
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
-
-    @Value("${app.chatKit.instanceId}")
-    private String instanceId;
-
-    @Value("${app.chatKit.keyId}")
-    private String keyId;
-
-    @Value("${app.chatKit.secret}")
-    private String secret;
-
-    private String visitorToken;
 
     @Autowired
     public AuthController(PasswordEncoder passwordEncoder,
@@ -222,30 +204,6 @@ public class AuthController extends BaseController{
         );
     }
 
-
-    @GetMapping(value = "/chatkitToken", produces = "application/json")
-    public ResponseEntity generateChatkitToken() {
-        User requester = requestUser();
-
-        Calendar c = Calendar.getInstance();
-        c.setTime(new Date());
-        c.add(Calendar.MINUTE, 1);
-        Map<String, Object> header = new HashMap<>();
-        header.put("typ", "JWT");
-        header.put("alg", "HS256");
-        // Creation of a JWT token for Chatkit auth
-        String JWTtoken = Jwts.builder()
-                .setHeader(header)
-                .setIssuer("api_keys/"+keyId)
-                .setSubject(requester.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(c.getTime())
-                .claim("instance", instanceId)
-                .claim("su", Boolean.TRUE)
-                .signWith(SignatureAlgorithm.HS256, new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"))
-                .compact();
-        return ResponseEntity.ok("{ \"token\": \""+JWTtoken+"\"}");
-    }
 
     private boolean checkUsername(String userName) {
         Pattern p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);

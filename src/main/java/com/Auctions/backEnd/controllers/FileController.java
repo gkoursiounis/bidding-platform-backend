@@ -41,76 +41,7 @@ public class FileController extends BaseController{
         this.userRepository = userRepository;
     }
 
-    /**
-     * A user can optionally upload more pictures for each item
-     * A basic picture set can be uploaded during the item creation
-     * in ItemController
-     *
-     * @param itemId - the id of the item portrayed in the picture
-     * @param media - the picture (.jpg, .png, .gif)
-     * @return the updated item
-     */
-//    @PatchMapping("/uploadPicture/{itemId}")
-//    public ResponseEntity uploadPicture(@PathVariable(value = "itemId") long itemId,
-//                                        @RequestParam(name = "media") MultipartFile media){
-//
-//        User requestUser = requestUser();
-//
-//        Item item = itemRepository.findItemById(itemId);
-//        if(item == null){
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-//                    "Error",
-//                    "Item not found"
-//            ));
-//        }
-//
-//        if(!item.getSeller().equals(requestUser)){
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
-//                    "Error",
-//                    "The auction does not belong to you"
-//            ));
-//        }
-//
-//        if(media != null){
-//
-//            if(!BaseController.contentTypes.contains(media.getContentType())) {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-//                        "Error",
-//                        "Image type not supported"
-//                ));
-//            }
-//
-//            if(media.getSize() > DBFile.MAXIMUM_IMAGE_SIZE && (
-//                    "image/png".equals(media.getContentType())  || "image/jpeg".equals(media.getContentType()) ||
-//                            "image/gif".equals(media.getContentType()))) {
-//
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-//                        "Error",
-//                        "Image over limits"
-//                ));
-//            }
-//
-//            DBFile dbFile = dBFileStorageService.storeFile(media);
-//            dbFile.setDownloadLink("/downloadFile/" + dbFile.getId() + "." + dbFile.getFileType().split("/")[1]);
-//            dbFile = dbFileRepository.save(dbFile);
-//            item.getMedia().add(dbFile);
-//        }
-//        else{
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-//                    "Error",
-//                    "Picture is missing"
-//            ));
-//        }
-//
-//        itemRepository.save(item);
-//        requestUser.getItems().add(item);
-//        userRepository.save(requestUser);
-//
-//        return ResponseEntity.ok(item);
-//    }
 
-
-    //TODO check
     /**
      * A user can download an item picture
      *

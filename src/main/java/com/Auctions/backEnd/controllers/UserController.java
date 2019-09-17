@@ -338,10 +338,12 @@ public class UserController extends BaseController{
      * @return list of sent messages
      */
     @GetMapping("/sentMessages")
-    public ResponseEntity getSentMessages() {
+    public ResponseEntity getSentMessages(Pageable pageable) {
 
-        return ResponseEntity.ok(requestUser().getMessagesSent());
+        return ResponseEntity.ok(userMessageRepository.getSentMessages(requestUser(), pageable));
+        //return ResponseEntity.ok(requestUser().getMessagesSent());
     }
+
 
     /**
      * User can get a list of the messages he received
@@ -349,9 +351,10 @@ public class UserController extends BaseController{
      * @return list of received messages
      */
     @GetMapping("/receivedMessages")
-    public ResponseEntity getReceivedMessages() {
+    public ResponseEntity getReceivedMessages(Pageable pageable) {
 
-        return ResponseEntity.ok(requestUser().getMessagesReceived());
+        return ResponseEntity.ok(userMessageRepository.getReceveivedMessages(requestUser(), pageable));
+        //return ResponseEntity.ok(requestUser().getMessagesReceived());
     }
 
 

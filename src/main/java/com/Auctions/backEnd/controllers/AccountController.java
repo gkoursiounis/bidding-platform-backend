@@ -109,7 +109,7 @@ public class AccountController extends BaseController{
         if(!passwordEncoder.matches(oldPasswordFromRequest, oldPasswordFromAccount)){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Message(
                     "Error",
-                    "Your actual password is incorrect"
+                    "Your old password is incorrect"
             ));
         }
 
