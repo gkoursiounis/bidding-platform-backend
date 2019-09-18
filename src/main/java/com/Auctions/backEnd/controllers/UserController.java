@@ -403,6 +403,13 @@ public class UserController extends BaseController{
         message.setMessage(text);
         message.setRecipient(highestBidder);
         message.setSender(requester);
+        userMessageRepository.save(message);
+
+        requester.getMessagesSent().add(message);
+        userRepository.save(requester);
+
+        highestBidder.getMessagesReceived().add(message);
+        userRepository.save(highestBidder);
 
         return ResponseEntity.ok(message);
     }
@@ -446,6 +453,13 @@ public class UserController extends BaseController{
         message.setMessage(text);
         message.setRecipient(item.getSeller());
         message.setSender(requester);
+        userMessageRepository.save(message);
+
+        requester.getMessagesSent().add(message);
+        userRepository.save(requester);
+
+        item.getSeller().getMessagesReceived().add(message);
+        userRepository.save(item.getSeller());
 
         return ResponseEntity.ok(message);
     }
@@ -504,7 +518,11 @@ public class UserController extends BaseController{
         }
 
         message.getRecipient().getMessagesReceived().remove(message);
+        userRepository.save(message.getRecipient());
+
         message.getSender().getMessagesSent().remove(message);
+        userRepository.save(message.getSender());
+
         userMessageRepository.deleteById(message.getId());
 
         return ResponseEntity.ok(new Message(

@@ -322,6 +322,10 @@ public class RecommendationController extends BaseController{
         allUsers.removeIf(user -> user.getBids().isEmpty());
         int userSize = allUsers.size();
 
+        if(userSize == 0){
+            return ResponseEntity.ok(null);
+        }
+
         List<Item> allItems = itemRepository.findAll();
         int itemSize = allItems.size();
 
