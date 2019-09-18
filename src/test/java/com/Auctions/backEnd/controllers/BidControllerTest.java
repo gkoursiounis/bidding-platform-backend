@@ -155,8 +155,8 @@ public class BidControllerTest {
 
         mvc.perform(get("/user/myHistory")
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("page", "1")
-                .param("size", "2")
+                .param("page", "0")
+                .param("size", "1")
                 .header("Authorization", user1))
                 .andExpect(status().isOk());
 

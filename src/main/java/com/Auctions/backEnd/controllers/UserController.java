@@ -403,6 +403,7 @@ public class UserController extends BaseController{
         message.setMessage(text);
         message.setRecipient(highestBidder);
         message.setSender(requester);
+        message.setItem(item);
         userMessageRepository.save(message);
 
         requester.getMessagesSent().add(message);
@@ -453,6 +454,7 @@ public class UserController extends BaseController{
         message.setMessage(text);
         message.setRecipient(item.getSeller());
         message.setSender(requester);
+        message.setItem(item);
         userMessageRepository.save(message);
 
         requester.getMessagesSent().add(message);
