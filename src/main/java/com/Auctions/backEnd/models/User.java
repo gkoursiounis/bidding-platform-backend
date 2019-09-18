@@ -47,12 +47,12 @@ public class User extends AuditModel {
     private Set<Notification> notifications = new TreeSet<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)
-    @OrderBy(value = "createdAt DESC")
+    @OrderBy(value = "createdAt ASC")
     @JsonIgnore
     private Set<UserMessage> messagesSent = new TreeSet<>();
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.REMOVE)
-    @OrderBy(value = "createdAt DESC")
+    @OrderBy(value = "createdAt ASC")
     @JsonIgnore
     private Set<UserMessage> messagesReceived = new TreeSet<>();
 
