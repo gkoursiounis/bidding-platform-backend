@@ -228,14 +228,14 @@ public class AdminController extends BaseController{
     @GetMapping("/allAuctions")
     public ResponseEntity getAllItems(){
 
-        User requester = requestUser();
-        if(!requester.isAdmin()){
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
-                    "Error",
-                    "You need to be an admin to perform this action"
-            ));
-        }
+//        User requester = requestUser();
+//        if(!requester.isAdmin()){
+//
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+//                    "Error",
+//                    "You need to be an admin to perform this action"
+//            ));
+//        }
 
         return ResponseEntity.ok(itemRepository.findAll());
     }

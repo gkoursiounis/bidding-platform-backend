@@ -742,4 +742,15 @@ public class AdminControllerTest {
                 .param("username", "user2"))
                 .andExpect(status().isOk());
     }
+
+
+    @Test
+    @DisplayName("Get all users - invalid token")
+    public void getAllItems() throws Exception {
+
+        mvc.perform(get("/admin/allAuctions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", user1))
+                .andExpect(status().isOk());
+    }
 }
