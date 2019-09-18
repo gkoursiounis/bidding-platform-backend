@@ -444,8 +444,8 @@ public class UserController extends BaseController{
 
         UserMessage message = new UserMessage();
         message.setMessage(text);
-        message.setRecipient(requester);
-        message.setSender(item.getSeller());
+        message.setRecipient(item.getSeller());
+        message.setSender(requester);
 
         return ResponseEntity.ok(message);
     }
