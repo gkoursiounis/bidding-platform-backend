@@ -18,11 +18,9 @@ import java.util.Date;
 public class UserMessage extends AuditModel {
 
     @ManyToOne
-    @JsonIgnore
     private User recipient;
 
     @ManyToOne
-    @JsonIgnore
     private User sender;
 
     String message;
