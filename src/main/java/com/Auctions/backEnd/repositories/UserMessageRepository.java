@@ -17,13 +17,13 @@ public interface UserMessageRepository extends JpaRepository<UserMessage, Long> 
     @Query( "SELECT um " +
             "FROM UserMessage um " +
             "WHERE um.recipient = :user " +
-            "ORDER BY um.createdAt ASC")
+            "ORDER BY um.createdAt DESC")
     Page<UserMessage> getReceveivedMessages(@Param("user") User user, Pageable pageable);
 
 
     @Query( "SELECT um " +
             "FROM UserMessage um " +
             "WHERE um.sender = :user " +
-            "ORDER BY um.createdAt ASC")
+            "ORDER BY um.createdAt DESC")
     Page<UserMessage> getSentMessages(@Param("user") User user, Pageable pageable);
 }

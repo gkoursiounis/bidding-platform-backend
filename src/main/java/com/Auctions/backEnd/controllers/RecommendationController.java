@@ -87,7 +87,7 @@ public class RecommendationController extends BaseController{
             }
 
         try {
-            File inputFile = new File("ebay/items-10.xml");
+            File inputFile = new File("ebay/items-4.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
@@ -106,16 +106,21 @@ public class RecommendationController extends BaseController{
                 item.setName(xmlItem.getChildText("Name"));
 
                 item.setCurrently(
-                        Double.valueOf(xmlItem.getChildText("Currently").substring(1)));
+                        Double.valueOf(xmlItem.getChildText("Currently").substring(1).replace(",", "")));
 
                 item.setFirstBid(
-                        Double.valueOf(xmlItem.getChildText("First_Bid").substring(1)));
+                        Double.valueOf(xmlItem.getChildText("First_Bid").substring(1).replace(",", "")));
 
-                //item.setDescription(xmlItem.getChildText("Description"));
+                if(xmlItem.getChildText("Description").length() > 255){
+                    item.setDescription(xmlItem.getChildText("Description").substring(0,255));
+                }
+                else {
+                    item.setDescription(xmlItem.getChildText("Description"));
+                }
 
                 if(xmlItem.getChildText("Buy_Price") != null){
                     item.setBuyPrice(
-                            Double.valueOf(xmlItem.getChildText("Buy_Price").substring(1)));
+                            Double.valueOf(xmlItem.getChildText("Buy_Price").substring(1).replace(",", "")));
                 }
 
                 Attribute longitude =  xmlItem.getChild("Location").getAttribute("Longitude");

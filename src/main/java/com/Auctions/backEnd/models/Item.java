@@ -64,9 +64,9 @@ public class Item extends AuditModel implements Serializable {
     @OneToOne
     private Geolocation location;
 
-    private int sellerRating = 0;
+    private Integer sellerRating;
 
-    private int bidderRating = 0;
+    private Integer bidderRating;
 
     @JsonGetter("getMediaPath")
     public List<String> getMediaPath() {

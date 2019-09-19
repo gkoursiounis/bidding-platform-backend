@@ -293,7 +293,7 @@ public class UserController extends BaseController{
 
         if(requester.equals(item.getSeller())){
 
-            if(item.getBidderRating() != 0){
+            if(item.getBidderRating() != null){
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
                         "Error",
                         "You cannot rate again"
@@ -309,7 +309,7 @@ public class UserController extends BaseController{
         }
         else if(requester.equals(highestBidder)){
 
-            if(item.getSellerRating() != 0){
+            if(item.getSellerRating() != null){
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
                         "Error",
                         "You cannot rate again"
