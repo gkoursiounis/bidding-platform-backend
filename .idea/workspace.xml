@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7fd5b0c1-8e05-4e06-9316-1ef9af2c730c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/UserMessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/UserMessageRepository.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -20,7 +21,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/UserMessage.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="24">
+            <state relative-caret-position="306">
               <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
             </state>
           </provider>
@@ -29,8 +30,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/UserController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="89">
-              <caret line="149" column="55" selection-start-line="149" selection-start-column="55" selection-end-line="149" selection-end-column="55" />
+            <state relative-caret-position="242">
+              <caret line="355" column="60" lean-forward="true" selection-start-line="355" selection-start-column="60" selection-end-line="355" selection-end-column="60" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/UserMessageRepository.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="343">
+              <caret line="25" column="37" selection-start-line="25" selection-start-column="37" selection-end-line="25" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -42,7 +55,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Item.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
-              <caret line="22" column="15" lean-forward="true" selection-start-line="22" selection-start-column="15" selection-end-line="22" selection-end-column="15" />
+              <caret line="22" column="15" selection-start-line="22" selection-start-column="15" selection-end-line="22" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -50,8 +63,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/User.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="54" column="35" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
+            <state relative-caret-position="255">
+              <caret line="48" column="65" selection-start-line="48" selection-start-column="65" selection-end-line="48" selection-end-column="65" />
             </state>
           </provider>
         </entry>
@@ -59,7 +72,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="99">
+            <state relative-caret-position="2227">
               <caret line="158" column="33" selection-start-line="158" selection-start-column="33" selection-end-line="158" selection-end-column="33" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -131,10 +144,10 @@
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/AdminControllerTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/UserMessageRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/UserMessage.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/UserController.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/UserMessageRepository.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/User.java" />
       </list>
     </option>
@@ -460,8 +473,8 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6899384" visible="true" weight="0.26626325" />
-      <window_info id="Structure" order="1" sideWeight="0.3100616" side_tool="true" visible="true" weight="0.26626325" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.687885" visible="true" weight="0.2700454" />
+      <window_info id="Structure" order="1" sideWeight="0.31211498" side_tool="true" visible="true" weight="0.2700454" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -476,7 +489,7 @@
       <window_info anchor="bottom" id="Version Control" order="6" weight="0.3289689" />
       <window_info anchor="bottom" id="ConsoleMavenPlugin" order="7" weight="0.32779455" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5015129" side_tool="true" weight="0.36006546" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.20294599" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.20294599" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.28150573" />
       <window_info anchor="bottom" id="TODO" order="11" weight="0.3666121" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -853,16 +866,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/UserMessageRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/AdminControllerTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -879,25 +882,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/UserMessage.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="24">
+        <state relative-caret-position="306">
           <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/com/Auctions/backEnd/controllers/BidControllerTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="99">
+        <state relative-caret-position="2227">
           <caret line="158" column="33" selection-start-line="158" selection-start-column="33" selection-end-line="158" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/UserController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
-          <caret line="149" column="55" selection-start-line="149" selection-start-column="55" selection-end-line="149" selection-end-column="55" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -907,14 +900,34 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/Item.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
-          <caret line="22" column="15" lean-forward="true" selection-start-line="22" selection-start-column="15" selection-end-line="22" selection-end-column="15" />
+          <caret line="22" column="15" selection-start-line="22" selection-start-column="15" selection-end-line="22" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/repositories/UserMessageRepository.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="25" column="37" selection-start-line="25" selection-start-column="37" selection-end-line="25" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/UserController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="355" column="60" lean-forward="true" selection-start-line="355" selection-start-column="60" selection-end-line="355" selection-end-column="60" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/models/User.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="54" column="35" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
+        <state relative-caret-position="255">
+          <caret line="48" column="65" selection-start-line="48" selection-start-column="65" selection-end-line="48" selection-end-column="65" />
         </state>
       </provider>
     </entry>
