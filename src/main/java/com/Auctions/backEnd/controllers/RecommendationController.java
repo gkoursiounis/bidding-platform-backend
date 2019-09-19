@@ -87,7 +87,7 @@ public class RecommendationController extends BaseController{
             }
 
         try {
-            File inputFile = new File("ebay/items-4.xml");
+            File inputFile = new File("ebay/items-18.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
@@ -200,11 +200,14 @@ public class RecommendationController extends BaseController{
                         Element bid = bidList.get(b);
 
                         String username = bid.getChild("Bidder").getAttribute("UserID").getValue();
+                        //System.out.println(username);
                         username = username
                                 .replace("@", "1")
                                 .replace(".", "2")
                                 .replace("$", "3")
-                                .replace("*", "4");
+                                .replace("*", "4")
+                                .replace("(", "5")
+                                .replace(")", "6");
 
                         User bidder = userRepository.findByAccount_Username(username);
                         if(bidder == null){
@@ -236,7 +239,7 @@ public class RecommendationController extends BaseController{
                         }
 
                         Bid newBid = new Bid();
-                        newBid.setOffer(Double.valueOf(bid.getChildText("Amount").substring(1)));
+                        newBid.setOffer(Double.valueOf(bid.getChildText("Amount").substring(1).replace(",", "")));
                         newBid.setBidder(bidder);
                         newBid.setItem(item);
                         bidRepository.save(newBid);
@@ -249,11 +252,14 @@ public class RecommendationController extends BaseController{
                 }
 
                 String username = xmlItem.getChild("Seller").getAttribute("UserID").getValue();
+               // System.out.println(username);
                 username = username
                         .replace("@", "1")
                         .replace(".", "2")
                         .replace("$", "3")
-                        .replace("*", "4");
+                        .replace("*", "4")
+                        .replace("(", "5")
+                        .replace(")", "6");
 
                 User seller = userRepository.findByAccount_Username(username);
                 if(seller == null){
@@ -324,7 +330,7 @@ public class RecommendationController extends BaseController{
         }
 
         List<User> allUsers = userRepository.findAll();
-        allUsers.removeIf(user -> user.getBids().isEmpty());
+      //  allUsers.removeIf(user -> user.getBids().isEmpty());
         int userSize = allUsers.size();
 
         if(userSize == 0){
@@ -357,7 +363,7 @@ public class RecommendationController extends BaseController{
                 }
             }
         }
-
+//
 //        for (int i = 0; i < userSize; i++) {
 //
 //            System.out.print(allUsers.get(i).getUsername() + "   ");
@@ -367,18 +373,20 @@ public class RecommendationController extends BaseController{
 //            System.out.println();
 //        }
 
-        int stages = 5;
+        int stages = 3;
         int buckets = (int) Math.sqrt(userSize);
 
         int activeUserBucket = -1;
         int activeUserPosition = 0;
         double avgRating = 0.0;
 
+     //   System.out.println("stages " + stages + "\nbuvkets " + buckets + "\nitemsize " + itemSize + "\nusersize " + userSize);
         LSHSuperBit lsh = new LSHSuperBit(stages, buckets, itemSize);
         Map<Integer, List<Integer>> map = new HashMap<>();
 
         for (int i = 0; i < userSize; i++) {
 
+           // System.out.println(allUsers.get(i).getUsername());
             double[] vector = vectors[i];
             int[] hash = lsh.hash(vector);
 

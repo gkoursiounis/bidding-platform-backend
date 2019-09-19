@@ -108,57 +108,64 @@ public class BidControllerTest {
 
 
 
-        mvc.perform(get("/item/openAuctions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("content.*", hasSize(0)));
+//        mvc.perform(get("/item/openAuctions")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header("Authorization", user1))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("content.*", hasSize(0)));
 
         ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
         String item_id = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
 
-        mvc.perform(get("/item/openAuctions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("content.*", hasSize(1)));
+//        mvc.perform(get("/item/openAuctions")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header("Authorization", user1))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("content.*", hasSize(1)));
 
         mvc.perform(post("/bid/makeBid/" + item_id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("offer", "6.0")
+                .param("offer", "2560.0")
                 .header("Authorization", user2))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("auctionCompleted", is(false)));
+                .andDo(mvcResult ->
+              //  .andExpect(jsonPath("auctionCompleted", is(false)));
 
-        mvc.perform(get("/user/myBids")
+//        mvc.perform(get("/user/myBids")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header("Authorization", user2))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.*", hasSize(1)));
+//
+//        mvc.perform(get("/item/" + item_id)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header("Authorization", user1))
+//                .andExpect(status().isOk());
+//
+//        mvc.perform(get("/user/myAuctions")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header("Authorization", user1))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.*", hasSize(1)));
+//
+//        mvc.perform(get("/item/openAuctions")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header("Authorization", user1))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("content.*", hasSize(1)));
+//
+//        mvc.perform(get("/user/myHistory")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .param("page", "0")
+//                .param("size", "1")
+//                .header("Authorization", user1))
+//                .andExpect(status().isOk());
+
+        mvc.perform(get("/recommend/lsh")
                 .contentType(MediaType.APPLICATION_JSON)
+                .param("username", "user2")
                 .header("Authorization", user2))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(1)));
-
-        mvc.perform(get("/item/" + item_id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk());
-
-        mvc.perform(get("/user/myAuctions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.*", hasSize(1)));
-
-        mvc.perform(get("/item/openAuctions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", user1))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("content.*", hasSize(1)));
-
-        mvc.perform(get("/user/myHistory")
-                .contentType(MediaType.APPLICATION_JSON)
-                .param("page", "0")
-                .param("size", "1")
-                .header("Authorization", user1))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()));
 
        // assertEquals(1, bidRepository.findAll().size());
        // assertEquals(1, geolocationRepository.findAll().size());
