@@ -171,6 +171,23 @@ public class BidControllerTest {
        // assertEquals(1, geolocationRepository.findAll().size());
     }
 
+    @Test
+    @DisplayName("Successful item creation")
+    public void makeBid18() throws Exception {
+
+
+        ItemCategory ic = itemCategoryRepository.findItemCategoryByName("All categories");
+        String item_id = TestUtils.makeItem(mvc, ic.getId().toString(), user1);
+
+        Thread.sleep(1000);
+                        mvc.perform(get("/recommend/lsh")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .param("username", "user2")
+                                .header("Authorization", user2))
+                                .andExpect(status().isOk());
+
+    }
+
 
     /**
      * User successfully makes a bid with invalid itemId

@@ -111,7 +111,7 @@ public abstract class BaseController {
         Notification toUser = new Notification();
         toUser.setRecipient(user);
         toUser.setItemId(null);
-        toUser.setMessage("You are now verified!");
+        toUser.setMessage("You are now verified, click here to acknowledge!");
         notificationRepository.save(toUser);
 
         user.getNotifications().add(toUser);

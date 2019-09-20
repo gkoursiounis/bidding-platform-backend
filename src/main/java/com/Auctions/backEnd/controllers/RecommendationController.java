@@ -333,7 +333,7 @@ public class RecommendationController extends BaseController{
       //  allUsers.removeIf(user -> user.getBids().isEmpty());
         int userSize = allUsers.size();
 
-        if(userSize == 0){
+        if(userSize == 0 || userSize == 1){
             return ResponseEntity.ok(null);
         }
 
@@ -355,40 +355,47 @@ public class RecommendationController extends BaseController{
 
             for (int j = 0; j < itemSize; j++) {
                 if(items.contains(allItems.get(j))) {
-                    vectors[i][j] = 1;
+                    vectors[i][j] = 1.0;
                 } else if(items.contains(allUsers.get(i).getItemSeen())){
                     vectors[i][j] = 0.5;
                 } else {
-                    vectors[i][j] = 0;
+                    vectors[i][j] = 0.0;
                 }
             }
         }
-//
-//        for (int i = 0; i < userSize; i++) {
-//
-//            System.out.print(allUsers.get(i).getUsername() + "   ");
-//            for (int j = 0; j < itemSize; j++) {
-//               System.out.print(vectors[i][j]  + " ");
-//            }
-//            System.out.println();
-//        }
+
+        for (int i = 0; i < userSize; i++) {
+
+            System.out.print(allUsers.get(i).getUsername() + "   ");
+            for (int j = 0; j < itemSize; j++) {
+               System.out.print(vectors[i][j]  + " ");
+            }
+            System.out.println();
+        }
 
         int stages = 3;
-        int buckets = (int) Math.sqrt(userSize);
+        int buckets = (int) (Math.sqrt(userSize) > 2  ? Math.sqrt(userSize) : 2);
 
         int activeUserBucket = -1;
         int activeUserPosition = 0;
         double avgRating = 0.0;
 
-     //   System.out.println("stages " + stages + "\nbuvkets " + buckets + "\nitemsize " + itemSize + "\nusersize " + userSize);
+        System.out.println("stages " + stages + "\nbuvkets " + buckets + "\nitemsize " + itemSize + "\nusersize " + userSize);
         LSHSuperBit lsh = new LSHSuperBit(stages, buckets, itemSize);
         Map<Integer, List<Integer>> map = new HashMap<>();
 
         for (int i = 0; i < userSize; i++) {
 
-           // System.out.println(allUsers.get(i).getUsername());
+            System.out.println(allUsers.get(i).getUsername());
             double[] vector = vectors[i];
             int[] hash = lsh.hash(vector);
+
+//            try {
+//                hash = lsh.hash(vector);
+//            }catch (Exception e){
+//                System.err.println("SAD");
+//                return ResponseEntity.ok(null);
+//            }
 
             List<Integer> neighbours = map.get(hash[0]);
             if(neighbours == null){
@@ -496,6 +503,43 @@ public class RecommendationController extends BaseController{
         List<Item> finalRatings = new ArrayList<>();
         ratedItems.forEach(item -> finalRatings.add(item.getItem()));
         return ResponseEntity.ok(finalRatings);
+    }
+
+
+    @GetMapping("/lsh1")
+    public ResponseEntity ls1h(@RequestParam String username) throws JDOMException, IOException {
+        int count = 2;
+
+        // R^n
+        int n = 1;
+
+        int stages = 3;
+        int buckets = 2;
+
+        // Produce some vectors in R^n
+        Random r = new Random();
+        double[][] vectors = new double[count][];
+        for (int i = 0; i < count; i++) {
+            vectors[i] = new double[n];
+
+            for (int j = 0; j < n; j++) {
+                vectors[i][j] = 0;
+            }
+        }
+
+        LSHSuperBit lsh = new LSHSuperBit(stages, buckets, n);
+
+        // Compute a SuperBit signature, and a LSH hash
+        for (int i = 0; i < count; i++) {
+            double[] vector = vectors[i];
+            int[] hash = lsh.hash(vector);
+            for (double v : vector) {
+                System.out.printf("%6.2f\t", v);
+            }
+            System.out.print(hash[0]);
+            System.out.print("\n");
+        }
+        return ResponseEntity.ok(null);
     }
 }
 
