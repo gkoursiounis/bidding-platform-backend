@@ -479,7 +479,12 @@ public class RecommendationController extends BaseController{
 
         //..and get the recommended items
         List<Item> finalRatings = new ArrayList<>();
-        ratedItems.forEach(item -> finalRatings.add(item.getItem()));
+        int size = ratedItems.size() > 5 ? 5 : ratedItems.size();
+
+        for(int k = 0; k < size; k++){
+            finalRatings.add(ratedItems.get(k).getItem());
+        }
+
         return ResponseEntity.ok(finalRatings);
     }
 }

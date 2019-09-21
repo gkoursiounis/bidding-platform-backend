@@ -2,18 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7fd5b0c1-8e05-4e06-9316-1ef9af2c730c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/testdb.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/db/testdb.mv.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/BidController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/BidController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/FileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/ItemController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/LocationController.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/SearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/SearchController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/UserController.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/classes/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -31,11 +20,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="479" column="16" selection-start-line="479" selection-start-column="16" selection-end-line="479" selection-end-column="16" />
+            <state relative-caret-position="272">
+              <caret line="483" column="31" selection-start-line="483" selection-start-column="31" selection-end-line="483" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application.properties">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="102">
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
             </state>
           </provider>
         </entry>
@@ -449,8 +447,8 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6788831" visible="true" weight="0.29198185" />
-      <window_info id="Structure" order="1" sideWeight="0.32111692" side_tool="true" visible="true" weight="0.29198185" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6776181" visible="true" weight="0.29198185" />
+      <window_info id="Structure" order="1" sideWeight="0.32238194" side_tool="true" visible="true" weight="0.29198185" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
@@ -458,14 +456,14 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.4893617" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49848714" visible="true" weight="0.062193125" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49848714" weight="0.31914893" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.48281506" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Version Control" order="6" weight="0.3289689" />
       <window_info anchor="bottom" id="ConsoleMavenPlugin" order="7" weight="0.32779455" />
       <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5015129" side_tool="true" weight="0.36006546" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.20294599" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.20294599" />
       <window_info anchor="bottom" id="Messages" order="10" weight="0.28150573" />
       <window_info anchor="bottom" id="TODO" order="11" weight="0.3666121" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -860,13 +858,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/UserController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="375">
@@ -887,10 +878,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/application.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/Auctions/backEnd/controllers/RecommendationController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="479" column="16" selection-start-line="479" selection-start-column="16" selection-end-line="479" selection-end-column="16" />
+        <state relative-caret-position="272">
+          <caret line="483" column="31" selection-start-line="483" selection-start-column="31" selection-end-line="483" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
