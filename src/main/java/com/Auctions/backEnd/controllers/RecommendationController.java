@@ -87,7 +87,7 @@ public class RecommendationController extends BaseController{
             }
 
         try {
-            File inputFile = new File("ebay/items-18.xml");
+            File inputFile = new File("ebay/items-39.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
@@ -320,14 +320,9 @@ public class RecommendationController extends BaseController{
 
 
     @GetMapping("/lsh")
-    public ResponseEntity lsh(@RequestParam String username) throws JDOMException, IOException {
+    public ResponseEntity lsh() throws JDOMException, IOException {
 
-        if(userRepository.findByAccount_Username(username) == null){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-                    "Error",
-                    "User not found"
-            ));
-        }
+        String username = requestUser().getUsername();
 
         List<User> allUsers = userRepository.findAll();
       //  allUsers.removeIf(user -> user.getBids().isEmpty());

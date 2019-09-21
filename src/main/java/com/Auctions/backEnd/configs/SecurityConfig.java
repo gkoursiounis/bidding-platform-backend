@@ -35,12 +35,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                //.httpBasic() // optional, if you want to access
-                //  .and()     // the services from a browser
                 .authorizeRequests()
                 .antMatchers("/auth/signup").permitAll()
                 .antMatchers("/auth/login").permitAll()
-                .antMatchers("/file/upload").permitAll()
                 .antMatchers("/account/checkUsername").permitAll()
                 .antMatchers("/account/checkEmail").permitAll()
                 .antMatchers("/media/downloadFile/{fileId}").permitAll()
