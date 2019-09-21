@@ -1,8 +1,6 @@
 package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.DBFile;
-import com.Auctions.backEnd.models.Item;
-import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.ItemRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import com.Auctions.backEnd.responses.Message;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,9 +41,10 @@ public class FileController extends BaseController{
 
     /**
      * A user can download an item picture
+     * The pictures are stored in the system not in the database
      *
-     * @param fileId
-     * @return
+     * @param fileId - id of the picture
+     * @return the picture
      */
     @GetMapping("/downloadFile/{fileId}")
     public ResponseEntity downloadFile(@PathVariable(value = "fileId") String fileId) {

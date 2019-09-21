@@ -341,7 +341,6 @@ public class UserController extends BaseController{
     public ResponseEntity getSentMessages(Pageable pageable) {
 
         return ResponseEntity.ok(userMessageRepository.getSentMessages(requestUser(), pageable));
-        //return ResponseEntity.ok(requestUser().getMessagesSent());
     }
 
 
@@ -354,7 +353,6 @@ public class UserController extends BaseController{
     public ResponseEntity getReceivedMessages(Pageable pageable) {
 
         return ResponseEntity.ok(userMessageRepository.getReceveivedMessages(requestUser(), pageable));
-        //return ResponseEntity.ok(requestUser().getMessagesReceived());
     }
 
 
@@ -470,7 +468,7 @@ public class UserController extends BaseController{
     /**
      * User can mark a message as seen
      *
-     * @return the notification as seen
+     * @return the message as seen
      */
     @PatchMapping("/markMessage/{messId}")
     public ResponseEntity markMessage(@PathVariable (value = "messId") long messId) {
@@ -531,6 +529,5 @@ public class UserController extends BaseController{
                 "Ok",
                 "Message has been deleted"
         ));
-
     }
 }

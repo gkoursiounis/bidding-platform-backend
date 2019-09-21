@@ -18,9 +18,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.criteria.*;
-import javax.validation.constraints.Null;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -37,6 +35,12 @@ public class SearchController extends BaseController{
     }
 
 
+    /**
+     * A user can get a list of suggestions when typing in the search bar
+     *
+     * @param keyword - partial or full word to be matched
+     * @return the list of suggestiong
+     */
     @GetMapping("/partialMatch")
     public ResponseEntity getPartialMatchedSearch(@RequestParam String keyword){
 
@@ -91,7 +95,7 @@ public class SearchController extends BaseController{
         List<Item> res = new ArrayList<>();
 
         //split string to words
-        String[] values = text.split(" "); //TODO maybe extend to recognize ,-..
+        String[] values = text.split(" ");
         for (String element : values) {
             res.addAll(itemRepository.searchItems(element.toLowerCase()));
         }
@@ -124,109 +128,9 @@ public class SearchController extends BaseController{
 
         List<List<Item>> subset = Lists.partition(result, size);
 
-        return ResponseEntity.ok(new ResultPage(subset.get(page), totalElements, (int)Math.ceil((double)totalElements / size)));
+        return ResponseEntity.ok(new ResultPage(subset.get(page),
+                totalElements, (int)Math.ceil((double)totalElements / size)));
     }
-
-
-    /**
-     * https://www.baeldung.com/java-lists-intersection
-     */
-//    @GetMapping("/filters")
-//    public ResponseEntity filterSearch(@Nullable @RequestParam Long categoryId,
-//                                       @Nullable @RequestParam Double lowerPrice,
-//                                       @Nullable @RequestParam Double higherPrice,
-//                                       @Nullable @RequestParam String locationTitle,
-//                                       @Nullable @RequestParam String description){
-//
-//        List<Item> results = new ArrayList<>();
-//
-//        //search according to category parameters
-//        if(categoryId != null) {
-//
-//            ItemCategory category = itemCategoryRepository.findItemCategoryById(categoryId);
-//            if(category == null){
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
-//                        "Error",
-//                        "Category not found"
-//                ));
-//            }
-//            results.retainAll(category.getItems());
-//        }
-//
-//        //search according to price parameters
-//        if(lowerPrice != null && higherPrice != null){
-//
-//            List<Item> byPrice = itemRepository.searchByPrice(lowerPrice, higherPrice);
-//            if(byPrice == null){
-//                return ResponseEntity.ok(null);
-//            }
-//            if(results.isEmpty()){
-//                results.addAll(byPrice);
-//            }
-//            else{
-//                results.retainAll(byPrice);
-//            }
-//        }
-//        else if(higherPrice != null){
-//
-//            List<Item> byHigherPrice = itemRepository.searchByHigherPrice(higherPrice);
-//            if(byHigherPrice == null){
-//                return ResponseEntity.ok(null);
-//            }
-//            if(results.isEmpty()){
-//                results.addAll(byHigherPrice);
-//            }
-//            else{
-//                results.retainAll(byHigherPrice);
-//            }
-//        }
-//        else if(lowerPrice != null){
-//
-//            List<Item> byLowerPrice = itemRepository.searchByLowerPrice(lowerPrice);
-//            if(byLowerPrice == null){
-//                return ResponseEntity.ok(null);
-//            }
-//            if(results.isEmpty()){
-//                results.addAll(byLowerPrice);
-//            }
-//            else{
-//                results.retainAll(byLowerPrice);
-//            }
-//        }
-//
-//        //search according to location parameter
-//        if(locationTitle != null){
-//
-//            List<Item> byLocationTitle = itemRepository.searchByLocation(locationTitle);
-//            if(byLocationTitle == null){
-//                return ResponseEntity.ok(null);
-//            }
-//            if(results.isEmpty()){
-//                results.addAll(byLocationTitle);
-//            }
-//            else{
-//                results.retainAll(byLocationTitle);
-//            }
-//        }
-//
-//
-//        //search according to description parameter
-//        if(description != null){
-//
-//            List<Item> byDescription = itemRepository.searchByDescription(description);
-//            if(byDescription == null){
-//                return ResponseEntity.ok(null);
-//            }
-//            if(results.isEmpty()){
-//                results.addAll(byDescription);
-//            }
-//            else{
-//                results.retainAll(byDescription);
-//            }
-//        }
-//
-//        return ResponseEntity.ok(results);
-//    }
 
 
 
@@ -267,6 +171,9 @@ public class SearchController extends BaseController{
     }
 
     /**
+     * A user can make a query using specific criteria
+     * We use h helper function to return a page result (findByCriteria)
+     *
      * https://javadeveloperzone.com/spring/spring-jpa-dynamic-query-example/
      *
      * @param categoryId - exact name of the category (case-sensitive)
@@ -275,7 +182,8 @@ public class SearchController extends BaseController{
      * @param locationTitle - location of auction (non case-sensitive)
      * @param description - description of an item (non case-sensitive)
      * @param pageable - pageable (page number, page size, optional sorting)
-     * @return
+     *
+     * @return - a list of matches (all parameters matched)
      */
     @GetMapping("/filters")
     public ResponseEntity filterSearch(@Nullable @RequestParam String categoryId,

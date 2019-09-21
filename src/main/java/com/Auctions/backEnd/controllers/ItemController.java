@@ -4,13 +4,10 @@ import com.Auctions.backEnd.models.*;
 import com.Auctions.backEnd.repositories.*;
 import com.Auctions.backEnd.responses.Message;
 import com.Auctions.backEnd.services.File.DBFileStorageService;
-import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
@@ -106,18 +103,6 @@ public class ItemController extends BaseController{
     }
 
 
-    //TODO remove
-    /**
-     * A User can get a list of All the items/auctions existing in the database
-     *
-     * @return list of all items
-     */
-//    @GetMapping("/allAuctions")
-//    public ResponseEntity getAllItems(){
-//        return ResponseEntity.ok(itemRepository.findAll());
-//    }
-
-
     /**
      * A User can get a list of all the categories
      * We have a predefined category call 'All categories'
@@ -187,12 +172,6 @@ public class ItemController extends BaseController{
             ));
         }
 
-//        if(endsAt.compareTo(new Date()) < 0){
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-//                    "Error",
-//                    "Auction ending time cannot be before the current time"
-//            ));
-//        }
 
         Item item = new Item(new Date());
         item.setSeller(requestUser);
@@ -410,10 +389,6 @@ public class ItemController extends BaseController{
         }
 
         itemRepository.save(item);
-
-//        requester.getItems().add(item);
-//        userRepository.save(requester);
-
         return ResponseEntity.ok(item);
     }
 

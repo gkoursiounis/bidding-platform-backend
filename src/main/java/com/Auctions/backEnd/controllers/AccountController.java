@@ -1,7 +1,6 @@
 package com.Auctions.backEnd.controllers;
 
 import com.Auctions.backEnd.models.Account;
-import com.Auctions.backEnd.models.User;
 import com.Auctions.backEnd.repositories.AccountRepository;
 import com.Auctions.backEnd.repositories.UserRepository;
 import com.Auctions.backEnd.requests.AccountRequest;
@@ -49,12 +48,6 @@ public class AccountController extends BaseController{
         } else {
             return ResponseEntity.ok(new Valid(true));
         }
-//        User  user = userRepository.findByAccount_Username(username);
-//        if (user != null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Valid(false));
-//        } else {
-//            return ResponseEntity.ok(new Valid(true));
-//        }
     }
 
 

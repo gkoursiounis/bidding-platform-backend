@@ -11,10 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
 import java.util.*;
 
 import java.io.File;
@@ -56,46 +52,47 @@ public class RecommendationController extends BaseController{
 
 
     /**
+     * XML load form the Bonus data-set:
+     * An admin can load all the XML items of a specified file in the database
+     * The procedure is offline so the method exists only in back-end
+     *
      * https://www.tutorialspoint.com/java_xml/java_jdom_parse_document.htm#
      * https://www.mkyong.com/java/how-to-read-xml-file-in-java-jdom-example/
      *
-     * @return
-     * @throws IOException
-     * @throws ParserConfigurationException
-     * @throws SAXException
-     * @throws XPathExpressionException
+     * @return an <HTTP>OK</HTTP> when all items are loaded
      */
     @GetMapping("/xmlRead")
     public ResponseEntity loadFromXml() {
 
-//        User requester = requestUser();
-//
-//        if(!requester.isAdmin()){
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
-//                    "Error",
-//                    "You need to be an admin to perform this action"
-//            ));
-//        }
+        User requester = requestUser();
 
-            Geolocation zero = geolocationRepository.findLocationByLatitudeAndLongitude(0.0,0.0);
-            if(zero == null){
-                zero = new Geolocation();
-                zero.setLatitude(0.0);
-                zero.setLongitude(0.0);
-                zero.setLocationTitle("No available location");
-                geolocationRepository.save(zero);
-            }
+        if(!requester.isAdmin()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You need to be an admin to perform this action"
+            ));
+        }
+
+        //default location for users created by xml data
+        Geolocation zero = geolocationRepository.findLocationByLatitudeAndLongitude(0.0,0.0);
+        if(zero == null){
+            zero = new Geolocation();
+            zero.setLatitude(0.0);
+            zero.setLongitude(0.0);
+            zero.setLocationTitle("No available location");
+            geolocationRepository.save(zero);
+        }
 
         try {
-            File inputFile = new File("ebay/items-39.xml");
+            File inputFile = new File("ebay/items-3.xml");
 
             SAXBuilder saxBuilder = new SAXBuilder();
             Document document = saxBuilder.build(inputFile);
 
-            // System.out.println("Root element :" + document.getRootElement().getName());
             Element classElement = document.getRootElement();
             List<Element> itemList = classElement.getChildren();
 
+            //read all items of xml file
             for (int i = 0; i < itemList.size(); i++) {
 
                 System.out.println("Importing " + (i+1) + " of " + itemList.size());
@@ -105,11 +102,12 @@ public class RecommendationController extends BaseController{
 
                 item.setName(xmlItem.getChildText("Name"));
 
-                item.setCurrently(
-                        Double.valueOf(xmlItem.getChildText("Currently").substring(1).replace(",", "")));
+                item.setCurrently(Double.valueOf(xmlItem.getChildText("Currently")
+                        .substring(1).replace(",", "")));
 
                 item.setFirstBid(
-                        Double.valueOf(xmlItem.getChildText("First_Bid").substring(1).replace(",", "")));
+                        Double.valueOf(xmlItem.getChildText("First_Bid")
+                                .substring(1).replace(",", "")));
 
                 if(xmlItem.getChildText("Description").length() > 255){
                     item.setDescription(xmlItem.getChildText("Description").substring(0,255));
@@ -120,7 +118,8 @@ public class RecommendationController extends BaseController{
 
                 if(xmlItem.getChildText("Buy_Price") != null){
                     item.setBuyPrice(
-                            Double.valueOf(xmlItem.getChildText("Buy_Price").substring(1).replace(",", "")));
+                            Double.valueOf(xmlItem.getChildText("Buy_Price")
+                                    .substring(1).replace(",", "")));
                 }
 
                 Attribute longitude =  xmlItem.getChild("Location").getAttribute("Longitude");
@@ -130,6 +129,7 @@ public class RecommendationController extends BaseController{
 
                 item.setEndsAt(new Date(new Date().getTime() + 10*86400000));
 
+                //location
                 Geolocation location;
                 if (longitude != null && latitude != null){
 
@@ -149,6 +149,7 @@ public class RecommendationController extends BaseController{
                 location.getItems().add(item);
                 geolocationRepository.save(location);
 
+                //categories
                 ItemCategory category = null;
                 List<Element> categories = xmlItem.getChildren("Category");
                 for (int j = 0; j < categories.size(); j++) {
@@ -190,6 +191,7 @@ public class RecommendationController extends BaseController{
                     }
                 }
 
+                //bids
                 List<Element> bids = xmlItem.getChildren("Bids");
                 for (int a = 0; a < bids.size(); a++) {
 
@@ -251,8 +253,8 @@ public class RecommendationController extends BaseController{
                     }
                 }
 
+                //account
                 String username = xmlItem.getChild("Seller").getAttribute("UserID").getValue();
-               // System.out.println(username);
                 username = username
                         .replace("@", "1")
                         .replace(".", "2")
@@ -308,6 +310,11 @@ public class RecommendationController extends BaseController{
     }
 
 
+    /**
+     * We suggest the visitors to visit the 5 most bidden auctions
+     *
+     * @return - 5 most popular auctions
+     */
     @GetMapping("/visitor")
     public ResponseEntity popularItems(){
         List<Item> items = itemRepository.popularItems();
@@ -318,20 +325,43 @@ public class RecommendationController extends BaseController{
     }
 
 
-
+    /**
+     * BONUS
+     * A registered user can be suggested to visit some auctions
+     * according to a LSH NN-CF method:
+     * 1) we find all users
+     * 2) we find all items
+     * 3) we create the vectors
+     *      - if a user has participated in an auction, we give 1.0
+     *      - if a user has seen an auction without participating in, we give 0.5
+     *      - else we give 0.0
+     * 4) we create min( sqrt(number of users), 2) buckets
+     * 5) we use the 'tdebatty' library (https://github.com/tdebatty/java-LSH) to perform LSH
+     * 6) after LSH we get the buckets in which the activeUser belongs in and we find his neighborhood
+     * 7) for every auction in which activeUser's neighbors participated, we calculate a rating prediction
+     * according to the formula presented in Eclass and here:
+     * https://link.springer.com/article/10.1007/s10479-016-2367-1 (part2, 2.1, step3)
+     * We exclude the auctions that belong to the activeUser of those he has also participated in
+     * 8) after finding the rating for every auction of the above step we sort them and return the item list
+     *
+     * @return - the sorted item list
+     * @throws JDOMException - lsh algorithm
+     * @throws IOException- lsh algorithm
+     */
     @GetMapping("/lsh")
     public ResponseEntity lsh() throws JDOMException, IOException {
 
         String username = requestUser().getUsername();
 
+        //1) get all users
         List<User> allUsers = userRepository.findAll();
-      //  allUsers.removeIf(user -> user.getBids().isEmpty());
         int userSize = allUsers.size();
 
         if(userSize == 0 || userSize == 1){
             return ResponseEntity.ok(null);
         }
 
+        //2) get all items
         List<Item> allItems = itemRepository.findAll();
         int itemSize = allItems.size();
 
@@ -339,10 +369,12 @@ public class RecommendationController extends BaseController{
             return ResponseEntity.ok(null);
         }
 
+        //3) create vectors of 'userSize' users * 'itemSize' items
         double[][] vectors = new double[userSize][];
         for (int i = 0; i < userSize; i++) {
             vectors[i] = new double[itemSize];
 
+            //auctions the user 'i' has participated in
             List<Item> items = new ArrayList<>();
             allUsers.get(i).getBids().forEach(bid -> {
                 items.add(bid.getItem());
@@ -351,7 +383,7 @@ public class RecommendationController extends BaseController{
             for (int j = 0; j < itemSize; j++) {
                 if(items.contains(allItems.get(j))) {
                     vectors[i][j] = 1.0;
-                } else if(items.contains(allUsers.get(i).getItemSeen())){
+                } else if(allUsers.get(i).getItemSeen().contains(allItems.get(j))){
                     vectors[i][j] = 0.5;
                 } else {
                     vectors[i][j] = 0.0;
@@ -359,15 +391,8 @@ public class RecommendationController extends BaseController{
             }
         }
 
-        for (int i = 0; i < userSize; i++) {
 
-            System.out.print(allUsers.get(i).getUsername() + "   ");
-            for (int j = 0; j < itemSize; j++) {
-               System.out.print(vectors[i][j]  + " ");
-            }
-            System.out.println();
-        }
-
+        //4)stages and buckets and initialization
         int stages = 3;
         int buckets = (int) (Math.sqrt(userSize) > 2  ? Math.sqrt(userSize) : 2);
 
@@ -375,22 +400,14 @@ public class RecommendationController extends BaseController{
         int activeUserPosition = 0;
         double avgRating = 0.0;
 
-        System.out.println("stages " + stages + "\nbuvkets " + buckets + "\nitemsize " + itemSize + "\nusersize " + userSize);
         LSHSuperBit lsh = new LSHSuperBit(stages, buckets, itemSize);
         Map<Integer, List<Integer>> map = new HashMap<>();
 
+        //5) LSH
         for (int i = 0; i < userSize; i++) {
 
-            System.out.println(allUsers.get(i).getUsername());
             double[] vector = vectors[i];
             int[] hash = lsh.hash(vector);
-
-//            try {
-//                hash = lsh.hash(vector);
-//            }catch (Exception e){
-//                System.err.println("SAD");
-//                return ResponseEntity.ok(null);
-//            }
 
             List<Integer> neighbours = map.get(hash[0]);
             if(neighbours == null){
@@ -402,59 +419,37 @@ public class RecommendationController extends BaseController{
             if(allUsers.get(i).getUsername().equals(username)){
                 activeUserBucket = hash[0];
                 activeUserPosition = i;
-             //   System.err.println("activeUserBucket " + activeUserBucket);
-            // System.err.println("activeUserPosition " + activeUserPosition);
                 avgRating =  Arrays.stream(vector).average().orElse(0);
-             //   System.err.println("avgRating " + avgRating);
             }
-
-           // System.out.print(allUsers.get(i).getUsername() + " :\t" + hash[0]);
-            //System.out.print("\n");
         }
 
-//        System.out.println("\n\n\n NEIGHBORS");
-
+        //6) after LSH we get the bucket in which the activeUser belongs in
         List<Integer> neighborhood = map.get(activeUserBucket);
         if(neighborhood == null){
             return ResponseEntity.ok(null);
         }
 
-//        for (Integer integer : neighborhood) {
-//            System.out.print(allUsers.get(integer).getUsername() + "   ");
-//            for (int j = 0; j < itemSize; j++) {
-//               System.out.print(vectors[integer][j]  + " ");
-//            }
-//            System.out.println();
-//        }
-
         neighborhood.removeIf(number -> allUsers.get(number).getUsername().equals(username));
 
-//        System.out.println("dddd");
-//        for (Integer k : neighborhood) {
-//            System.out.println(vectors[activeUserPosition]);
-//            System.out.println(vectors[k]);
-//            System.out.println("cosine" +
-//                    "");
-//            System.out.println(cosineSimilarity(vectors[activeUserPosition], vectors[k]));
-//        }
-//        System.out.println("dd");
-
         int finalActiveUserPosition = activeUserPosition;
+
+        //lambda - normalizing factor
         double lambda = 1 / neighborhood.stream().mapToDouble(
                 neighbourPosition -> cosineSimilarity(vectors[finalActiveUserPosition], vectors[neighbourPosition])).sum();
 
-        //auctions that users has participated in
+        //auctions that activeUser has participated in
         List<Item> participations = new ArrayList<>();
         allUsers.get(finalActiveUserPosition).getBids().forEach(bid -> {
             participations.add(bid.getItem());
         });
 
-        //for every neighbour of the active user we get the auctions they have participated in
+        //7) for every neighbour of the activeUser we get the auctions they have participated in
         List<RatedItem> ratedItems = new ArrayList<>();
         double finalAvgRating = avgRating;
         neighborhood.forEach(neighbourPosition -> {
             allUsers.get(neighbourPosition).getBids().forEach(bid -> {
 
+                //we process the auction olny if it does not belong to the activeUser or he has already bidden
                 if(!participations.contains(bid.getItem()) &&
                         !allUsers.get(finalActiveUserPosition).getItems().contains(bid.getItem())) {
 
@@ -479,62 +474,13 @@ public class RecommendationController extends BaseController{
             });
         });
 
-//        System.out.println("\n\n\n");
-//        int finalActiveUserBucket = activeUserBucket;
-//        map.entrySet().forEach(entry-> {
-//            if(entry.getKey() == finalActiveUserBucket) {
-//                System.out.println(entry.getKey());
-//                List<Integer> nn = entry.getValue();
-//                nn.forEach(user -> {
-//                    System.out.println(allUsers.get(user).getUsername());
-//                });
-//            }
-//        });
-
+        //8) sorting according to calculated rating..
         ratedItems.sort(Comparator.comparingDouble(RatedItem::getRating).reversed());
-//        System.out.println("\n\n\nFINAL");
-        ratedItems.forEach(item -> { System.out.println(item.getItem().getName() + " with rating " + item.getRating());});
 
+        //..and get the recommended items
         List<Item> finalRatings = new ArrayList<>();
         ratedItems.forEach(item -> finalRatings.add(item.getItem()));
         return ResponseEntity.ok(finalRatings);
-    }
-
-
-    @GetMapping("/lsh1")
-    public ResponseEntity ls1h(@RequestParam String username) throws JDOMException, IOException {
-        int count = 2;
-
-        // R^n
-        int n = 1;
-
-        int stages = 3;
-        int buckets = 2;
-
-        // Produce some vectors in R^n
-        Random r = new Random();
-        double[][] vectors = new double[count][];
-        for (int i = 0; i < count; i++) {
-            vectors[i] = new double[n];
-
-            for (int j = 0; j < n; j++) {
-                vectors[i][j] = 0;
-            }
-        }
-
-        LSHSuperBit lsh = new LSHSuperBit(stages, buckets, n);
-
-        // Compute a SuperBit signature, and a LSH hash
-        for (int i = 0; i < count; i++) {
-            double[] vector = vectors[i];
-            int[] hash = lsh.hash(vector);
-            for (double v : vector) {
-                System.out.printf("%6.2f\t", v);
-            }
-            System.out.print(hash[0]);
-            System.out.print("\n");
-        }
-        return ResponseEntity.ok(null);
     }
 }
 

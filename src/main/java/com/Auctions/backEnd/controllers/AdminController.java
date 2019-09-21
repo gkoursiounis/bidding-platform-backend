@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -228,14 +227,14 @@ public class AdminController extends BaseController{
     @GetMapping("/allAuctions")
     public ResponseEntity getAllItems(){
 
-//        User requester = requestUser();
-//        if(!requester.isAdmin()){
-//
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
-//                    "Error",
-//                    "You need to be an admin to perform this action"
-//            ));
-//        }
+        User requester = requestUser();
+        if(!requester.isAdmin()){
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
+                    "Error",
+                    "You need to be an admin to perform this action"
+            ));
+        }
 
         return ResponseEntity.ok(itemRepository.findAll());
     }
