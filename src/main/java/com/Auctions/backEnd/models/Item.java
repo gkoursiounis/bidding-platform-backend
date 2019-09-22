@@ -41,7 +41,7 @@ public class Item extends AuditModel implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "item_category_id"))
     private List<ItemCategory> categories = new ArrayList<>();
 
-    @OneToMany( mappedBy = "item")
+    @OneToMany( mappedBy = "item", fetch = FetchType.EAGER)
     @OrderBy(value = "offer DESC")
     @JsonIgnoreProperties("item")
     private List<Bid> bids = new ArrayList<>();
