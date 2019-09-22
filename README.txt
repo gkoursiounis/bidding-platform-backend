@@ -7,7 +7,7 @@
 
 
 Back-end
-Τεχνολογίες: Spring Framework σε IntelliJIDEA
+Τεχνολογίες: Spring Framework σε IntelliJIDEA (Windows 10)
 
 Παραδοχές:
 1. Η σύνδεση κάποιου χρήστη γίνεται με username ή email και password και λαμβάνει ένα JSON Web Token (/auth/login).
@@ -102,7 +102,7 @@ Extra υλοποιήσεις:
 
 
 Front-end
-Τεχνολογίες: React.js
+Τεχνολογίες: React.js (Windows 10)
 
 Παραδοχές:
 1. Αρχικά στον φυλλομετρητή στέλνεται σελίδα login και μέσω σύνδεσης ο χρήστης ανακατευθύνεται στο HomePage
