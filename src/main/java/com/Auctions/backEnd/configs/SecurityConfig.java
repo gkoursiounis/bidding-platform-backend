@@ -26,7 +26,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
         http
                 .csrf()
                 .disable()
@@ -47,9 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/search/partialMatch").permitAll()
                 .antMatchers("/search/searchBar").permitAll()
                 .antMatchers("/search/filters").permitAll()
-                .antMatchers("/user/{username}").permitAll()
                 .antMatchers("/recommend/visitor").permitAll()
-                .antMatchers("/recommend/xmlRead").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JWTConfigurer(this.tokenProvider))
@@ -61,6 +58,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpStrictTransportSecurity()
                 .includeSubDomains(true)
                 .maxAgeInSeconds(31536000);
-        // @formatter:on
     }
 }

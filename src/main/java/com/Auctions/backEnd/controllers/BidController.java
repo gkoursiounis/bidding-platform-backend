@@ -82,7 +82,7 @@ public class BidController extends BaseController{
                     "You cannot bid at your own auction"
             ));
         }
-//TODO fix
+
         if(java.lang.Double.compare(offer, item.getCurrently()) <= 0){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",

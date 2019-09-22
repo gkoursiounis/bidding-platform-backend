@@ -509,11 +509,10 @@ public class UserController extends BaseController{
             ));
         }
 
-        if(!requester.getUsername().equals(message.getRecipient().getUsername()) &&
-                !requester.getUsername().equals(message.getSender().getUsername())){
+        if(!requester.getUsername().equals(message.getSender().getUsername())){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Message(
                     "Error",
-                    "You are not neither the recipient not the sender"
+                    "This message is not yours"
             ));
         }
 

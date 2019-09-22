@@ -59,7 +59,7 @@ public class Item extends AuditModel implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_picture")
     @JsonIgnore
-    private List<DBFile> media = new ArrayList<>();         //TODO how to delete picture?
+    private List<DBFile> media = new ArrayList<>();
 
     @OneToOne
     private Geolocation location;
@@ -67,6 +67,7 @@ public class Item extends AuditModel implements Serializable {
     private Integer sellerRating;
 
     private Integer bidderRating;
+
 
     @JsonGetter("getMediaPath")
     public List<String> getMediaPath() {

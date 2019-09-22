@@ -22,7 +22,6 @@ public class DBFile implements Serializable {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-
     @Column
     private String fileName;
 

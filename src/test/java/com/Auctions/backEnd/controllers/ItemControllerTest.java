@@ -946,8 +946,7 @@ public class ItemControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-//
-// TODO remove
+
     /**
      * User gets item's details of an expired item
      *
@@ -991,7 +990,7 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.*", hasSize(3)));
     }
 
-//TODO remove
+
     /**
      * User gets a list of all open auctions
      *

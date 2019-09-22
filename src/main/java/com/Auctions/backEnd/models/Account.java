@@ -19,10 +19,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class Account extends AuditModel {
 
-    // Fields
-
     @NotNull
-   // @Size(min=5, max=15)
     @Column(name = "account_username")
     private String username;
 
@@ -42,7 +39,6 @@ public class Account extends AuditModel {
     @Column(name = "account_admin")
     private boolean admin = false;
 
-    // Constructors
 
     public Account(String username, String email, String password, Boolean verified) {
         this.username = username;
@@ -50,9 +46,6 @@ public class Account extends AuditModel {
         this.password = password;
         this.verified = verified;
     }
-
-
-    // Methods
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
         this.password = passwordEncoder.encode(this.password);
