@@ -1,0 +1,23 @@
+{
+  "groups": [
+    {
+      "name": "app",
+      "type": "com.Auctions.backEnd.configs.AppConfig",
+      "sourceType": "com.Auctions.backEnd.configs.AppConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "app.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.Auctions.backEnd.configs.AppConfig"
+    },
+    {
+      "name": "app.token-validity-in-seconds",
+      "type": "java.lang.Long",
+      "sourceType": "com.Auctions.backEnd.configs.AppConfig",
+      "defaultValue": 0
+    }
+  ],
+  "hints": []
+}

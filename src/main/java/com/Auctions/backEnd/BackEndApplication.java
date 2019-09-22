@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 
@@ -89,6 +90,8 @@ public class BackEndApplication implements CommandLineRunner {
 		System.out.println("App is running...");
 
 		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+		ScheduledExecutorService exec1 = Executors.newSingleThreadScheduledExecutor();
+
 		exec.scheduleAtFixedRate(new Runnable() {
 
 			@Override
@@ -108,12 +111,6 @@ public class BackEndApplication implements CommandLineRunner {
 					user.setTelNumber("1234567890");
 					user.setTaxNumber("1234");
 					user.setAccount(admin);
-//
-//				Geolocation address = new Geolocation();
-//				address.setLatitude(37.968564);
-//				address.setLongitude(23.76695);
-//				address.setLocationTitle("Dept. Informatics and Telecomms");
-//				user.setAddress(address);
 
 					userRepository.save(user);
 					accountRepository.save(admin);
@@ -137,29 +134,31 @@ public class BackEndApplication implements CommandLineRunner {
 		 * 'endsAt' time meaning that the auction must be completed
 		 *
 		 */
-		exec.scheduleAtFixedRate(new Runnable() {
+		exec1.scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {
 				System.out.println("Updating...");
-				List<Item> auctions = itemRepository.getAllOpenAuctions();
-				auctions.forEach(item -> {
+				try {
+					List<Item> auctions = itemRepository.getAllOpenAuctions();
+					auctions.forEach(item -> {
 
-					if(item.getEndsAt().getTime() < System.currentTimeMillis()) {
+						if (item.getEndsAt().getTime() < System.currentTimeMillis()) {
 
-						System.err.println("Closing auction with id " + item.getId());
+							System.err.println("Closing auction with id " + item.getId());
 
-						item.setAuctionCompleted(true);
-						itemRepository.save(item);
+							item.setAuctionCompleted(true);
+							itemRepository.save(item);
 
-						Notification toSeller = new Notification();
-						toSeller.setRecipient(item.getSeller());
-						toSeller.setItemId(item.getId());
-						toSeller.setMessage("Your auction has been completed! Click here for details");
-						notificationRepository.save(toSeller);
+							Notification toSeller = new Notification();
+							toSeller.setRecipient(item.getSeller());
+							toSeller.setItemId(item.getId());
+							toSeller.setMessage("Your auction has been completed! Click here for details");
+							notificationRepository.save(toSeller);
 
-						item.getSeller().getNotifications().add(toSeller);
-						userRepository.save(item.getSeller());
+							item.getSeller().getNotifications().add(toSeller);
+							userRepository.save(item.getSeller());
+
 
 						if(!item.getBids().isEmpty()) {
 							Notification toBuyer = new Notification();
@@ -172,8 +171,12 @@ public class BackEndApplication implements CommandLineRunner {
 							highestBidder.getNotifications().add(toBuyer);
 							userRepository.save(highestBidder);
 						}
-					}
-				});
+						}
+					});
+				}
+				catch (Exception e){
+					e.printStackTrace();
+				}
 			}
 		}, 0, 5, TimeUnit.SECONDS);
 	}

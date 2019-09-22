@@ -167,7 +167,8 @@ Setup:
 Στον φυλλομετρητή: https://localhost:3000
 
 Back-end
-Το back-end εκκινείται από το src\main\java\com\Auctions\backEnd\BackEndApplication.java. Κατά την εκκίνηση,
+1. Open as Project το pom.xml μέσα από το IntelliJIDEA
+2. Το back-end εκκινείται από το src\main\java\com\Auctions\backEnd\BackEndApplication.java. Κατά την εκκίνηση,
 δημιουργείται αν δεν υπάρχει ήδη ο admin με username:tediadiktyoy και password:adminadmin. Επιπλέον, πρέπει
 ο χρήστης να αποδεχτεί στον browser το self-signed πιστοποιητικό μέσω του url: https://localhost:8443.
 

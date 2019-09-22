@@ -16,8 +16,10 @@ import java.util.Date;
 public class Notification extends AuditModel {
 
     @ManyToOne
+    @Nullable
     private User recipient;
 
+    @Nullable
     String message;
 
     @Nullable
