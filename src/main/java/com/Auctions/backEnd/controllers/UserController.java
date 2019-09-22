@@ -397,6 +397,13 @@ public class UserController extends BaseController{
             ));
         }
 
+        if(text.length() > 255){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "The message is too long"
+            ));
+        }
+
         UserMessage message = new UserMessage();
         message.setMessage(text);
         message.setRecipient(highestBidder);
@@ -445,6 +452,13 @@ public class UserController extends BaseController{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Message(
                     "Error",
                     "Highest bidder does not exist or you are not the highest bidder"
+            ));
+        }
+
+        if(text.length() > 255){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
+                    "Error",
+                    "The message is too long"
             ));
         }
 

@@ -165,10 +165,10 @@ public class ItemController extends BaseController{
         }
 
         if(name.isEmpty() || description.isEmpty() || firstBid == null || endsAt == null ||
-                (buyPrice != null && Double.compare(buyPrice, firstBid) < 0)){
+                (buyPrice != null && Double.compare(buyPrice, firstBid) <= 0)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
                     "Error",
-                    "Missing parameters or buy Price is smaller than first Bid"
+                    "Missing parameters or buy Price is smaller or equal than first Bid"
             ));
         }
 

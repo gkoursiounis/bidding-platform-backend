@@ -32,7 +32,7 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new Message(
                         "Error",
-                        "Oops..Something went wrong - invalid data or HTTPS request"
+                        "Invalid input or request"
                 ));
     }
 }

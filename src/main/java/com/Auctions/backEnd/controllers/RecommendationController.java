@@ -202,7 +202,6 @@ public class RecommendationController extends BaseController{
                         Element bid = bidList.get(b);
 
                         String username = bid.getChild("Bidder").getAttribute("UserID").getValue();
-                        //System.out.println(username);
                         username = username
                                 .replace("@", "1")
                                 .replace(".", "2")
@@ -336,7 +335,7 @@ public class RecommendationController extends BaseController{
      *      - if a user has seen an auction without participating in, we give 0.5
      *      - else we give 0.0
      * 4) we create min( sqrt(number of users), 2) buckets
-     * 5) we use the 'tdebatty' library (https://github.com/tdebatty/java-LSH) to perform LSH
+     * 5) we use the 'tdebatty' library (https://github.com/tdebatty/java-LSH) to perform LSH (with cosine)
      * 6) after LSH we get the buckets in which the activeUser belongs in and we find his neighborhood
      * 7) for every auction in which activeUser's neighbors participated, we calculate a rating prediction
      * according to the formula presented in Eclass and here:
@@ -457,7 +456,6 @@ public class RecommendationController extends BaseController{
                             cosineSimilarity(vectors[finalActiveUserPosition], vectors[neighbourPos]) *
                                     (1 - Arrays.stream(vectors[neighbourPos]).average().orElse(0))
                     ).sum();
-                    System.out.println(finalAvgRating + lambda * sum);
 
                     List<Item> existingRatings = new ArrayList<>();
                     ratedItems.forEach(item -> existingRatings.add(item.getItem()));

@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 
@@ -160,17 +159,17 @@ public class BackEndApplication implements CommandLineRunner {
 							userRepository.save(item.getSeller());
 
 
-						if(!item.getBids().isEmpty()) {
-							Notification toBuyer = new Notification();
-							User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();
-							toBuyer.setRecipient(highestBidder);
-							toBuyer.setItemId(item.getId());
-							toBuyer.setMessage("Congratulations, you won an auction! Click here for details");
-							notificationRepository.save(toBuyer);
+							if(!item.getBids().isEmpty()) {
+								Notification toBuyer = new Notification();
+								User highestBidder = Collections.max(item.getBids(), Bid.cmp).getBidder();
+								toBuyer.setRecipient(highestBidder);
+								toBuyer.setItemId(item.getId());
+								toBuyer.setMessage("Congratulations, you won an auction! Click here for details");
+								notificationRepository.save(toBuyer);
 
-							highestBidder.getNotifications().add(toBuyer);
-							userRepository.save(highestBidder);
-						}
+								highestBidder.getNotifications().add(toBuyer);
+								userRepository.save(highestBidder);
+							}
 						}
 					});
 				}

@@ -26,15 +26,4 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 "File too big"
         ));
     }
-
-    @ExceptionHandler(value = {
-            DataIntegrityViolationException.class,
-            javax.validation.ConstraintViolationException.class
-    })
-    protected ResponseEntity handleFieldSize() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Message(
-                "Error",
-                "Invalid input"
-        ));
-    }
 }
