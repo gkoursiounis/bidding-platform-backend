@@ -1,15 +1,13 @@
-﻿Τ.Ε.Διαδικτύου
+## Τεχνολογίες Εφαρμογών Διαδικτύου, 2019
 
-Ομάδα:
-Μαρία Καραμηνά (1115201600059)
-Γιώργος Κουρσιούνης (1115201600077)
+### Ομάδα
+- Μαρία Καραμηνά
+- Γιώργος Κουρσιούνης
 
+### Back-end
+Spring Framework σε IntelliJIDEA (Windows 10)
 
-
-Back-end
-Τεχνολογίες: Spring Framework σε IntelliJIDEA (Windows 10)
-
-Παραδοχές:
+### Παραδοχές & User stories
 1. Η σύνδεση κάποιου χρήστη γίνεται με username ή email και password και λαμβάνει ένα JSON Web Token (/auth/login).
 
 2. Ο visitor δεν χρειάζεται token και μπορεί να έχει πρόσβαση μόνο σε συγκεκριμένα μέρη της εφαρμογής.
@@ -99,6 +97,17 @@ Extra υλοποιήσεις:
 4. να δει τα unseen notifications (/user/unseenNotifications), να δει όλα τα notifications (/user/myNotifications), να επιλέξει ως 'seen' ένα 
 (/user/markNotification/{notId}) ή όλα τα unseen notifications (/user/allSeen)
 
+### Εκκίνηση
+
+1. Open as Project το pom.xml μέσα από το IntelliJIDEA
+2. Το back-end εκκινείται από το src\main\java\com\Auctions\backEnd\BackEndApplication.java. Κατά την εκκίνηση,
+δημιουργείται αν δεν υπάρχει ήδη ο admin με username:tediadiktyoy και password:adminadmin. Επιπλέον, πρέπει
+ο χρήστης να αποδεχτεί στον browser το self-signed πιστοποιητικό μέσω του url: https://localhost:8443.
+
+ΠΡΟΣΟΧΗ: Έχουμε αρχική κενή βάση και σε κάθε εκκίνηση της εφαρμογής η υπάρχουσα βάση θα διαγράφεται και γίνεται κενή. 
+Αν θέλετε persistency αλλάξτε στο application.properties το spring.jpa.hibernate.ddl-auto
+από create σε update. Τότε σε κάθε εκκίνηση της εφαρμογής η υπάρχουσα βάση θα εμπλουτίζεται.
+
 
 
 Front-end
@@ -155,7 +164,6 @@ Front-end
 ή να αποσυνδεθεί από την εφαρμογή
 
 
-
 Εκκίνηση: 
 
 Front-end
@@ -166,12 +174,3 @@ Setup:
 Εκκίνηση: npm start μέσα από τον φάκελο TED_frontend
 Στον φυλλομετρητή: https://localhost:3000
 
-Back-end
-1. Open as Project το pom.xml μέσα από το IntelliJIDEA
-2. Το back-end εκκινείται από το src\main\java\com\Auctions\backEnd\BackEndApplication.java. Κατά την εκκίνηση,
-δημιουργείται αν δεν υπάρχει ήδη ο admin με username:tediadiktyoy και password:adminadmin. Επιπλέον, πρέπει
-ο χρήστης να αποδεχτεί στον browser το self-signed πιστοποιητικό μέσω του url: https://localhost:8443.
-
-ΠΡΟΣΟΧΗ: Έχουμε αρχική κενή βάση και σε κάθε εκκίνηση της εφαρμογής η υπάρχουσα βάση θα διαγράφεται και γίνεται κενή. 
-Αν θέλετε persistency αλλάξτε στο application.properties το spring.jpa.hibernate.ddl-auto
-από create σε update. Τότε σε κάθε εκκίνηση της εφαρμογής η υπάρχουσα βάση θα εμπλουτίζεται.
